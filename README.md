@@ -35,6 +35,7 @@ Inspired by the Dawn spacecraft mission parameters (ion propulsion system, large
 - [Repository Structure](#repository-structure)
 - [Installation & Quickstart](#installation--quickstart)
 - [Running Tests](#running-tests)
+- [Citation & How to Include in Your Research Paper](#citation--how-to-include-in-your-research-paper)
 - [References](#references)
 
 ---
@@ -305,6 +306,36 @@ All 15 tests verify:
 - Boundary condition satisfaction to machine precision via TFC constrained expressions.
 - Legendre-Gauss-Lobatto (LGL) quadrature nodes and spectral differentiation matrix properties ($D \mathbf{1} = \mathbf{0}$, $D \boldsymbol{\tau} = \mathbf{1}$).
 - 2-body specific energy and cumulative external work conservation.
+
+## Citation & How to Include in Your Research Paper
+
+### 1. Can You Provide Just the GitHub Link?
+**Yes.** For almost all academic journals and conferences (including Elsevier, IEEE, AIAA, MDPI, and Springer), including a direct GitHub URL in the **Code Availability Statement** or in the references/footnotes is fully accepted and standard practice:
+```markdown
+Code Availability: The Python implementation of the trajectory optimization algorithms,
+including X-TFC PoNN, Indirect Shooting, and Pseudospectral Collocation with J2 and SRP
+perturbations, is openly available on GitHub at:
+https://github.com/Nirbaan13/XTFC-PoNN---Trajectory-Optimization
+```
+
+### 2. How to Get a Persistent DOI via Zenodo (Recommended Gold Standard)
+If you wish to provide a formal Digital Object Identifier (DOI) alongside the GitHub link:
+1. Go to [Zenodo](https://zenodo.org/) and log in with your GitHub account.
+2. Under "GitHub Settings" on Zenodo, toggle the switch for `Nirbaan13/XTFC-PoNN---Trajectory-Optimization`.
+3. In this GitHub repository, click **Releases -> Create a new release** (tag e.g. `v1.0.0`).
+4. Zenodo will automatically archive the repository snapshot and assign a permanent DOI (e.g., `10.5281/zenodo.XXXXXXX`) that can be cited in your paper.
+
+### 3. BibTeX Citation Format
+```bibtex
+@software{nirbaan2026xtfc_trajectory,
+  author       = {Nirbaan Singh},
+  title        = {Earth-Mars Low-Thrust Trajectory Optimization: Benchmarking X-TFC PoNN, Indirect Shooting, and Pseudospectral Collocation under J2 and SRP Perturbations},
+  year         = {2026},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/Nirbaan13/XTFC-PoNN---Trajectory-Optimization}}
+}
+```
 
 ---
 
