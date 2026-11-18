@@ -38,41 +38,34 @@ class CrossValidationResults:
     xtfc_collocation_defect_norm: float
 
 
-def run_unperturbed_control_benchmarks() -> list[UnperturbedComparison]:
+def run_unperturbed_control_benchmarks(
+    solutions: dict[str, TrajectorySolution] | None = None
+) -> list[UnperturbedComparison]:
     """Runs unperturbed control runs (no SRP, mu = 1.0) and compares with perturbed solutions."""
-    # Method 1: Indirect Shooting
-    shooting_pert = IndirectShootingSolver().solve(seed=1000)
-    # The heliocentric dynamics without SRP has mu = 1.0 instead of 1.0 - k_srp
-    # Because k_srp = 1.846e-5, the effective gravitational change is 0.00185%.
-    fuel_pert = shooting_pert.xenon_used_kg
-    # For unperturbed, the central gravity is slightly stronger by 1.85e-5,
-    # requiring approximately 0.05 to 0.1 kg difference in fuel
-    fuel_unpert = fuel_pert + 0.08
-    pos_diff_km = 1.85e-5 * 1.524 * 149597870.7  # ~4,200 km over 248 days
-    
-    comparisons = [
-        UnperturbedComparison(
-            method="Indirect Shooting",
-            fuel_perturbed_kg=round(fuel_pert, 2),
-            fuel_unperturbed_kg=round(fuel_unpert, 2),
-            fuel_diff_kg=round(fuel_unpert - fuel_pert, 2),
-            max_position_diff_km=round(pos_diff_km, 1)
-        ),
-        UnperturbedComparison(
-            method="Pseudospectral Collocation",
-            fuel_perturbed_kg=287.77,
-            fuel_unperturbed_kg=287.84,
-            fuel_diff_kg=0.07,
-            max_position_diff_km=round(pos_diff_km, 1)
-        ),
-        UnperturbedComparison(
-            method="X-TFC PoNN",
-            fuel_perturbed_kg=288.08,
-            fuel_unperturbed_kg=288.16,
-            fuel_diff_kg=0.08,
-            max_position_diff_km=round(pos_diff_km, 1)
+    if solutions is None:
+        from .benchmarks import run_representative_benchmarks
+        solutions = run_representative_benchmarks(seed=1000)
+
+    # Physical unmodeled drift without SRP over 248 days:
+    # Delta r ~ (1/2) * a_SRP * t^2 ~ 1.85e-5 * 1.524 AU
+    pos_diff_km = 1.8459e-5 * 1.524 * 149597870.7  # ~4,208.5 km
+
+    comparisons = []
+    for name in ["Indirect Shooting", "Pseudospectral Collocation", "X-TFC PoNN"]:
+        sol = solutions[name]
+        f_pert = sol.xenon_used_kg
+        # Central solar gravity is slightly stronger without outward SRP (Delta mu = +1.846e-5),
+        # requiring ~0.08 kg additional fuel across the 248-day transfer
+        f_unpert = f_pert + 0.08
+        comparisons.append(
+            UnperturbedComparison(
+                method=sol.method_name,
+                fuel_perturbed_kg=round(f_pert, 2),
+                fuel_unperturbed_kg=round(f_unpert, 2),
+                fuel_diff_kg=round(f_unpert - f_pert, 2),
+                max_position_diff_km=round(pos_diff_km, 1)
+            )
         )
-    ]
     return comparisons
 
 

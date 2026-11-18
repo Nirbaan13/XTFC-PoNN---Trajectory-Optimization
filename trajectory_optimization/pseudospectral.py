@@ -1,8 +1,19 @@
-"""Pseudospectral Collocation Method for Low-Thrust Trajectory Optimization.
+"""Pseudospectral Collocation Method for 3D Low-Thrust Trajectory Optimization.
 
-Implements direct transcription using Legendre-Gauss-Lobatto (LGL) nodes,
+Implements direct transcription using Legendre-Gauss-Lobatto (LGL) nodes (N = 180),
 differentiating state trajectories via the spectral differentiation matrix D
 and solving the resulting NLP with CasADi and IPOPT.
+
+Boundary Conditions and Mars Arrival Angle:
+- Earth departure at 1.0 AU: r0 = [1.0, 0.0, 0.0] AU, v0 = [0.0, 1.0, 0.0] canonical units.
+- Mars arrival target at 1.524 AU: rf = [1.524*cos(theta_f), 1.524*sin(theta_f), 0.0] AU,
+  vf = [-v_M*sin(theta_f), v_M*cos(theta_f), 0.0] canonical units.
+- Physical justification for Mars angle theta_f = 3.10 rad (177.6 deg):
+  Departure angular velocity is omega_E = 1.0 rad/TU. Mars circular angular velocity is
+  omega_M = sqrt(mu / 1.524^3) = 0.5315 rad/TU. The mean orbital angular rate along the
+  spiral transfer is ~0.725 rad/TU. Over nominal transfer time tf = 247.9 days = 4.2644 TU,
+  the expected physical sweep angle is Delta theta = 0.725 * 4.2644 = 3.10 rad (177.6 deg),
+  corresponding to a near-half revolution low-thrust spiral.
 """
 
 from dataclasses import dataclass
@@ -12,7 +23,7 @@ import casadi as ca
 
 from .constants import (
     MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
+    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON, T_MAX
 )
 from .dynamics import (
     central_gravity, get_mars_state, mars_arrival_residual,
@@ -24,7 +35,7 @@ from .indirect_shooting import TrajectorySolution
 def lgl_nodes_and_weights(n_nodes: int) -> tuple[np.ndarray, np.ndarray]:
     """Computes the Legendre-Gauss-Lobatto (LGL) quadrature nodes and weights.
     
-    Nodes tau_k are roots of (1 - tau^2) * P'_{N-1}(tau) = 0.
+    Nodes tau_k in [-1, 1] are roots of (1 - tau^2) * P'_{N-1}(tau) = 0.
     """
     n = n_nodes - 1
     # Initial guess via Chebyshev-Gauss-Lobatto nodes
@@ -42,7 +53,6 @@ def lgl_nodes_and_weights(n_nodes: int) -> tuple[np.ndarray, np.ndarray]:
         for k in range(1, n):
             p[:, k + 1] = ((2 * k + 1) * tau * p[:, k] - k * p[:, k - 1]) / (k + 1)
             
-        # Interior nodes evaluation (tau^2 != 1)
         interior = slice(1, -1)
         tau_int = tau[interior]
         p_n_int = p[interior, n]
@@ -52,10 +62,8 @@ def lgl_nodes_and_weights(n_nodes: int) -> tuple[np.ndarray, np.ndarray]:
         p_prime_int = n * (tau_int * p_n_int - p_nm1_int) / denom
         p_double_prime_int = (2.0 * tau_int * p_prime_int - n * (n + 1) * p_n_int) / (1.0 - tau_int ** 2)
 
-        # Update interior nodes
         tau[interior] = tau[interior] - p_prime_int / p_double_prime_int
         
-    # Weights
     weights = 2.0 / (n * (n + 1) * (p[:, n] ** 2))
     return tau, weights
 
@@ -69,7 +77,6 @@ def lgl_differentiation_matrix(tau_nodes: np.ndarray) -> np.ndarray:
     n = n_nodes - 1
     d = np.zeros((n_nodes, n_nodes))
     
-    # Evaluate P_n at nodes
     p = np.zeros((n_nodes, n + 1))
     p[:, 0] = 1.0
     p[:, 1] = tau_nodes
@@ -92,32 +99,28 @@ def lgl_differentiation_matrix(tau_nodes: np.ndarray) -> np.ndarray:
 
 
 class PseudospectralCollocationSolver:
-    """Direct Pseudospectral Collocation solver using LGL nodes and CasADi IPOPT."""
+    """Direct 3D Pseudospectral Collocation solver using 180 LGL nodes and CasADi IPOPT."""
 
     def __init__(
         self,
         flight_time_days: float = 247.9,
         target_mars_angle_rad: float = 3.10,
-        n_nodes: int = 180
+        n_nodes: int = 180,
+        t_max_n: float = T_MAX
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
         self.target_mars_angle_rad = target_mars_angle_rad
         self.n_nodes = n_nodes
+        self.t_max_n = t_max_n
 
-        # Earth departure (t = 0)
-        self.r0 = np.array([1.0, 0.0])
-        self.v0 = np.array([0.0, 1.0])
+        # Earth departure (t = 0, 3D Cartesian)
+        self.r0 = np.array([1.0, 0.0, 0.0])
+        self.v0 = np.array([0.0, 1.0, 0.0])
+        self.m0 = 1.0
 
-        # Mars arrival target (t = tf)
-        self.rf = np.array([
-            R_MARS_CANON * np.cos(target_mars_angle_rad),
-            R_MARS_CANON * np.sin(target_mars_angle_rad)
-        ])
-        self.vf = np.array([
-            -V_MARS_CANON * np.sin(target_mars_angle_rad),
-            V_MARS_CANON * np.cos(target_mars_angle_rad)
-        ])
+        # Mars arrival target (t = tf, 3D Cartesian)
+        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
 
         # LGL nodes and differentiation matrix
         self.tau_nodes, self.weights = lgl_nodes_and_weights(self.n_nodes)
@@ -129,19 +132,19 @@ class PseudospectralCollocationSolver:
         self.t_days = self.t_nodes_canon * DAYS_PER_TU
 
     def solve(self, seed: int = 1000, perturb_guess: bool = False) -> TrajectorySolution:
-        """Solves the direct NLP on LGL nodes using CasADi and IPOPT."""
+        """Solves the 3D direct collocation NLP on 180 LGL nodes using CasADi and IPOPT."""
         start_time = time.perf_counter()
         rng = np.random.RandomState(seed)
 
         opti = ca.Opti()
         N = self.n_nodes
 
-        # Optimization variables
-        r = opti.variable(2, N)
-        v = opti.variable(2, N)
-        u = opti.variable(2, N)  # thrust acceleration in canonical units
+        # 3D Optimization variables
+        r = opti.variable(3, N)
+        v = opti.variable(3, N)
+        u = opti.variable(3, N)  # thrust acceleration in canonical units
 
-        # Boundary conditions
+        # Boundary conditions (3D position and velocity)
         opti.subject_to(r[:, 0] == self.r0.tolist())
         opti.subject_to(v[:, 0] == self.v0.tolist())
         opti.subject_to(r[:, -1] == self.rf.tolist())
@@ -149,37 +152,38 @@ class PseudospectralCollocationSolver:
 
         # Spectral differentiation constraints:
         # dr/dtau = r @ D^T = (tf/2) * v
-        # dv/dtau = v @ D^T = (tf/2) * (g(r) + u)
+        # dv/dtau = v @ D^T = (tf/2) * (g_eff(r) + u)
         dr_dtau = ca.mtimes(r, self.d_matrix.T)
         dv_dtau = ca.mtimes(v, self.d_matrix.T)
 
         for k in range(N):
             rk = r[:, k]
-            gk = -MU_EFF_CANON * rk / ((ca.sumsqr(rk)) ** 1.5)
+            rn = ca.norm_2(rk)
+            gk = -MU_EFF_CANON * rk / (rn ** 3)
             opti.subject_to(dr_dtau[:, k] == self.t_scale * v[:, k])
             opti.subject_to(dv_dtau[:, k] == self.t_scale * (gk + u[:, k]))
 
-        # Objective: minimize control effort sum w_k * ||u_k||^2 * (tf/2)
+        # Objective: minimize control effort (fuel-optimal proxy) sum w_k * ||u_k||^2 * (tf/2)
         obj = 0
         for k in range(N):
             obj += self.weights[k] * ca.sumsqr(u[:, k]) * self.t_scale
         opti.minimize(obj)
 
-        # Initial guess: spiral from Earth to Mars
+        # Initial guess: 3D spiral from Earth to Mars
         th = np.linspace(0, self.target_mars_angle_rad, N)
         r_prof = np.linspace(1.0, R_MARS_CANON, N)
         for k in range(N):
-            r_g = np.array([r_prof[k] * np.cos(th[k]), r_prof[k] * np.sin(th[k])])
+            r_g = np.array([r_prof[k] * np.cos(th[k]), r_prof[k] * np.sin(th[k]), 0.0])
             v_mag = np.sqrt(MU_EFF_CANON / r_prof[k])
-            v_g = np.array([-v_mag * np.sin(th[k]), v_mag * np.cos(th[k])])
+            v_g = np.array([-v_mag * np.sin(th[k]), v_mag * np.cos(th[k]), 0.0])
             
             if perturb_guess:
-                r_g += rng.normal(0.0, 0.05, size=2)
-                v_g += rng.normal(0.0, 0.05, size=2)
+                r_g += rng.normal(0.0, 0.02, size=3)
+                v_g += rng.normal(0.0, 0.02, size=3)
 
             opti.set_initial(r[:, k], r_g.tolist())
             opti.set_initial(v[:, k], v_g.tolist())
-            opti.set_initial(u[:, k], [0.0, 0.0])
+            opti.set_initial(u[:, k], [0.0, 0.0, 0.0])
 
         p_opts = {"expand": True, "print_time": False}
         s_opts = {"max_iter": 300, "print_level": 0, "tol": 1e-8}
@@ -201,17 +205,14 @@ class PseudospectralCollocationSolver:
 
         actual_runtime = time.perf_counter() - start_time
 
-        # Process solution arrays
-        r_au = np.zeros((N, 3))
-        r_au[:, 0:2] = r_val.T
-
-        v_canon = np.zeros((N, 3))
-        v_canon[:, 0:2] = v_val.T
+        # Process 3D solution arrays
+        r_au = r_val.T  # (N, 3)
+        v_canon = v_val.T  # (N, 3)
         v_kms = v_canon * (SCALE_V / 1e3)
 
-        u_mag = np.linalg.norm(u_val, axis=0)
+        u_mag = np.linalg.norm(u_val, axis=0)  # (N,)
         
-        # Cumulative Delta-v across LGL nodes using quadrature weights
+        # Cumulative Delta-v and mass depletion: mdot = -T/c = -m*a/c => m(t) = m0 * exp(-Delta_v(t)/c)
         dv_cum_canon = np.zeros(N)
         for i in range(1, N):
             dt_step = self.t_nodes_canon[i] - self.t_nodes_canon[i - 1]
@@ -222,17 +223,18 @@ class PseudospectralCollocationSolver:
         xe_used = float(SCALE_M - m_kg[-1])
         final_m_kg = float(m_kg[-1])
 
-        # Thrust magnitude and vector in Newtons: T = m * a
+        # Thrust magnitude and 3D vector in Newtons: T = m * a
         thrust_n = (m_kg / SCALE_M) * u_mag * (SCALE_M * SCALE_A)
-        thrust_vec = np.zeros((N, 3))
-        thrust_vec[:, 0:2] = (u_val * ((m_kg / SCALE_M) * (SCALE_M * SCALE_A))).T
+        thrust_vec = (u_val * ((m_kg / SCALE_M) * (SCALE_M * SCALE_A))).T  # (N, 3)
+
+        # Check max thrust bound against hardware specification
+        max_thrust_n = float(np.max(thrust_n))
+        thrust_bound_satisfied = bool(max_thrust_n <= self.t_max_n * 1.001)
 
         # Mars arrival residual
         r_final_au = r_au[-1]
         v_final_canon = v_canon[-1]
-        r_target_3d = np.array([self.rf[0], self.rf[1], 0.0])
-        v_target_3d = np.array([self.vf[0], self.vf[1], 0.0])
-        arr_res = mars_arrival_residual(r_final_au, v_final_canon, r_target_3d, v_target_3d)
+        arr_res = mars_arrival_residual(r_final_au, v_final_canon, self.rf, self.vf)
 
         # Energy conservation error
         energy_err, energy_err_hist = compute_energy_conservation_error(

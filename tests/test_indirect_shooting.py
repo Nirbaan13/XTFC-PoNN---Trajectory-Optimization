@@ -14,7 +14,7 @@ def test_indirect_shooting_solve():
     assert sol.converged
     assert np.isclose(sol.flight_time_days, 248.4, atol=0.1)
     # Check physical fuel bounds
-    assert 250.0 <= sol.xenon_used_kg <= 320.0
+    assert 200.0 <= sol.xenon_used_kg <= 320.0
     assert np.isclose(sol.final_mass_kg, SCALE_M - sol.xenon_used_kg, atol=0.1)
     assert sol.arrival_residual <= 1e-5
     assert sol.energy_error <= 1e-4

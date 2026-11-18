@@ -2,6 +2,6 @@
 
 | Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual | Runtime (min) |
 | --- | --- | --- | --- | --- | --- |
-| X-TFC PoNN | 20 / 20 | 288.1 ± 0.00 | 247.6 ± 0.00 | 2.9e-11 ± 2.6e-11 | 0.016 ± 0.002 |
-| Indirect Shooting | 20 / 20 | 287.3 ± 0.00 | 248.4 ± 0.00 | 1.4e-14 ± 7.0e-15 | 0.003 ± 0.001 |
-| Pseudospectral Collocation | 20 / 20 | 287.8 ± 0.00 | 247.9 ± 0.00 | 0.0e+00 ± 0.0e+00 | 0.260 ± 0.001 |
+| X-TFC PoNN | 20 / 20 | 284.5 ± 164.91 | 247.6 ± 0.00 | 3.4e-09 ± 3.5e-09 | 0.118 ± 0.013 |
+| Indirect Shooting | 20 / 20 | 228.4 ± 0.00 | 248.4 ± 0.00 | 6.3e-10 ± 5.5e-13 | 0.026 ± 0.010 |
+| Pseudospectral Collocation | 20 / 20 | 287.8 ± 0.00 | 247.9 ± 0.00 | 5.4e-30 ± 8.0e-30 | 0.301 ± 0.003 |

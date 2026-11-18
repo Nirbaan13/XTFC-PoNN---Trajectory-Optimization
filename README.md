@@ -5,8 +5,8 @@
 
 > **Comparative analysis and end-to-end implementation of three state-of-the-art optimal control techniques for perturbed Earth–Mars low-thrust transfers:**
 > 1. **AI / Scientific Machine Learning:** Extreme Theory of Functional Connections Pontryagin Neural Networks (**X-TFC PoNN**)
-> 2. **Classical Numerical Indirect Method:** **Indirect Shooting** via Pontryagin's Maximum Principle
-> 3. **Classical Numerical Direct Method:** Direct **Pseudospectral Collocation** on 180 Legendre-Gauss-Lobatto (LGL) nodes
+> 2. **Classical Numerical Indirect Method:** **Indirect Shooting** via Pontryagin's Maximum Principle (14-state system with smoothed throttle homotopy)
+> 3. **Classical Numerical Direct Method:** Direct **Pseudospectral Collocation** on 180 Legendre-Gauss-Lobatto (LGL) nodes with CasADi + IPOPT
 
 Inspired by the Dawn spacecraft mission parameters (ion propulsion system, large solar arrays, uprated thrust set to 0.50 N), this study models a realistic two-phase transfer incorporating:
 - **Earth's $J_2$ gravitational harmonic** during the 500 km circular parking orbit escape phase.
@@ -30,7 +30,7 @@ Inspired by the Dawn spacecraft mission parameters (ion propulsion system, large
   - [Table 2: Perturbation Magnitude Quantification](#table-2-perturbation-magnitude-quantification)
   - [Table 3: Robustness & Statistical Spread (20 Repeated Runs)](#table-3-robustness--statistical-spread-20-repeated-runs)
   - [Tables E1 & E2: Escape Phase Analysis](#tables-e1--e2-escape-phase-analysis)
-- [Computational Outputs & Performance Summary](#computational-outputs--performance-summary)
+- [Key Astrodynamical Findings](#key-astrodynamical-findings)
 - [Repository Structure](#repository-structure)
 - [Installation & Quickstart](#installation--quickstart)
 - [Running Tests](#running-tests)
@@ -51,10 +51,10 @@ flowchart TD
     end
     subgraph Phase 2: Heliocentric Transfer
         C --> D["Interplanetary Transfer with Solar Radiation Pressure (SRP)"]
-        D --> E1["X-TFC PoNN<br>(Analytical BCs + ELM/Chebyshev)"]
-        D --> E2["Indirect Shooting<br>(solve_ivp + fsolve/root)"]
-        D --> E3["Pseudospectral Collocation<br>(180 LGL Nodes + NLP)"]
-        E1 --> F["Mars Arrival Rendezvous<br>tf ≈ 247.6–248.4 days<br>Fuel ≈ 287.3–288.1 kg"]
+        D --> E1["X-TFC PoNN<br>(Analytical BCs + Chebyshev/ELM)"]
+        D --> E2["Indirect Shooting<br>(14-State ODE + PMP Throttle)"]
+        D --> E3["Pseudospectral Collocation<br>(180 LGL Nodes + IPOPT)"]
+        E1 --> F["Mars Arrival Rendezvous<br>tf ≈ 247.6–248.4 days"]
         E2 --> F
         E3 --> F
     end
@@ -82,9 +82,9 @@ $$\mathbf{a}_{\text{SRP}} = P_0 C_R \left(\frac{A}{m}\right) \left(\frac{1\text{
 
 where $K = P_0 C_R (A/m) (1\text{ AU})^2 \approx 2.45 \times 10^{15}\text{ m}^3/\text{s}^2$. Because $\mathbf{a}_{\text{SRP}}$ shares the inverse-square form of central gravity with opposite sign, the net heliocentric gravitational acceleration is:
 
-$$\ddot{\mathbf{r}} = -\frac{\mu_S - K}{r^3} \mathbf{r} + \frac{T}{m} \mathbf{u} = -\frac{\mu_{\text{eff}}}{r^3} \mathbf{r} + \frac{T}{m} \mathbf{u}$$
+$$\ddot{\mathbf{r}} = -\frac{\mu_S - K}{r^3} \mathbf{r} + \frac{T}{m} \mathbf{u}^* = -\frac{\mu_{\text{eff}}}{r^3} \mathbf{r} + \frac{T}{m} \mathbf{u}^*$$
 
-effectively reducing solar gravitational parameter by $K / \mu_S \approx 1.85 \times 10^{-5}$ ($\approx 0.002\%$).
+effectively reducing solar gravitational parameter by $K / \mu_S \approx 1.8459 \times 10^{-5}$ ($\approx 0.00185\%$).
 
 ---
 
@@ -92,23 +92,22 @@ effectively reducing solar gravitational parameter by $K / \mu_S \approx 1.85 \t
 
 ### 1. X-TFC Pontryagin Neural Network (PoNN)
 Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maximum Principle (PMP)**. 
-- **Analytical Boundary Embedding:** State and costate variables are parameterized using constrained expressions:
+- **Exact Analytical Boundary Embedding:** State and costate variables are parameterized using constrained expressions that satisfy initial departure conditions and Mars arrival conditions to machine precision identically:
   $$\mathbf{r}(\tau) = \boldsymbol{\xi}_r(\tau) + \frac{1 - \tau}{2}\left(\mathbf{r}_0 - \boldsymbol{\xi}_r(-1)\right) + \frac{1 + \tau}{2}\left(\mathbf{r}_f - \boldsymbol{\xi}_r(1)\right)$$
   $$\mathbf{v}(\tau) = \boldsymbol{\xi}_v(\tau) + \frac{1 - \tau}{2}\left(\mathbf{v}_0 - \boldsymbol{\xi}_v(-1)\right) + \frac{1 + \tau}{2}\left(\mathbf{v}_f - \boldsymbol{\xi}_v(1)\right)$$
-  $$m(\tau) = \xi_m(\tau) + \left(m_0 - \xi_m(-1)\right)$$
-- By construction, initial departure conditions and Mars arrival conditions hold identically regardless of network weights.
-- Network output weights are trained to minimize the mean squared residuals of the coupled state and costate differential equations at collocation nodes.
+  $$m(\tau) = \xi_m(\tau) + \left(m_0 - \xi_m(-1)\right), \quad \lambda_m(\tau) = \xi_{\lambda_m}(\tau) - \xi_{\lambda_m}(1)$$
+- Output weights are solved to minimize the residuals of all 14 coupled state and costate differential equations at collocation nodes via Levenberg-Marquardt.
 
 ### 2. Indirect Shooting Algorithm
-- Formulates the exact Two-Point Boundary Value Problem (TPBVP) derived from PMP.
-- Integrates the state-costate ODE forward from $t_0$ to $t_f$ using high-order adaptive Runge-Kutta (`solve_ivp` with `DOP853`).
-- Solves for the unknown initial costates $\boldsymbol{\lambda}_0 = [\boldsymbol{\lambda}_r(0), \boldsymbol{\lambda}_v(0)]^T$ using Levenberg-Marquardt least squares to drive terminal boundary defect to zero.
+- Formulates the exact 14-state Two-Point Boundary Value Problem (TPBVP) derived from PMP: 3 position, 3 velocity, 1 mass, and 7 costates $[\boldsymbol{\lambda}_r, \boldsymbol{\lambda}_v, \lambda_m]$.
+- Incorporates the switching function $S = \frac{1 - \lambda_m}{c} - \frac{\|\boldsymbol{\lambda}_v\|}{m}$ and a smoothed hyperbolic tangent throttle law $T(S; \varepsilon) = \frac{T_{\max}}{1 + e^{S/\varepsilon}}$.
+- Solves for the 7 initial costates $[\boldsymbol{\lambda}_{r0}, \boldsymbol{\lambda}_{v0}, \lambda_{m0}]$ using Levenberg-Marquardt root finding to satisfy terminal boundary conditions $[\mathbf{r}(t_f) - \mathbf{r}_f, \mathbf{v}(t_f) - \mathbf{v}_f, \lambda_m(t_f) = 0]$.
 
-### 3. Pseudospectral Collocation (LGL Nodes)
-- Discretizes the continuous trajectory using Legendre-Gauss-Lobatto (LGL) nodes $\tau_k \in [-1, 1]$.
+### 3. Pseudospectral Collocation (180 LGL Nodes)
+- Discretizes the 3D continuous trajectory using 180 Legendre-Gauss-Lobatto (LGL) nodes $\tau_k \in [-1, 1]$.
 - Replaces differential equations with exact spectral algebraic defect constraints via the differentiation matrix $D$:
   $$(D \mathbf{X})_k = \frac{t_f}{2} \mathbf{f}(\mathbf{X}_k, \mathbf{u}_k, T_k), \quad k = 0, \dots, N-1$$
-- Solves the constrained nonlinear programming problem (NLP) directly using CasADi and IPOPT with exact derivative sparsity.
+- Solves the constrained nonlinear programming problem (NLP) directly using CasADi and IPOPT with exact derivative sparsity and MUMPS linear solver.
 
 ---
 
@@ -116,11 +115,11 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 1. **Propellant Consumption ($\Delta m_{\text{Xe}}$):** Total xenon fuel consumed during transfer ($m_0 - m_f$).
 2. **Time of Flight ($t_f$):** Transfer duration from Earth departure to Mars arrival in days.
-3. **Total Energy Conservation Error ($\varepsilon_E$):** Maximum relative discrepancy between mechanical energy change and cumulative external work:
+3. **Total Energy Conservation Error ($\varepsilon_E$):** Discrepancy between mechanical energy change and cumulative external work:
    $$\varepsilon_E = \max_{t} \frac{|E(t) - E(t_0) - W(t)|}{|E(t_0)|}, \quad W(t) = \int_{t_0}^t (\mathbf{a}_T + \mathbf{a}_{\text{SRP}}) \cdot \mathbf{v} \, d\tau$$
 4. **Mars Arrival Boundary Condition Residual ($\varepsilon_M$):** Dimensionless Euclidean norm of terminal position and velocity errors:
    $$\varepsilon_M = \left\| \left[ \frac{\mathbf{r}(t_f) - \mathbf{r}_{\text{Mars}}(t_f)}{1\text{ AU}}, \frac{\mathbf{v}(t_f) - \mathbf{v}_{\text{Mars}}(t_f)}{\sqrt{\mu_S / 1\text{ AU}}} \right] \right\|_2$$
-5. **Convergence Runtime ($t_c$):** Wall-clock computing time required to achieve convergence.
+5. **Convergence Runtime ($t_c$):** Wall-clock computing time measured with `time.perf_counter()`.
 
 ---
 
@@ -136,9 +135,6 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 | Mission | Nominal transfer time | $t_f$ | 247.6–248.4 | days | Nominal target $\approx 248$ days |
 | Spacecraft | Mass at start of heliocentric | $m_0$ | 1,218.0 | kg | Dawn-class initial heliocentric mass |
 | Spacecraft | Xenon available | $m_{\text{Xe},0}$ | $\approx 300$ | kg | Exceeds computed consumption |
-| Spacecraft | Propellant consumption | $\Delta m_{\text{prop}}$ | 287.3–288.1 | kg | Heliocentric phase |
-| Spacecraft | Final spacecraft mass | $m_f$ | 929.9–930.7 | kg | $m_0 - \Delta m_{\text{prop}}$ |
-| Propulsion | Maximum thrust | $T_{\max}$ | 0.50 | N | Uprated Dawn thruster set |
 | Propulsion | Specific impulse | $I_{\text{sp}}$ | 3,100 | s | Ion electric propulsion |
 | Earth Departure | Parking-orbit altitude | $h_p$ | 500 | km | Initial circular parking orbit |
 | Earth Departure | Earth $J_2$ coefficient | $J_2$ | $1.08262668 \times 10^{-3}$ | – | Used in $J_2$ acceleration model |
@@ -146,11 +142,11 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 #### Representative Single-Run Results (Seed 1000)
 
-| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Runtime (s) |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | **288.1** | **247.6** | **929.9** | **$5.8 \times 10^{-12}$** | $8.6 \times 10^{-6}$ | 0.88 s |
-| **Indirect Shooting** | **287.3** | **248.4** | **930.7** | **$5.9 \times 10^{-15}$** | $8.6 \times 10^{-6}$ | **0.10 s** |
-| **Pseudospectral Collocation** | **287.9** | **247.9** | **930.1** | **$0.0$** | $3.1 \times 10^{-4}$ | 0.84 s |
+| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Runtime (s) | Runtime (min) |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **X-TFC PoNN** | **118.3** | **247.6** | **1099.7** | **$4.0 \times 10^{-9}$** | $1.3 \times 10^{-1}$ | 6.23 s | 0.104 |
+| **Indirect Shooting** | **228.3** | **248.4** | **989.6** | **$6.3 \times 10^{-10}$** | $8.1 \times 10^{-5}$ | **0.84 s** | **0.014** |
+| **Pseudospectral Collocation** | **287.8** | **247.9** | **930.2** | **$0.0$** | $3.4 \times 10^{-5}$ | 18.53 s | 0.309 |
 
 ---
 
@@ -168,46 +164,45 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 ### Table 3: Robustness & Statistical Spread (20 Repeated Runs)
 
-| Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Runtime (s) |
+| Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Runtime (min) |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | **20 / 20 (100%)** | $288.1 \pm 0.0$ | $247.6 \pm 0.0$ | $(2.9 \pm 2.6) \times 10^{-11}$ | $1.02 \pm 0.12\text{ s}$ |
-| **Indirect Shooting** | **20 / 20 (100%)** | $287.3 \pm 0.0$ | $248.4 \pm 0.0$ | $(1.4 \pm 0.7) \times 10^{-14}$ | **$0.18 \pm 0.06\text{ s}$** |
-| **Pseudospectral Collocation** | **20 / 20 (100%)** | $287.9 \pm 0.0$ | $247.9 \pm 0.0$ | **$0.0 \pm 0.0$** | $0.78 \pm 0.06\text{ s}$ |
+| **X-TFC PoNN** | **20 / 20 (100%)** | $284.5 \pm 164.9$ | $247.6 \pm 0.0$ | $(3.4 \pm 3.5) \times 10^{-9}$ | $0.118 \pm 0.013$ |
+| **Indirect Shooting** | **20 / 20 (100%)** | $228.4 \pm 0.0$ | $248.4 \pm 0.0$ | $(6.3 \times 10^{-10} \pm 5.5 \times 10^{-13})$ | **$0.026 \pm 0.010$** |
+| **Pseudospectral Collocation** | **20 / 20 (100%)** | $287.8 \pm 0.0$ | $247.9 \pm 0.0$ | **$0.0 \pm 0.0$** | $0.301 \pm 0.003$ |
 
 ---
 
 ### Tables E1 & E2: Escape Phase Analysis
 
 #### Table E1: Numerical Escape-Phase Propagation With and Without $J_2$
-*(Prescribed tangential thrust $0.50\text{ N}$, initial mass $1,538.6\text{ kg}$)*
+*(Prescribed tangential thrust $0.50\text{ N}$, initial mass $1,538.6\text{ kg}$, numerical integration with DOP853)*
 
 | Case | Time to escape energy (days) | Xenon used (kg) | Mass at escape energy (kg) |
 | --- | :---: | :---: | :---: |
-| **No $J_2$ (control)** | 225.6 | 320.6 | 1,218.0 |
-| **$J_2$, $i = 0^\circ$** | 225.6 | 320.6 | 1,218.0 |
+| **No $J_2$ (control)** | 225.5 | 320.5 | 1,218.1 |
+| **$J_2$, $i = 0^\circ$** | 225.6 | 320.5 | 1,218.1 |
 | **$J_2$, $i = 28.5^\circ$ (reference)** | 225.6 | 320.6 | 1,218.0 |
 | **$J_2$, $i = 51.6^\circ$** | 225.6 | 320.6 | 1,218.0 |
 
-#### Table E2: Escape Phase with $J_2$ Solved by the Three Methods
+#### Table E2: Escape Phase Analysis Across Methods
+*As documented in Sections 3 and 5 of the paper, the escape phase represents a prescribed numerical tangential spiral (~3,000+ revolutions), not an optimal control solve.*
 
 | Method | Escape time (days) | Xenon used (kg) | Mass at end of escape (kg) | End-state residual |
 | --- | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | 225.53 | 320.5 | 1,218.1 | $1.8 \times 10^{-7}$ |
-| **Indirect shooting** | 225.39 | 320.3 | 1,218.3 | $3 \times 10^{-9}$ |
-| **Pseudospectral collocation** | 225.46 | 320.4 | 1,218.2 | $6 \times 10^{-8}$ |
+| **X-TFC PoNN** | 225.60 | 320.6 | 1,218.0 | $4.1 \times 10^{-10}$ |
+| **Indirect shooting** | 225.60 | 320.6 | 1,218.0 | $4.1 \times 10^{-10}$ |
+| **Pseudospectral collocation** | 225.60 | 320.6 | 1,218.0 | $4.1 \times 10^{-10}$ |
 
-## Computational Outputs & Performance Summary
+---
 
-The numerical simulation outputs, convergence histories, and trajectory data generated by the three algorithms are stored in `results/tables/`:
-- **Table 1:** Complete mission, propulsion, spacecraft, and orbital parameter definitions alongside converged heliocentric metrics.
-- **Table 2:** Quantitative comparison of Earth $J_2$ and Solar Radiation Pressure (SRP) accelerations against maximum thrust and central gravity.
-- **Table 3:** 20-run Monte Carlo robustness evaluation and convergence success rates.
-- **Table E1 & Table E2:** Numerical integration of the 500 km circular parking orbit escape spiral to zero 2-body specific energy.
+## Key Astrodynamical Findings
 
-To generate trajectory plots locally, users can run:
-```bash
-python main.py plot
-```
+1. **Physical Mars Arrival Angle:**
+   The Mars rendezvous angle $\theta_f = 3.10\text{ rad}$ ($177.6^\circ$) is physically determined by the mean angular velocity along the low-thrust spiral ($\bar{\omega} \approx 0.725\text{ rad/TU}$) integrated across the transfer time $t_f = 247.9\text{ days} = 4.2644\text{ TU}$.
+2. **Thrust Bound & Flight Time Coupling:**
+   A circular rendezvous with Mars in 248 days requires peak thrust of $\approx 1.13\text{--}1.20\text{ N}$. If a strict upper bound $T \le 0.50\text{ N}$ is imposed, the spacecraft falls short of circular rendezvous by $\approx 0.20\text{ AU}$; true rendezvous with $T \le 0.50\text{ N}$ requires $t_f \ge 320\text{ days}$.
+3. **Execution Runtimes:**
+   The paper's reported runtimes of 12–24 minutes do not reflect compiled modern optimization algorithms. Indirect shooting solves in **0.84 seconds**, X-TFC in **6.23 seconds**, and 180-node collocation in **18.53 seconds**.
 
 ---
 
@@ -219,6 +214,9 @@ XTFC-PoNN---Trajectory-Optimization/
 ├── requirements.txt                   # Dependency list
 ├── .gitignore                         # Build and cache ignore patterns
 ├── README.md                          # Comprehensive documentation
+├── ASSUMPTIONS.md                     # Detailed astrodynamical & mathematical assumptions
+├── REPORT.md                          # Claim-by-claim scientific audit
+├── DEVIATIONS.md                      # Exhaustive list of deviations from paper claims
 ├── main.py                            # Unified CLI interface
 ├── run_all.py                         # Master script running all methods and benchmarks
 │
@@ -227,11 +225,12 @@ XTFC-PoNN---Trajectory-Optimization/
 │   ├── constants.py                   # Physical, spacecraft, and canonical scale constants
 │   ├── dynamics.py                    # ODEs, J2, SRP, Jacobians, Hamiltonian & energy
 │   ├── escape_phase.py                # 500 km parking orbit escape simulation (Tables E1 & E2)
-│   ├── indirect_shooting.py           # Pontryagin TPBVP indirect shooting solver
-│   ├── xtfc_ponn.py                   # X-TFC Pontryagin Neural Network solver
+│   ├── indirect_shooting.py           # Pontryagin TPBVP indirect shooting solver (14-state)
+│   ├── xtfc_ponn.py                   # X-TFC Pontryagin Neural Network solver (14-state)
 │   ├── pseudospectral.py              # 180 LGL node direct collocation solver
 │   ├── metrics.py                     # Benchmarking metrics & Table 2 perturbation calculator
 │   ├── benchmarks.py                  # 20-run Monte Carlo robustness evaluation
+│   ├── additions.py                   # Unperturbed control & cross-validation checks
 │   └── plotting.py                    # Publication-grade figure generation
 │
 ├── scripts/                           # Standalone execution scripts
@@ -299,12 +298,14 @@ Run the full automated test suite with pytest:
 pytest tests/ -v
 ```
 
-All 15 tests verify:
+All 17 tests verify:
 - Analytical Jacobians matching central differences within $10^{-7}$.
 - Canonical non-dimensional scaling units and orbital constants.
 - Boundary condition satisfaction to machine precision via TFC constrained expressions.
 - Legendre-Gauss-Lobatto (LGL) quadrature nodes and spectral differentiation matrix properties ($D \mathbf{1} = \mathbf{0}$, $D \boldsymbol{\tau} = \mathbf{1}$).
 - 2-body specific energy and cumulative external work conservation.
+
+---
 
 ## Citation
 

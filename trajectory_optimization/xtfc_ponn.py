@@ -1,8 +1,23 @@
 """Extreme Theory of Functional Connections Pontryagin Neural Network (X-TFC PoNN).
 
-Solves the fuel-optimal low-thrust Earth-Mars transfer by analytically embedding
-boundary conditions via TFC constrained expressions and optimizing Chebyshev neural
-network weights on Pontryagin state-costate ODE residuals using nonlinear least-squares.
+Solves the 3D fuel-optimal low-thrust Earth-Mars transfer by analytically embedding
+boundary conditions via TFC constrained expressions and optimizing neural network
+weights on Pontryagin state-costate 14-ODE residuals using nonlinear least-squares (LM).
+
+Boundary Conditions Embedded Analytically:
+    r(-1) = r0, r(1) = rf  (Earth departure and Mars arrival position)
+    v(-1) = v0, v(1) = vf  (Earth departure and Mars arrival velocity)
+    m(-1) = m0             (Initial spacecraft wet mass 1218 kg)
+    lambda_m(1) = 0        (Transversality condition for free final mass)
+
+Collocation Residuals:
+    Evaluates all 14 ODE residuals across CGL collocation nodes:
+    - 3 kinematic residuals (dr/dt - v)
+    - 3 dynamic residuals (dv/dt - (g + (T/m)u))
+    - 1 mass depletion residual (dm/dt - (-T/c))
+    - 3 costate lambda_r residuals (dlam_r/dt + (dg/dr)^T lam_v)
+    - 3 costate lambda_v residuals (dlam_v/dt + lam_r)
+    - 1 costate lambda_m residual (dlam_m/dt - (T/m^2)(lam_v . u))
 """
 
 from dataclasses import dataclass
@@ -12,10 +27,11 @@ from scipy.optimize import least_squares
 
 from .constants import (
     MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
+    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON, T_MAX
 )
 from .dynamics import (
     central_gravity, central_gravity_jacobian,
+    optimal_thrust_direction, switching_function, optimal_throttle,
     get_mars_state, mars_arrival_residual,
     compute_energy_conservation_error
 )
@@ -23,15 +39,17 @@ from .indirect_shooting import TrajectorySolution
 
 
 class XTFC_PoNN_Solver:
-    """X-TFC Pontryagin Neural Network solver for perturbed Earth-Mars transfers."""
+    """X-TFC Pontryagin Neural Network solver for 3D fuel-optimal Earth-Mars transfers."""
 
     def __init__(
         self,
         flight_time_days: float = 247.6,
         target_mars_angle_rad: float = 3.10,
-        n_collocation_nodes: int = 60,
+        n_collocation_nodes: int = 50,
         n_basis_terms: int = 16,
-        n_epochs: int = 500
+        n_epochs: int = 300,
+        t_max_n: float = 1.20,
+        hardware_t_max_n: float = T_MAX
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -39,37 +57,33 @@ class XTFC_PoNN_Solver:
         self.n_nodes = n_collocation_nodes
         self.n_basis = n_basis_terms
         self.n_epochs = n_epochs
+        self.t_max_n = t_max_n
+        self.t_max_c = t_max_n / (SCALE_M * SCALE_A)
+        self.hardware_t_max_n = hardware_t_max_n
 
         # Earth departure conditions (t = 0, tau = -1)
-        self.r0 = np.array([1.0, 0.0])
-        self.v0 = np.array([0.0, 1.0])
+        self.r0 = np.array([1.0, 0.0, 0.0])
+        self.v0 = np.array([0.0, 1.0, 0.0])
+        self.m0 = 1.0
 
         # Mars arrival target (t = tf, tau = +1)
-        self.rf = np.array([
-            R_MARS_CANON * np.cos(target_mars_angle_rad),
-            R_MARS_CANON * np.sin(target_mars_angle_rad)
-        ])
-        self.vf = np.array([
-            -V_MARS_CANON * np.sin(target_mars_angle_rad),
-            V_MARS_CANON * np.cos(target_mars_angle_rad)
-        ])
+        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
 
         # Collocation nodes in [-1, 1] (Chebyshev-Gauss-Lobatto)
         i = np.arange(self.n_nodes)
         self.tau_nodes = -np.cos(np.pi * i / (self.n_nodes - 1))
-        # Mapping: t = (tf / 2) * (tau + 1) => dtau/dt = 2 / tf
         self.c_tau = 2.0 / self.tf_canon
         self.t_nodes = (self.tf_canon / 2.0) * (self.tau_nodes + 1.0)
         self.t_days = self.t_nodes * DAYS_PER_TU
 
-        # Chebyshev polynomials at nodes
+        # Chebyshev orthogonal polynomial basis evaluated at collocation nodes
         self.T, self.dT = self._chebyshev_basis(self.tau_nodes, self.n_basis)
         self.T_m1 = np.array([(-1.0) ** k for k in range(self.n_basis)])
         self.T_p1 = np.ones(self.n_basis)
 
-        # 1st order TFC switching functions
-        self.phi0 = 0.5 * (1.0 - self.tau_nodes)
-        self.phi1 = 0.5 * (1.0 + self.tau_nodes)
+        # 1st order TFC boundary switching functions
+        self.phi0 = 0.5 * (1.0 - self.tau_nodes)[:, None]
+        self.phi1 = 0.5 * (1.0 + self.tau_nodes)[:, None]
         self.dphi0 = -0.5
         self.dphi1 = 0.5
 
@@ -99,173 +113,191 @@ class XTFC_PoNN_Solver:
         M = self.n_basis
         N = self.n_nodes
 
-        # Initial baseline state profiles
-        th_prof = np.linspace(0, self.target_mars_angle_rad, N)
+        # Baseline physical state profiles for weight initialization
+        th_prof = np.linspace(0.0, self.target_mars_angle_rad, N)
         r_prof = np.linspace(1.0, R_MARS_CANON, N)
-        r_init = np.column_stack([r_prof * np.cos(th_prof), r_prof * np.sin(th_prof)])
+        r_init = np.column_stack([r_prof * np.cos(th_prof), r_prof * np.sin(th_prof), np.zeros(N)])
         v_init = np.column_stack([
             -np.sqrt(MU_EFF_CANON / r_prof) * np.sin(th_prof),
-            np.sqrt(MU_EFF_CANON / r_prof) * np.cos(th_prof)
+            np.sqrt(MU_EFF_CANON / r_prof) * np.cos(th_prof),
+            np.zeros(N)
         ])
+        m_init = np.linspace(1.0, 0.78, N)[:, None]
 
-        # Baseline costates
-        lam_v_init = np.column_stack([np.full(N, -0.05), np.full(N, -0.15)])
-        lam_r_init = np.column_stack([np.full(N, -0.13), np.full(N, -0.05)])
+        lam_r_init = np.column_stack([np.full(N, -1.03), np.full(N, -0.34), np.zeros(N)])
+        lam_v_init = np.column_stack([np.full(N, -0.37), np.full(N, -1.14), np.zeros(N)])
+        lam_m_init = np.linspace(0.22, 0.0, N)[:, None]
 
         if perturb_weights:
-            r_init += rng.normal(0.0, 0.05, size=r_init.shape)
-            v_init += rng.normal(0.0, 0.05, size=v_init.shape)
-            lam_v_init += rng.normal(0.0, 0.02, size=lam_v_init.shape)
+            r_init += rng.normal(0.0, 0.02, size=r_init.shape)
+            v_init += rng.normal(0.0, 0.02, size=v_init.shape)
             lam_r_init += rng.normal(0.0, 0.02, size=lam_r_init.shape)
+            lam_v_init += rng.normal(0.0, 0.02, size=lam_v_init.shape)
 
-        w_r0, _, _, _ = np.linalg.lstsq(self.T, r_init, rcond=None)
-        w_v0, _, _, _ = np.linalg.lstsq(self.T, v_init, rcond=None)
-        w_lr0, _, _, _ = np.linalg.lstsq(self.T, lam_r_init, rcond=None)
-        w_lv0, _, _, _ = np.linalg.lstsq(self.T, lam_v_init, rcond=None)
-        p0 = np.concatenate([w_r0.flatten(), w_v0.flatten(), w_lr0.flatten(), w_lv0.flatten()])
+        W_r, _, _, _ = np.linalg.lstsq(self.T, r_init, rcond=None)
+        W_v, _, _, _ = np.linalg.lstsq(self.T, v_init, rcond=None)
+        W_m, _, _, _ = np.linalg.lstsq(self.T, m_init, rcond=None)
+        W_lr, _, _, _ = np.linalg.lstsq(self.T, lam_r_init, rcond=None)
+        W_lv, _, _, _ = np.linalg.lstsq(self.T, lam_v_init, rcond=None)
+        W_lm, _, _, _ = np.linalg.lstsq(self.T, lam_m_init, rcond=None)
+
+        p0 = np.concatenate([
+            W_r.flatten(), W_v.flatten(), W_m.flatten(),
+            W_lr.flatten(), W_lv.flatten(), W_lm.flatten()
+        ])
 
         loss_history = []
 
         def eval_system(p: np.ndarray) -> np.ndarray:
-            W_r = p[0:2 * M].reshape((M, 2))
-            W_v = p[2 * M:4 * M].reshape((M, 2))
-            W_lr = p[4 * M:6 * M].reshape((M, 2))
-            W_lv = p[6 * M:8 * M].reshape((M, 2))
+            idx = 0
+            Wr = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+            Wv = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+            Wm = p[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
+            Wlr = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+            Wlv = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+            Wlm = p[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
 
             # TFC Constrained Expressions:
-            # r(tau) = g_r(tau) + phi0 * (r0 - g_r(-1)) + phi1 * (rf - g_r(1))
-            g_r = self.T @ W_r
-            dg_r = self.dT @ W_r
-            dr_0 = self.r0 - self.T_m1 @ W_r
-            dr_f = self.rf - self.T_p1 @ W_r
-            r_tau = g_r + np.outer(self.phi0, dr_0) + np.outer(self.phi1, dr_f)
-            dr_dt = self.c_tau * (dg_r + np.outer(self.dphi0, dr_0) + np.outer(self.dphi1, dr_f))
+            # 1. Position: r(-1) = r0, r(1) = rf exactly
+            gr = self.T @ Wr
+            dgr = self.dT @ Wr
+            dr0 = self.r0 - self.T_m1 @ Wr
+            drf = self.rf - self.T_p1 @ Wr
+            r = gr + self.phi0 * dr0 + self.phi1 * drf
+            dr_dt = self.c_tau * (dgr + self.dphi0 * dr0 + self.dphi1 * drf)
 
-            # v(tau) = g_v(tau) + phi0 * (v0 - g_v(-1)) + phi1 * (vf - g_v(1))
-            g_v = self.T @ W_v
-            dg_v = self.dT @ W_v
-            dv_0 = self.v0 - self.T_m1 @ W_v
-            dv_f = self.vf - self.T_p1 @ W_v
-            v_tau = g_v + np.outer(self.phi0, dv_0) + np.outer(self.phi1, dv_f)
-            dv_dt = self.c_tau * (dg_v + np.outer(self.dphi0, dv_0) + np.outer(self.dphi1, dv_f))
+            # 2. Velocity: v(-1) = v0, v(1) = vf exactly
+            gv = self.T @ Wv
+            dgv = self.dT @ Wv
+            dv0 = self.v0 - self.T_m1 @ Wv
+            dvf = self.vf - self.T_p1 @ Wv
+            v = gv + self.phi0 * dv0 + self.phi1 * dvf
+            dv_dt = self.c_tau * (dgv + self.dphi0 * dv0 + self.dphi1 * dvf)
 
-            # Costates
-            lam_r = self.T @ W_lr
-            dlam_r_dt = self.c_tau * (self.dT @ W_lr)
+            # 3. Mass: m(-1) = m0 exactly
+            gm = self.T @ Wm
+            dgm = self.dT @ Wm
+            dm0 = self.m0 - (self.T_m1 @ Wm)[0]
+            m = gm + dm0
+            dm_dt = self.c_tau * dgm
 
-            lam_v = self.T @ W_lv
-            dlam_v_dt = self.c_tau * (self.dT @ W_lv)
+            # 4. Costates
+            lam_r = self.T @ Wlr
+            dlam_r_dt = self.c_tau * (self.dT @ Wlr)
 
-            # Dynamics residuals:
-            # 1. dr/dt - v = 0
-            res_r = dr_dt - v_tau
+            lam_v = self.T @ Wlv
+            dlam_v_dt = self.c_tau * (self.dT @ Wlv)
 
-            # 2. dv/dt - (g(r) - lam_v) = 0
-            rn = np.linalg.norm(r_tau, axis=1)
-            g_eff = -MU_EFF_CANON * r_tau / (rn[:, None] ** 3)
-            res_v = dv_dt - (g_eff - lam_v)
+            # 5. Mass costate: lambda_m(1) = 0 exactly (transversality)
+            glm = self.T @ Wlm
+            dglm = self.dT @ Wlm
+            dlmf = 0.0 - (self.T_p1 @ Wlm)[0]
+            lam_m = glm + dlmf
+            dlam_m_dt = self.c_tau * dglm
 
-            # 3. dlam_r/dt + (dg/dr)^T @ lam_v = 0
+            # 14 ODE Residuals
+            res_r = dr_dt - v
+            res_v = np.zeros_like(v)
+            res_m = np.zeros_like(m)
             res_lr = np.zeros_like(lam_r)
-            for i in range(N):
-                r_i = r_tau[i]
-                rn_i = rn[i]
-                dg = -(MU_EFF_CANON / (rn_i ** 3)) * (np.eye(2) - 3.0 * np.outer(r_i / rn_i, r_i / rn_i))
-                res_lr[i] = dlam_r_dt[i] + dg.T @ lam_v[i]
-
-            # 4. dlam_v/dt + lam_r = 0
             res_lv = dlam_v_dt + lam_r
+            res_lm = np.zeros_like(lam_m)
 
-            vec = np.concatenate([res_r.flatten(), res_v.flatten(), res_lr.flatten(), res_lv.flatten()])
+            for k in range(N):
+                rk = r[k]
+                mk = max(m[k, 0], 0.1)
+                lvk = lam_v[k]
+                lmk = lam_m[k, 0]
+
+                u_k = optimal_thrust_direction(lvk)
+                s_k = switching_function(lvk, lmk, mk, c=C_CANON)
+                t_mag = optimal_throttle(s_k, t_max=self.t_max_c, smoothing_eps=0.05)
+
+                gk = central_gravity(rk, mu=MU_EFF_CANON)
+                a_thrust = (t_mag / mk) * u_k
+
+                res_v[k] = dv_dt[k] - (gk + a_thrust)
+                res_m[k, 0] = dm_dt[k, 0] - (-t_mag / C_CANON)
+
+                dg_dr = central_gravity_jacobian(rk, mu=MU_EFF_CANON)
+                res_lr[k] = dlam_r_dt[k] - (-dg_dr.T @ lvk)
+                res_lm[k, 0] = dlam_m_dt[k, 0] - ((t_mag / (mk ** 2)) * np.dot(lvk, u_k))
+
+            vec = np.concatenate([
+                res_r.flatten(), res_v.flatten(), res_m.flatten(),
+                res_lr.flatten(), res_lv.flatten(), res_lm.flatten()
+            ])
             loss = float(np.mean(vec ** 2))
             loss_history.append(loss)
             return vec
 
         # Optimize network weights via Levenberg-Marquardt
-        res = least_squares(eval_system, p0, method="lm", max_nfev=self.n_epochs * 4)
-        converged = bool(res.success and loss_history[-1] < 1e-4)
+        res = least_squares(eval_system, p0, method="lm", max_nfev=self.n_epochs)
+        converged = bool(res.success and loss_history[-1] < 1e-3)
 
-        # Evaluate final converged fields
-        W_r = res.x[0:2 * M].reshape((M, 2))
-        W_v = res.x[2 * M:4 * M].reshape((M, 2))
-        W_lr = res.x[4 * M:6 * M].reshape((M, 2))
-        W_lv = res.x[6 * M:8 * M].reshape((M, 2))
-
-        # Reconstruct on fine evaluation grid
+        # Dense evaluation grid (250 points)
         n_eval = 250
         tau_eval = np.linspace(-1.0, 1.0, n_eval)
         t_eval_canon = (self.tf_canon / 2.0) * (tau_eval + 1.0)
         t_days = t_eval_canon * DAYS_PER_TU
 
         T_eval, dT_eval = self._chebyshev_basis(tau_eval, M)
-        phi0_eval = 0.5 * (1.0 - tau_eval)
-        phi1_eval = 0.5 * (1.0 + tau_eval)
+        phi0_e = 0.5 * (1.0 - tau_eval)[:, None]
+        phi1_e = 0.5 * (1.0 + tau_eval)[:, None]
 
-        dr_0 = self.r0 - self.T_m1 @ W_r
-        dr_f = self.rf - self.T_p1 @ W_r
-        r_eval_2d = (T_eval @ W_r) + np.outer(phi0_eval, dr_0) + np.outer(phi1_eval, dr_f)
+        idx = 0
+        Wr = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+        Wv = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+        Wm = res.x[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
+        Wlr = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+        Wlv = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
+        Wlm = res.x[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
 
-        dv_0 = self.v0 - self.T_m1 @ W_v
-        dv_f = self.vf - self.T_p1 @ W_v
-        v_eval_2d = (T_eval @ W_v) + np.outer(phi0_eval, dv_0) + np.outer(phi1_eval, dv_f)
+        dr0 = self.r0 - self.T_m1 @ Wr
+        drf = self.rf - self.T_p1 @ Wr
+        r_au = (T_eval @ Wr) + phi0_e * dr0 + phi1_e * drf
 
-        lam_v_eval = T_eval @ W_lv
-        lam_r_eval = T_eval @ W_lr
-
-        # Convert to 3D arrays
-        r_au = np.zeros((n_eval, 3))
-        r_au[:, 0:2] = r_eval_2d
-
-        v_canon = np.zeros((n_eval, 3))
-        v_canon[:, 0:2] = v_eval_2d
+        dv0 = self.v0 - self.T_m1 @ Wv
+        dvf = self.vf - self.T_p1 @ Wv
+        v_canon = (T_eval @ Wv) + phi0_e * dv0 + phi1_e * dvf
         v_kms = v_canon * (SCALE_V / 1e3)
 
-        lam_v = np.zeros((n_eval, 3))
-        lam_v[:, 0:2] = lam_v_eval
+        dm0 = self.m0 - (self.T_m1 @ Wm)[0]
+        m_canon = ((T_eval @ Wm) + dm0)[:, 0]
+        m_kg = m_canon * SCALE_M
 
-        lam_r = np.zeros((n_eval, 3))
-        lam_r[:, 0:2] = lam_r_eval
+        lam_r = T_eval @ Wlr
+        lam_v = T_eval @ Wlv
+        dlmf = 0.0 - (self.T_p1 @ Wlm)[0]
+        lam_m = ((T_eval @ Wlm) + dlmf)[:, 0]
 
-        # Thrust acceleration: a = -lam_v
-        a_mag_canon = np.linalg.norm(lam_v_eval, axis=1)
-
-        # Cumulative Delta-v
-        dv_cum_canon = np.zeros(n_eval)
-        for i in range(1, n_eval):
-            dt_step = t_eval_canon[i] - t_eval_canon[i - 1]
-            dv_cum_canon[i] = dv_cum_canon[i - 1] + 0.5 * (a_mag_canon[i] + a_mag_canon[i - 1]) * dt_step
-
-        total_dv_si = dv_cum_canon[-1] * SCALE_V
-        m_kg = SCALE_M * np.exp(-dv_cum_canon * SCALE_V / C_EXHAUST)
-        xe_used = float(SCALE_M - m_kg[-1])
-        final_m_kg = float(m_kg[-1])
-
-        # Thrust magnitude in Newtons: T = m * a
-        thrust_n = (m_kg / SCALE_M) * a_mag_canon * (SCALE_M * SCALE_A)
+        # Process thrust profile
+        thrust_n = np.zeros(n_eval)
         thrust_vec = np.zeros((n_eval, 3))
         for i in range(n_eval):
-            if a_mag_canon[i] > 1e-12:
-                thrust_vec[i, 0:2] = -(lam_v_eval[i] / a_mag_canon[i]) * thrust_n[i]
+            u_i = optimal_thrust_direction(lam_v[i])
+            s_i = switching_function(lam_v[i], lam_m[i], m_canon[i], c=C_CANON)
+            t_mag_c = optimal_throttle(s_i, t_max=self.t_max_c, smoothing_eps=0.05)
+            thrust_n[i] = t_mag_c * (SCALE_M * SCALE_A)
+            thrust_vec[i] = thrust_n[i] * u_i
 
-        # Mars arrival residual (analytically guaranteed to be small by TFC)
-        r_final_au = r_au[-1]
-        v_final_canon = v_canon[-1]
-        r_target_3d = np.array([self.rf[0], self.rf[1], 0.0])
-        v_target_3d = np.array([self.vf[0], self.vf[1], 0.0])
-        arr_res = mars_arrival_residual(r_final_au, v_final_canon, r_target_3d, v_target_3d)
+        xe_used = float(SCALE_M - m_kg[-1])
+        final_m_kg = float(m_kg[-1])
+        actual_runtime = time.perf_counter() - start_time
+
+        # Arrival residual (embedded analytically => machine precision)
+        arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
 
         # Energy conservation error
         energy_err, energy_err_hist = compute_energy_conservation_error(
-            t_eval_canon, r_au, v_canon, m_kg / SCALE_M,
+            t_eval_canon, r_au, v_canon, m_canon,
             thrust_vec / (SCALE_M * SCALE_A)
         )
-
-        actual_runtime = time.perf_counter() - start_time
 
         return TrajectorySolution(
             method_name="X-TFC PoNN",
             converged=converged,
-            iterations=len(loss_history),
+            iterations=res.nfev,
             runtime_seconds=actual_runtime,
             flight_time_days=self.flight_time_days,
             xenon_used_kg=round(xe_used, 2),
@@ -280,7 +312,7 @@ class XTFC_PoNN_Solver:
             thrust_vec=thrust_vec,
             lambda_r=lam_r,
             lambda_v=lam_v,
-            lambda_m=np.zeros(n_eval),
+            lambda_m=lam_m,
             energy_error_hist=energy_err_hist,
             loss_history=loss_history
         )

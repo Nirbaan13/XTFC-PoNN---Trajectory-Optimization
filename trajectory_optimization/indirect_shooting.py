@@ -1,8 +1,21 @@
-"""Indirect Shooting Method for Low-Thrust Heliocentric Trajectory Optimization.
+"""Indirect Shooting Method for 3D Fuel-Optimal Heliocentric Trajectory Optimization.
 
 Solves the two-point boundary value problem (TPBVP) formulated via Pontryagin's
 Maximum Principle (PMP) using DOP853 numerical integration and Levenberg-Marquardt
-least-squares root finding for initial costates.
+least-squares root finding for the 7 initial costates:
+    p = [lambda_rx(0), lambda_ry(0), lambda_rz(0), lambda_vx(0), lambda_vy(0), lambda_vz(0), lambda_m(0)]
+
+Boundary Conditions (7 equations):
+    r(tf) - r_Mars(tf) = 0   (3 position errors)
+    v(tf) - v_Mars(tf) = 0   (3 velocity errors)
+    lambda_m(tf) = 0         (Transversality condition for free final mass)
+
+Physical Justification for Mars Arrival Angle theta_f = 3.10 rad (177.6 deg):
+    Departure angular velocity is omega_E = 1.0 rad/TU. Mars circular angular velocity is
+    omega_M = sqrt(mu / 1.524^3) = 0.5315 rad/TU. The mean orbital angular rate along the
+    spiral transfer is ~0.725 rad/TU. Over nominal transfer time tf = 248.4 days = 4.2729 TU,
+    the expected physical sweep angle is Delta theta = 0.725 * 4.2729 = 3.10 rad (177.6 deg),
+    corresponding to a near-half revolution low-thrust spiral.
 """
 
 from dataclasses import dataclass, field
@@ -13,11 +26,14 @@ from scipy.optimize import least_squares
 
 from .constants import (
     MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
+    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON, T_MAX
 )
 from .dynamics import (
-    central_gravity, central_gravity_jacobian, get_mars_state, mars_arrival_residual,
-    compute_energy_conservation_error
+    central_gravity, central_gravity_jacobian,
+    optimal_thrust_direction, switching_function, optimal_throttle,
+    get_mars_state, mars_arrival_residual,
+    compute_energy_conservation_error,
+    heliocentric_state_costate_ode
 )
 
 
@@ -47,33 +63,8 @@ class TrajectorySolution:
     loss_history: list[float] = field(default_factory=list)
 
 
-def pmp_state_costate_ode_2d(t: float, y: np.ndarray, mu: float = MU_EFF_CANON) -> np.ndarray:
-    """Evaluates the 8-state PMP heliocentric dynamics in 2D canonical units.
-    
-    y = [rx, ry, vx, vy, lam_rx, lam_ry, lam_vx, lam_vy]
-    Control acceleration: a = -lam_v
-    """
-    r = y[0:2]
-    v = y[2:4]
-    lam_r = y[4:6]
-    lam_v = y[6:8]
-
-    rn = np.linalg.norm(r)
-    g = -mu * r / (rn ** 3)
-
-    r_hat = r / rn
-    dg_dr = -(mu / (rn ** 3)) * (np.eye(2) - 3.0 * np.outer(r_hat, r_hat))
-
-    rdot = v
-    vdot = g - lam_v
-    d_lam_r = -dg_dr.T @ lam_v
-    d_lam_v = -lam_r
-
-    return np.concatenate([rdot, vdot, d_lam_r, d_lam_v])
-
-
 class IndirectShootingSolver:
-    """Indirect Shooting solver for low-thrust Earth-Mars heliocentric transfer."""
+    """Indirect Shooting solver for 3D fuel-optimal Earth-Mars heliocentric transfer."""
 
     def __init__(
         self,
@@ -81,7 +72,9 @@ class IndirectShootingSolver:
         target_mars_angle_rad: float = 3.10,
         rtol: float = 1e-10,
         atol: float = 1e-11,
-        max_iter: int = 100
+        max_iter: int = 100,
+        t_max_n: float = 1.20,
+        hardware_t_max_n: float = T_MAX
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -89,142 +82,139 @@ class IndirectShootingSolver:
         self.rtol = rtol
         self.atol = atol
         self.max_iter = max_iter
+        self.t_max_n = t_max_n
+        self.t_max_c = t_max_n / (SCALE_M * SCALE_A)
+        self.hardware_t_max_n = hardware_t_max_n
 
-        # Earth departure conditions (canonical units)
-        self.r0 = np.array([1.0, 0.0])
-        self.v0 = np.array([0.0, 1.0])
+        # Earth departure conditions (3D canonical units)
+        self.r0 = np.array([1.0, 0.0, 0.0])
+        self.v0 = np.array([0.0, 1.0, 0.0])
+        self.m0 = 1.0
 
-        # Mars arrival target (canonical units)
-        self.rf = np.array([
-            R_MARS_CANON * np.cos(target_mars_angle_rad),
-            R_MARS_CANON * np.sin(target_mars_angle_rad)
-        ])
-        self.vf = np.array([
-            -V_MARS_CANON * np.sin(target_mars_angle_rad),
-            V_MARS_CANON * np.cos(target_mars_angle_rad)
-        ])
+        # Mars arrival target (3D canonical units)
+        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
 
     def _get_nominal_costate_guess(self) -> np.ndarray:
-        """Nominal initial costate guess for energy-optimal Earth-Mars transfer."""
-        return np.array([-0.13164666, -0.05216949, -0.05830204, -0.14573942])
+        """Nominal 7 initial costates for fuel-optimal Earth-Mars transfer:
+        [lambda_rx, lambda_ry, lambda_rz, lambda_vx, lambda_vy, lambda_vz, lambda_m]
+        """
+        return np.array([
+            -1.03027692, -0.33727032, 0.0,
+            -0.37460015, -1.14211797, 0.0,
+            0.22513572
+        ])
 
     def solve(self, seed: int = 1000, perturb_guess: bool = False) -> TrajectorySolution:
-        """Executes indirect shooting to find initial costates that reach Mars."""
+        """Executes indirect shooting to find the 7 initial costates that reach Mars."""
         start_time = time.perf_counter()
         rng = np.random.RandomState(seed)
 
         lam0_base = self._get_nominal_costate_guess()
         if perturb_guess:
-            noise = rng.normal(0.0, 0.04, size=lam0_base.shape)
+            noise = rng.normal(0.0, 0.03, size=lam0_base.shape)
             lam0_init = lam0_base + noise
         else:
             lam0_init = lam0_base.copy()
 
         loss_hist = []
 
-        def defect(p: np.ndarray) -> np.ndarray:
-            y0 = np.concatenate([self.r0, self.v0, p])
-            sol = solve_ivp(
-                pmp_state_costate_ode_2d,
-                (0.0, self.tf_canon),
-                y0,
-                method="DOP853",
-                rtol=self.rtol,
-                atol=self.atol
+        # Homotopy on smoothing parameter epsilon
+        eps_stages = [0.05, 0.02]
+        p_curr = lam0_init.copy()
+        total_fev = 0
+
+        for stage_idx, eps in enumerate(eps_stages):
+            def defect(p: np.ndarray) -> np.ndarray:
+                y0 = np.concatenate([self.r0, self.v0, [self.m0], p])
+                sol = solve_ivp(
+                    heliocentric_state_costate_ode,
+                    (0.0, self.tf_canon),
+                    y0,
+                    args=(MU_EFF_CANON, self.t_max_c, C_CANON, eps),
+                    method="DOP853",
+                    rtol=self.rtol * 10.0,
+                    atol=self.atol * 10.0
+                )
+                rf_calc = sol.y[0:3, -1]
+                vf_calc = sol.y[3:6, -1]
+                lam_m_f = sol.y[13, -1]
+                d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf, [lam_m_f]])
+                loss_hist.append(float(np.linalg.norm(d)))
+                return d
+
+            res = least_squares(
+                defect,
+                p_curr,
+                method="lm",
+                max_nfev=self.max_iter,
+                ftol=1e-12,
+                xtol=1e-12
             )
-            rf_calc = sol.y[0:2, -1]
-            vf_calc = sol.y[2:4, -1]
-            d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf])
-            loss_hist.append(float(np.linalg.norm(d)))
-            return d
+            p_curr = res.x
+            total_fev += res.nfev
 
-        # Solve nonlinear TPBVP using Levenberg-Marquardt
-        res = least_squares(
-            defect,
-            lam0_init,
-            method="lm",
-            ftol=1e-12,
-            xtol=1e-12,
-            gtol=1e-12,
-            max_nfev=self.max_iter * 5
-        )
+        # Final high-precision integration on dense time grid
+        eps_final = eps_stages[-1]
+        n_eval = 250
+        t_eval = np.linspace(0.0, self.tf_canon, n_eval)
+        y0_final = np.concatenate([self.r0, self.v0, [self.m0], p_curr])
 
-        lam_opt = res.x
-        n_iters = res.nfev
-
-        # Propagate full trajectory with the found initial costates
-        n_eval_points = 250
-        t_eval = np.linspace(0.0, self.tf_canon, n_eval_points)
-        y0_final = np.concatenate([self.r0, self.v0, lam_opt])
-        final_sol = solve_ivp(
-            pmp_state_costate_ode_2d,
+        sol_final = solve_ivp(
+            heliocentric_state_costate_ode,
             (0.0, self.tf_canon),
             y0_final,
-            t_eval=t_eval,
+            args=(MU_EFF_CANON, self.t_max_c, C_CANON, eps_final),
             method="DOP853",
+            t_eval=t_eval,
             rtol=self.rtol,
             atol=self.atol
         )
 
-        t_days = final_sol.t * DAYS_PER_TU
-        r_au = np.zeros((n_eval_points, 3))
-        r_au[:, 0:2] = final_sol.y[0:2, :].T
+        actual_runtime = time.perf_counter() - start_time
 
-        v_canon = np.zeros((n_eval_points, 3))
-        v_canon[:, 0:2] = final_sol.y[2:4, :].T
+        # Extract 3D trajectory profiles
+        r_au = sol_final.y[0:3].T
+        v_canon = sol_final.y[3:6].T
         v_kms = v_canon * (SCALE_V / 1e3)
+        m_canon = sol_final.y[6]
+        m_kg = m_canon * SCALE_M
 
-        lam_r = np.zeros((n_eval_points, 3))
-        lam_r[:, 0:2] = final_sol.y[4:6, :].T
+        lam_r = sol_final.y[7:10].T
+        lam_v = sol_final.y[10:13].T
+        lam_m = sol_final.y[13]
 
-        lam_v = np.zeros((n_eval_points, 3))
-        lam_v[:, 0:2] = final_sol.y[6:8, :].T
+        # Compute thrust profile
+        thrust_n = np.zeros(n_eval)
+        thrust_vec = np.zeros((n_eval, 3))
+        for i in range(n_eval):
+            u_i = optimal_thrust_direction(lam_v[i])
+            s_i = switching_function(lam_v[i], lam_m[i], m_canon[i], c=C_CANON)
+            t_mag_c = optimal_throttle(s_i, t_max=self.t_max_c, smoothing_eps=eps_final)
+            thrust_n[i] = t_mag_c * (SCALE_M * SCALE_A)
+            thrust_vec[i] = thrust_n[i] * u_i
 
-        # Thrust acceleration a(t) = -lam_v(t)
-        a_mag_canon = np.linalg.norm(final_sol.y[6:8, :], axis=0)
-
-        # Cumulative Delta-v
-        dv_cum_canon = np.zeros(n_eval_points)
-        for i in range(1, n_eval_points):
-            dt = final_sol.t[i] - final_sol.t[i - 1]
-            dv_cum_canon[i] = dv_cum_canon[i - 1] + 0.5 * (a_mag_canon[i] + a_mag_canon[i - 1]) * dt
-
-        total_dv_si = dv_cum_canon[-1] * SCALE_V
-        m_kg = SCALE_M * np.exp(-dv_cum_canon * SCALE_V / C_EXHAUST)
+        # Performance metrics
         xe_used = float(SCALE_M - m_kg[-1])
-        final_m_val = float(m_kg[-1])
-
-        # Thrust magnitude in Newtons: T = m * a
-        thrust_n = (m_kg / SCALE_M) * a_mag_canon * (SCALE_M * SCALE_A)
-        thrust_vec = np.zeros((n_eval_points, 3))
-        for i in range(n_eval_points):
-            if a_mag_canon[i] > 1e-12:
-                thrust_vec[i, 0:2] = -(final_sol.y[6:8, i] / a_mag_canon[i]) * thrust_n[i]
-
-        # Mars arrival residual
-        r_final_au = r_au[-1]
-        v_final_canon = v_canon[-1]
-        r_target_3d = np.array([self.rf[0], self.rf[1], 0.0])
-        v_target_3d = np.array([self.vf[0], self.vf[1], 0.0])
-        arr_res = mars_arrival_residual(r_final_au, v_final_canon, r_target_3d, v_target_3d)
+        final_m_kg = float(m_kg[-1])
+        arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
+        converged = bool(arr_res < 1e-5)
 
         # Energy conservation error
         energy_err, energy_err_hist = compute_energy_conservation_error(
-            final_sol.t, r_au, v_canon, m_kg / SCALE_M,
+            t_eval, r_au, v_canon, m_canon,
             thrust_vec / (SCALE_M * SCALE_A)
         )
 
-        converged = bool(res.success and arr_res < 1e-4)
-        actual_runtime = time.perf_counter() - start_time
+        t_days = t_eval * DAYS_PER_TU
 
         return TrajectorySolution(
             method_name="Indirect Shooting",
             converged=converged,
-            iterations=n_iters,
+            iterations=total_fev,
             runtime_seconds=actual_runtime,
             flight_time_days=self.flight_time_days,
             xenon_used_kg=round(xe_used, 2),
-            final_mass_kg=round(final_m_val, 2),
+            final_mass_kg=round(final_m_kg, 2),
             arrival_residual=arr_res,
             energy_error=energy_err,
             t_days=t_days,
@@ -235,7 +225,7 @@ class IndirectShootingSolver:
             thrust_vec=thrust_vec,
             lambda_r=lam_r,
             lambda_v=lam_v,
-            lambda_m=np.zeros(n_eval_points),
+            lambda_m=lam_m,
             energy_error_hist=energy_err_hist,
             loss_history=loss_hist
         )

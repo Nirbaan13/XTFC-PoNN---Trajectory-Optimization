@@ -143,7 +143,7 @@ def main():
 
     # 7. Two Additions: Unperturbed Control Runs & Cross-Validation
     print("\n[Step 6/6] Executing Unperturbed Control Runs & Cross-Validation...")
-    unpert_comps = run_unperturbed_control_benchmarks()
+    unpert_comps = run_unperturbed_control_benchmarks(solutions)
     cross_val = run_cross_validation(solutions["Pseudospectral Collocation"], solutions["Indirect Shooting"], solutions["X-TFC PoNN"])
 
     additions_md = [
