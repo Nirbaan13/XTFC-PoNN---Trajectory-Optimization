@@ -55,7 +55,7 @@ flowchart TD
         D --> E1["X-TFC PoNN<br>(Analytical BCs + ELM/Chebyshev)"]
         D --> E2["Indirect Shooting<br>(solve_ivp + fsolve/root)"]
         D --> E3["Pseudospectral Collocation<br>(180 LGL Nodes + NLP)"]
-        E1 --> F["Mars Arrival Rendezvous<br>tf ≈ 247.6–248.4 days<br>Fuel ≈ 274.8–276.1 kg"]
+        E1 --> F["Mars Arrival Rendezvous<br>tf ≈ 247.6–248.4 days<br>Fuel ≈ 287.3–288.1 kg"]
         E2 --> F
         E3 --> F
     end
@@ -97,20 +97,19 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
   $$\mathbf{r}(\tau) = \boldsymbol{\xi}_r(\tau) + \frac{1 - \tau}{2}\left(\mathbf{r}_0 - \boldsymbol{\xi}_r(-1)\right) + \frac{1 + \tau}{2}\left(\mathbf{r}_f - \boldsymbol{\xi}_r(1)\right)$$
   $$\mathbf{v}(\tau) = \boldsymbol{\xi}_v(\tau) + \frac{1 - \tau}{2}\left(\mathbf{v}_0 - \boldsymbol{\xi}_v(-1)\right) + \frac{1 + \tau}{2}\left(\mathbf{v}_f - \boldsymbol{\xi}_v(1)\right)$$
   $$m(\tau) = \xi_m(\tau) + \left(m_0 - \xi_m(-1)\right)$$
-  $$\lambda_m(\tau) = \xi_{\lambda_m}(\tau) - \xi_{\lambda_m}(1) \quad (\text{satisfying } \lambda_m(t_f) = 0 \text{ transversality analytically})$$
 - By construction, initial departure conditions and Mars arrival conditions hold identically regardless of network weights.
-- Network output weights are trained to minimize the mean squared residuals of the 14 coupled state and costate differential equations at collocation nodes over 4,300 epochs.
+- Network output weights are trained to minimize the mean squared residuals of the coupled state and costate differential equations at collocation nodes.
 
 ### 2. Indirect Shooting Algorithm
 - Formulates the exact Two-Point Boundary Value Problem (TPBVP) derived from PMP.
-- Integrates the 14-state ODE forward from $t_0$ to $t_f$ using adaptive Runge-Kutta / Dormand-Prince (`solve_ivp`).
-- Solves for the unknown initial costates $\boldsymbol{\lambda}_0 = [\boldsymbol{\lambda}_r(0), \boldsymbol{\lambda}_v(0), \lambda_m(0)]^T$ using Powell's hybrid method / Levenberg-Marquardt (`fsolve`/`root`) to drive terminal state error to zero.
+- Integrates the state-costate ODE forward from $t_0$ to $t_f$ using high-order adaptive Runge-Kutta (`solve_ivp` with `DOP853`).
+- Solves for the unknown initial costates $\boldsymbol{\lambda}_0 = [\boldsymbol{\lambda}_r(0), \boldsymbol{\lambda}_v(0)]^T$ using Levenberg-Marquardt least squares to drive terminal boundary defect to zero.
 
-### 3. Pseudospectral Collocation (180 LGL Nodes)
-- Discretizes the continuous trajectory using 180 Legendre-Gauss-Lobatto (LGL) nodes $\tau_k \in [-1, 1]$.
+### 3. Pseudospectral Collocation (LGL Nodes)
+- Discretizes the continuous trajectory using Legendre-Gauss-Lobatto (LGL) nodes $\tau_k \in [-1, 1]$.
 - Replaces differential equations with exact spectral algebraic defect constraints via the differentiation matrix $D$:
   $$(D \mathbf{X})_k = \frac{t_f}{2} \mathbf{f}(\mathbf{X}_k, \mathbf{u}_k, T_k), \quad k = 0, \dots, N-1$$
-- Minimizes propellant consumption $\Delta m = m_0 - m(t_f)$ subject to path and boundary constraints using Sequential Quadratic Programming (SQP/IPOPT).
+- Solves the constrained nonlinear programming problem (NLP) directly using CasADi and IPOPT with exact derivative sparsity.
 
 ---
 
@@ -137,8 +136,9 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 | Mission | Mission type | – | Low-thrust interplanetary transfer | – | Common mission definition |
 | Mission | Nominal transfer time | $t_f$ | 247.6–248.4 | days | Nominal target $\approx 248$ days |
 | Spacecraft | Mass at start of heliocentric | $m_0$ | 1,218.0 | kg | Dawn-class initial heliocentric mass |
-| Spacecraft | Xenon available | $m_{\text{Xe},0}$ | $\approx 300$ | kg | Exceeds reported consumption |
-| Spacecraft | Propellant consumption | $\Delta m_{\text{prop}}$ | 274.8–276.1 | kg | Heliocentric phase |
+| Spacecraft | Xenon available | $m_{\text{Xe},0}$ | $\approx 300$ | kg | Exceeds computed consumption |
+| Spacecraft | Propellant consumption | $\Delta m_{\text{prop}}$ | 287.3–288.1 | kg | Heliocentric phase |
+| Spacecraft | Final spacecraft mass | $m_f$ | 929.9–930.7 | kg | $m_0 - \Delta m_{\text{prop}}$ |
 | Propulsion | Maximum thrust | $T_{\max}$ | 0.50 | N | Uprated Dawn thruster set |
 | Propulsion | Specific impulse | $I_{\text{sp}}$ | 3,100 | s | Ion electric propulsion |
 | Earth Departure | Parking-orbit altitude | $h_p$ | 500 | km | Initial circular parking orbit |
@@ -147,11 +147,11 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 #### Representative Single-Run Results (Seed 1000)
 
-| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Runtime (min) |
+| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Runtime (s) |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | **274.8** | **247.6** | **943.2** | **$3.2 \times 10^{-7}$** | $8.0 \times 10^{-7}$ | 18.6 |
-| **Indirect Shooting** | **276.1** | **248.4** | **941.9** | $6.5 \times 10^{-7}$ | $1.2 \times 10^{-6}$ | 24.0 |
-| **Pseudospectral Collocation** | **275.3** | **247.9** | **942.7** | $4.0 \times 10^{-7}$ | **$6.0 \times 10^{-7}$** | **12.2** |
+| **X-TFC PoNN** | **288.1** | **247.6** | **929.9** | **$5.8 \times 10^{-12}$** | $8.6 \times 10^{-6}$ | 0.88 s |
+| **Indirect Shooting** | **287.3** | **248.4** | **930.7** | **$5.9 \times 10^{-15}$** | $8.6 \times 10^{-6}$ | **0.10 s** |
+| **Pseudospectral Collocation** | **287.9** | **247.9** | **930.1** | **$0.0$** | $3.1 \times 10^{-4}$ | 0.84 s |
 
 ---
 
@@ -169,11 +169,11 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 ### Table 3: Robustness & Statistical Spread (20 Repeated Runs)
 
-| Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Runtime (min) |
+| Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Runtime (s) |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | 19 / 20 (95%) | $275.0 \pm 0.6$ | $247.8 \pm 0.4$ | $(3.6 \pm 1.1) \times 10^{-7}$ | $18.6 \pm 2.4$ |
-| **Indirect Shooting** | 14 / 20 (70%) | $276.0 \pm 0.9$ | $248.4 \pm 0.5$ | $(6.9 \pm 2.3) \times 10^{-7}$ | $25.1 \pm 6.8$ |
-| **Pseudospectral Collocation** | **20 / 20 (100%)** | $275.3 \pm 0.2$ | $247.9 \pm 0.1$ | $(4.0 \pm 0.5) \times 10^{-7}$ | **$12.2 \pm 1.1$** |
+| **X-TFC PoNN** | **20 / 20 (100%)** | $288.1 \pm 0.0$ | $247.6 \pm 0.0$ | $(2.9 \pm 2.6) \times 10^{-11}$ | $1.02 \pm 0.12\text{ s}$ |
+| **Indirect Shooting** | **20 / 20 (100%)** | $287.3 \pm 0.0$ | $248.4 \pm 0.0$ | $(1.4 \pm 0.7) \times 10^{-14}$ | **$0.18 \pm 0.06\text{ s}$** |
+| **Pseudospectral Collocation** | **20 / 20 (100%)** | $287.9 \pm 0.0$ | $247.9 \pm 0.0$ | **$0.0 \pm 0.0$** | $0.78 \pm 0.06\text{ s}$ |
 
 ---
 
@@ -184,8 +184,8 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 | Case | Time to escape energy (days) | Xenon used (kg) | Mass at escape energy (kg) |
 | --- | :---: | :---: | :---: |
-| **No $J_2$ (control)** | 225.5 | 320.5 | 1,218.1 |
-| **$J_2$, $i = 0^\circ$** | 225.6 | 320.5 | 1,218.1 |
+| **No $J_2$ (control)** | 225.6 | 320.6 | 1,218.0 |
+| **$J_2$, $i = 0^\circ$** | 225.6 | 320.6 | 1,218.0 |
 | **$J_2$, $i = 28.5^\circ$ (reference)** | 225.6 | 320.6 | 1,218.0 |
 | **$J_2$, $i = 51.6^\circ$** | 225.6 | 320.6 | 1,218.0 |
 
@@ -193,9 +193,9 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 | Method | Escape time (days) | Xenon used (kg) | Mass at end of escape (kg) | End-state residual |
 | --- | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | 225.54 | 320.5 | 1,218.1 | $1.8 \times 10^{-7}$ |
-| **Indirect shooting** | 225.40 | 320.3 | 1,218.3 | $3 \times 10^{-9}$ |
-| **Pseudospectral collocation** | 225.47 | 320.4 | 1,218.2 | $6 \times 10^{-8}$ |
+| **X-TFC PoNN** | 225.53 | 320.5 | 1,218.1 | $1.8 \times 10^{-7}$ |
+| **Indirect shooting** | 225.39 | 320.3 | 1,218.3 | $3 \times 10^{-9}$ |
+| **Pseudospectral collocation** | 225.46 | 320.4 | 1,218.2 | $6 \times 10^{-8}$ |
 
 ## Computational Outputs & Performance Summary
 

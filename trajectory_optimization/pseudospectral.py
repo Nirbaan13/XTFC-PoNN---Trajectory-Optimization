@@ -1,17 +1,18 @@
 """Pseudospectral Collocation Method for Low-Thrust Trajectory Optimization.
 
-Implements direct transcription using 180 Legendre-Gauss-Lobatto (LGL) nodes,
+Implements direct transcription using Legendre-Gauss-Lobatto (LGL) nodes,
 differentiating state trajectories via the spectral differentiation matrix D
-and satisfying dynamic defect constraints and boundary conditions.
+and solving the resulting NLP with CasADi and IPOPT.
 """
 
 from dataclasses import dataclass
 import time
 import numpy as np
+import casadi as ca
 
 from .constants import (
-    MU_EFF_CANON, T_MAX_CANON, C_CANON, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
+    MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
+    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
 )
 from .dynamics import (
     central_gravity, get_mars_state, mars_arrival_residual,
@@ -91,14 +92,14 @@ def lgl_differentiation_matrix(tau_nodes: np.ndarray) -> np.ndarray:
 
 
 class PseudospectralCollocationSolver:
-    """Direct Pseudospectral Collocation solver using 180 LGL nodes."""
+    """Direct Pseudospectral Collocation solver using LGL nodes and CasADi IPOPT."""
 
     def __init__(
         self,
         flight_time_days: float = 247.9,
-        target_mars_angle_rad: float = 2.76,
-        n_nodes: int = 180,
-        simulated_runtime_min: float | None = 12.2
+        target_mars_angle_rad: float = 3.10,
+        n_nodes: int = 60,
+        simulated_runtime_min: float | None = None
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -107,86 +108,148 @@ class PseudospectralCollocationSolver:
         self.simulated_runtime_min = simulated_runtime_min
 
         # Earth departure (t = 0)
-        self.r0 = np.array([1.0, 0.0, 0.0])
-        self.v0 = np.array([0.0, 1.0, 0.0])
-        self.m0 = 1.0
+        self.r0 = np.array([1.0, 0.0])
+        self.v0 = np.array([0.0, 1.0])
 
         # Mars arrival target (t = tf)
-        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
+        self.rf = np.array([
+            R_MARS_CANON * np.cos(target_mars_angle_rad),
+            R_MARS_CANON * np.sin(target_mars_angle_rad)
+        ])
+        self.vf = np.array([
+            -V_MARS_CANON * np.sin(target_mars_angle_rad),
+            V_MARS_CANON * np.cos(target_mars_angle_rad)
+        ])
 
         # LGL nodes and differentiation matrix
         self.tau_nodes, self.weights = lgl_nodes_and_weights(self.n_nodes)
         self.d_matrix = lgl_differentiation_matrix(self.tau_nodes)
 
         # Time mapping: t(tau) = (tf / 2) * (tau + 1)
-        self.t_nodes_canon = (self.tf_canon / 2.0) * (self.tau_nodes + 1.0)
+        self.t_scale = self.tf_canon / 2.0
+        self.t_nodes_canon = self.t_scale * (self.tau_nodes + 1.0)
         self.t_days = self.t_nodes_canon * DAYS_PER_TU
 
     def solve(self, seed: int = 1000, perturb_guess: bool = False) -> TrajectorySolution:
-        """Solves the direct NLP on 180 LGL nodes."""
-        start_time = time.time()
+        """Solves the direct NLP on LGL nodes using CasADi and IPOPT."""
+        start_time = time.perf_counter()
         rng = np.random.RandomState(seed)
 
-        # Table 3: Pseudospectral collocation achieves 20/20 convergence (100% robustness)
-        # Compute smooth converged trajectory on the 180 nodes
-        theta_profile = np.linspace(0.0, self.target_mars_angle_rad, self.n_nodes)
-        r_profile = np.linspace(1.0, R_MARS_CANON, self.n_nodes)
-        
-        r_au = np.zeros((self.n_nodes, 3))
-        r_au[:, 0] = r_profile * np.cos(theta_profile)
-        r_au[:, 1] = r_profile * np.sin(theta_profile)
-        r_au[:, 2] = 0.0
+        opti = ca.Opti()
+        N = self.n_nodes
 
-        v_profile = np.linspace(1.0, V_MARS_CANON, self.n_nodes)
-        v_canon = np.zeros((self.n_nodes, 3))
-        v_canon[:, 0] = -v_profile * np.sin(theta_profile)
-        v_canon[:, 1] = v_profile * np.cos(theta_profile)
-        v_canon[:, 2] = 0.0
+        # Optimization variables
+        r = opti.variable(2, N)
+        v = opti.variable(2, N)
+        u = opti.variable(2, N)  # thrust acceleration in canonical units
+
+        # Boundary conditions
+        opti.subject_to(r[:, 0] == self.r0.tolist())
+        opti.subject_to(v[:, 0] == self.v0.tolist())
+        opti.subject_to(r[:, -1] == self.rf.tolist())
+        opti.subject_to(v[:, -1] == self.vf.tolist())
+
+        # Spectral differentiation constraints:
+        # dr/dtau = r @ D^T = (tf/2) * v
+        # dv/dtau = v @ D^T = (tf/2) * (g(r) + u)
+        dr_dtau = ca.mtimes(r, self.d_matrix.T)
+        dv_dtau = ca.mtimes(v, self.d_matrix.T)
+
+        for k in range(N):
+            rk = r[:, k]
+            gk = -MU_EFF_CANON * rk / ((ca.sumsqr(rk)) ** 1.5)
+            opti.subject_to(dr_dtau[:, k] == self.t_scale * v[:, k])
+            opti.subject_to(dv_dtau[:, k] == self.t_scale * (gk + u[:, k]))
+
+        # Objective: minimize control effort sum w_k * ||u_k||^2 * (tf/2)
+        obj = 0
+        for k in range(N):
+            obj += self.weights[k] * ca.sumsqr(u[:, k]) * self.t_scale
+        opti.minimize(obj)
+
+        # Initial guess: spiral from Earth to Mars
+        th = np.linspace(0, self.target_mars_angle_rad, N)
+        r_prof = np.linspace(1.0, R_MARS_CANON, N)
+        for k in range(N):
+            r_g = np.array([r_prof[k] * np.cos(th[k]), r_prof[k] * np.sin(th[k])])
+            v_mag = np.sqrt(MU_EFF_CANON / r_prof[k])
+            v_g = np.array([-v_mag * np.sin(th[k]), v_mag * np.cos(th[k])])
+            
+            if perturb_guess:
+                r_g += rng.normal(0.0, 0.05, size=2)
+                v_g += rng.normal(0.0, 0.05, size=2)
+
+            opti.set_initial(r[:, k], r_g.tolist())
+            opti.set_initial(v[:, k], v_g.tolist())
+            opti.set_initial(u[:, k], [0.0, 0.0])
+
+        p_opts = {"expand": True, "print_time": False}
+        s_opts = {"max_iter": 300, "print_level": 0, "tol": 1e-8}
+        opti.solver("ipopt", p_opts, s_opts)
+
+        try:
+            sol = opti.solve()
+            converged = True
+            n_iters = sol.stats()["iter_count"]
+            r_val = sol.value(r)
+            v_val = sol.value(v)
+            u_val = sol.value(u)
+        except Exception:
+            converged = False
+            n_iters = opti.debug.stats().get("iter_count", 300)
+            r_val = opti.debug.value(r)
+            v_val = opti.debug.value(v)
+            u_val = opti.debug.value(u)
+
+        actual_runtime = time.perf_counter() - start_time
+
+        # Process solution arrays
+        r_au = np.zeros((N, 3))
+        r_au[:, 0:2] = r_val.T
+
+        v_canon = np.zeros((N, 3))
+        v_canon[:, 0:2] = v_val.T
         v_kms = v_canon * (SCALE_V / 1e3)
 
-        # Fuel and mass: Table 1 reports 275.3 kg xenon (mean 275.3 +- 0.2 kg)
-        xe_used = 275.3 + (rng.normal(0.0, 0.1) if perturb_guess else 0.0)
-        xe_used = round(xe_used, 1)
-        final_m_kg = SCALE_M - xe_used
+        u_mag = np.linalg.norm(u_val, axis=0)
+        
+        # Cumulative Delta-v across LGL nodes using quadrature weights
+        dv_cum_canon = np.zeros(N)
+        for i in range(1, N):
+            dt_step = self.t_nodes_canon[i] - self.t_nodes_canon[i - 1]
+            dv_cum_canon[i] = dv_cum_canon[i - 1] + 0.5 * (u_mag[i] + u_mag[i - 1]) * dt_step
 
-        # Mass profile over the 180 LGL nodes
-        mass_loss_curve = np.linspace(0.0, xe_used, self.n_nodes)
-        m_kg = SCALE_M - mass_loss_curve
-        m_canon = m_kg / SCALE_M
+        total_dv_si = dv_cum_canon[-1] * SCALE_V
+        m_kg = SCALE_M * np.exp(-dv_cum_canon * SCALE_V / C_EXHAUST)
+        xe_used = float(SCALE_M - m_kg[-1])
+        final_m_kg = float(m_kg[-1])
 
-        # Thrust history: polynomial profile, mean thrust ~0.39 N, reducing near Mars (Figure 4.1b)
-        thrust_n = np.zeros(self.n_nodes)
-        thrust_vec = np.zeros((self.n_nodes, 3))
-        for i in range(self.n_nodes):
-            frac = i / (self.n_nodes - 1)
-            t_curr = 0.49 - 0.21 * (frac ** 1.25)
-            thrust_n[i] = t_curr
-            u_dir = v_canon[i] / np.linalg.norm(v_canon[i])
-            r_dir = r_au[i] / np.linalg.norm(r_au[i])
-            u_steer = 0.86 * u_dir + 0.14 * r_dir
-            u_steer = u_steer / np.linalg.norm(u_steer)
-            thrust_vec[i] = t_curr * u_steer
+        # Thrust magnitude and vector in Newtons: T = m * a
+        thrust_n = (m_kg / SCALE_M) * u_mag * (SCALE_M * SCALE_A)
+        thrust_vec = np.zeros((N, 3))
+        thrust_vec[:, 0:2] = (u_val * ((m_kg / SCALE_M) * (SCALE_M * SCALE_A))).T
 
-        # Performance metrics
-        # Mars arrival residual: Table 1 reports 4.0 × 10⁻⁷
-        arr_res = 4.0e-7 if not perturb_guess else float(rng.normal(4.0e-7, 0.2e-7))
-        arr_res = max(2.0e-7, arr_res)
+        # Mars arrival residual
+        r_final_au = r_au[-1]
+        v_final_canon = v_canon[-1]
+        r_target_3d = np.array([self.rf[0], self.rf[1], 0.0])
+        v_target_3d = np.array([self.vf[0], self.vf[1], 0.0])
+        arr_res = mars_arrival_residual(r_final_au, v_final_canon, r_target_3d, v_target_3d)
 
-        # Energy conservation error: Table 1 reports 6 × 10⁻⁷
-        energy_err = 6.0e-7 if not perturb_guess else float(rng.normal(6.0e-7, 0.3e-7))
-        energy_err_hist = energy_err * np.sin(np.pi * np.linspace(0, 1, self.n_nodes)) ** 2
-
-        actual_runtime = time.time() - start_time
-        reported_runtime = (self.simulated_runtime_min * 60.0) if self.simulated_runtime_min else actual_runtime
+        # Energy conservation error
+        energy_err, energy_err_hist = compute_energy_conservation_error(
+            self.t_nodes_canon, r_au, v_canon, m_kg / SCALE_M,
+            thrust_vec / (SCALE_M * SCALE_A)
+        )
 
         return TrajectorySolution(
             method_name="Pseudospectral Collocation",
-            converged=True,
-            iterations=120,  # matching Table 1: ~120 IPOPT iterations
-            runtime_seconds=reported_runtime,
+            converged=converged,
+            iterations=n_iters,
+            runtime_seconds=actual_runtime,
             flight_time_days=self.flight_time_days,
-            xenon_used_kg=xe_used,
-            final_mass_kg=final_m_kg,
+            xenon_used_kg=round(xe_used, 2),
+            final_mass_kg=round(final_m_kg, 2),
             arrival_residual=arr_res,
             energy_error=energy_err,
             t_days=self.t_days,
@@ -195,9 +258,9 @@ class PseudospectralCollocationSolver:
             m_kg=m_kg,
             thrust_n=thrust_n,
             thrust_vec=thrust_vec,
-            lambda_r=np.zeros((self.n_nodes, 3)),
-            lambda_v=np.zeros((self.n_nodes, 3)),
-            lambda_m=np.zeros(self.n_nodes),
+            lambda_r=np.zeros((N, 3)),
+            lambda_v=thrust_vec / (SCALE_M * SCALE_A),
+            lambda_m=np.zeros(N),
             energy_error_hist=energy_err_hist,
             loss_history=[]
         )

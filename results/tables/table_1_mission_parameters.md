@@ -41,8 +41,8 @@
 
 ### Representative Method Performance (Seed 1000)
 
-| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (min) |
-| --- | --- | --- | --- | --- | --- | --- |
-| X-TFC PoNN | 274.8 | 247.6 | 943.2 | 3.2e-07 | 8.0e-07 | 18.6 |
-| Indirect Shooting | 276.1 | 248.4 | 941.9 | 6.5e-07 | 1.2e-06 | 24.0 |
-| Pseudospectral Collocation | 275.3 | 247.9 | 942.7 | 4.0e-07 | 6.0e-07 | 12.2 |
+| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (s) | Runtime (min) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| X-TFC PoNN | 288.1 | 247.6 | 929.9 | 5.8e-12 | 8.6e-06 | 0.88 s | 0.015 |
+| Indirect Shooting | 287.3 | 248.4 | 930.7 | 5.9e-15 | 8.6e-06 | 0.10 s | 0.002 |
+| Pseudospectral Collocation | 287.9 | 247.9 | 930.1 | 0.0e+00 | 3.1e-04 | 0.84 s | 0.014 |

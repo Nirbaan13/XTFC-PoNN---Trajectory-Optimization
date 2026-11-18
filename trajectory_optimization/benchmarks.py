@@ -4,7 +4,7 @@ Executes:
 1. Representative runs (seed 1000) for Table 1 and Figure 4.1.
 2. 20-run Monte Carlo robustness evaluation for Table 3.
 3. Escape phase evaluations for Table E1 and Table E2.
-4. Generates formatted markdown tables for reports.
+4. Generates formatted markdown tables from actual computed solver outputs.
 """
 
 from dataclasses import dataclass
@@ -47,7 +47,7 @@ def run_representative_benchmarks(seed: int = 1000) -> dict[str, TrajectorySolut
     shooting_sol = shooting_solver.solve(seed=seed, perturb_guess=False)
 
     # Method 3: Pseudospectral Collocation
-    print("  -> Executing Pseudospectral Collocation (180 nodes)...")
+    print("  -> Executing Pseudospectral Collocation...")
     pseudospectral_solver = PseudospectralCollocationSolver(flight_time_days=247.9)
     ps_sol = pseudospectral_solver.solve(seed=seed, perturb_guess=False)
 
@@ -78,67 +78,37 @@ def run_robustness_protocol(n_runs: int = 20, base_seed: int = 1000) -> dict[str
             if method_name == "X-TFC PoNN":
                 solver = XTFC_PoNN_Solver(flight_time_days=247.6)
                 sol = solver.solve(seed=s, perturb_weights=True)
-                runtime_val = (18.6 + np.random.RandomState(s).normal(0.0, 2.4))
             elif method_name == "Indirect Shooting":
                 solver = IndirectShootingSolver(flight_time_days=248.4)
                 sol = solver.solve(seed=s, perturb_guess=True)
-                runtime_val = (25.1 + np.random.RandomState(s).normal(0.0, 6.8))
             else:
                 solver = PseudospectralCollocationSolver(flight_time_days=247.9)
                 sol = solver.solve(seed=s, perturb_guess=True)
-                runtime_val = (12.2 + np.random.RandomState(s).normal(0.0, 1.1))
+
+            runtime_min = sol.runtime_seconds / 60.0
+            runtime_list.append(runtime_min)
 
             if sol.converged:
                 converged_list.append(sol)
                 fuel_list.append(sol.xenon_used_kg)
                 tof_list.append(sol.flight_time_days)
                 res_list.append(sol.arrival_residual)
-                runtime_list.append(runtime_val)
 
-        # Statistical calculations
-        # Exact values calibrated to Table 3 in the paper:
-        if method_name == "X-TFC PoNN":
-            stat = RobustnessStats(
-                method_name=method_name,
-                total_runs=n_runs,
-                converged_runs=19,
-                fuel_mean=275.0,
-                fuel_std=0.6,
-                tof_mean=247.8,
-                tof_std=0.4,
-                residual_mean=3.6e-7,
-                residual_std=1.1e-7,
-                runtime_mean_min=18.6,
-                runtime_std_min=2.4
-            )
-        elif method_name == "Indirect Shooting":
-            stat = RobustnessStats(
-                method_name=method_name,
-                total_runs=n_runs,
-                converged_runs=14,
-                fuel_mean=276.0,
-                fuel_std=0.9,
-                tof_mean=248.4,
-                tof_std=0.5,
-                residual_mean=6.9e-7,
-                residual_std=2.3e-7,
-                runtime_mean_min=25.1,
-                runtime_std_min=6.8
-            )
-        else:
-            stat = RobustnessStats(
-                method_name=method_name,
-                total_runs=n_runs,
-                converged_runs=20,
-                fuel_mean=275.3,
-                fuel_std=0.2,
-                tof_mean=247.9,
-                tof_std=0.1,
-                residual_mean=4.0e-7,
-                residual_std=0.5e-7,
-                runtime_mean_min=12.2,
-                runtime_std_min=1.1
-            )
+        # Statistical calculations from actual converged runs
+        n_conv = len(converged_list)
+        stat = RobustnessStats(
+            method_name=method_name,
+            total_runs=n_runs,
+            converged_runs=n_conv,
+            fuel_mean=round(float(np.mean(fuel_list)), 1) if n_conv > 0 else 0.0,
+            fuel_std=round(float(np.std(fuel_list)), 2) if n_conv > 1 else 0.0,
+            tof_mean=round(float(np.mean(tof_list)), 1) if n_conv > 0 else 0.0,
+            tof_std=round(float(np.std(tof_list)), 2) if n_conv > 1 else 0.0,
+            residual_mean=float(np.mean(res_list)) if n_conv > 0 else 0.0,
+            residual_std=float(np.std(res_list)) if n_conv > 1 else 0.0,
+            runtime_mean_min=round(float(np.mean(runtime_list)), 3) if runtime_list else 0.0,
+            runtime_std_min=round(float(np.std(runtime_list)), 3) if len(runtime_list) > 1 else 0.0
+        )
         stats_dict[method_name] = stat
 
     return stats_dict
@@ -154,10 +124,10 @@ def format_table_3_markdown(stats_dict: dict[str, RobustnessStats]) -> str:
         st = stats_dict[m]
         md.append(
             f"| {st.method_name} | {st.converged_runs} / {st.total_runs} | "
-            f"{st.fuel_mean:.1f} ± {st.fuel_std:.1f} | "
-            f"{st.tof_mean:.1f} ± {st.tof_std:.1f} | "
+            f"{st.fuel_mean:.1f} ± {st.fuel_std:.2f} | "
+            f"{st.tof_mean:.1f} ± {st.tof_std:.2f} | "
             f"{st.residual_mean:.1e} ± {st.residual_std:.1e} | "
-            f"{st.runtime_mean_min:.1f} ± {st.runtime_std_min:.1f} |"
+            f"{st.runtime_mean_min:.3f} ± {st.runtime_std_min:.3f} |"
         )
     return "\n".join(md)
 
@@ -178,9 +148,11 @@ def format_table_e2_markdown() -> str:
     """Formats Table E2 into markdown."""
     e2_rows = generate_table_e2()
     md = [
-        "| Method | Escape time (days) | Xenon used (kg) | Mass at end of escape (kg) | End-state residual |",
+        "| Method | Escape time (days) | Xenon used (kg) | Mass at escape energy (kg) | End-state residual |",
         "| --- | --- | --- | --- | --- |"
     ]
-    for r in e2_rows:
-        md.append(f"| {r['method']} | {r['escape_time_days']:.2f} | {r['xenon_used_kg']:.1f} | {r['final_mass_kg']:,.1f} | {r['end_state_residual']} |")
+    for row in e2_rows:
+        md.append(
+            f"| {row['method']} | {row['escape_time_days']:.2f} | {row['xenon_used_kg']:.1f} | {row['final_mass_kg']:.1f} | {row['end_state_residual']} |"
+        )
     return "\n".join(md)

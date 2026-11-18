@@ -1,23 +1,22 @@
 """Indirect Shooting Method for Low-Thrust Heliocentric Trajectory Optimization.
 
 Solves the two-point boundary value problem (TPBVP) formulated via Pontryagin's
-Maximum Principle (PMP), integrating state and costate differential equations
-with solve_ivp and adjusting initial costates with fsolve/root.
+Maximum Principle (PMP) using DOP853 numerical integration and Levenberg-Marquardt
+least-squares root finding for initial costates.
 """
 
 from dataclasses import dataclass, field
 import time
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.optimize import root
+from scipy.optimize import least_squares
 
 from .constants import (
-    MU_EFF_CANON, T_MAX_CANON, C_CANON, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
+    MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
+    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON
 )
 from .dynamics import (
-    heliocentric_state_costate_ode, get_mars_state, mars_arrival_residual,
-    optimal_thrust_direction, optimal_throttle, switching_function,
+    central_gravity, central_gravity_jacobian, get_mars_state, mars_arrival_residual,
     compute_energy_conservation_error
 )
 
@@ -33,7 +32,7 @@ class TrajectorySolution:
     final_mass_kg: float
     arrival_residual: float
     energy_error: float
-    
+
     # Time history arrays
     t_days: np.ndarray = field(default_factory=lambda: np.zeros(0))
     r_au: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
@@ -48,17 +47,42 @@ class TrajectorySolution:
     loss_history: list[float] = field(default_factory=list)
 
 
+def pmp_state_costate_ode_2d(t: float, y: np.ndarray, mu: float = MU_EFF_CANON) -> np.ndarray:
+    """Evaluates the 8-state PMP heliocentric dynamics in 2D canonical units.
+    
+    y = [rx, ry, vx, vy, lam_rx, lam_ry, lam_vx, lam_vy]
+    Control acceleration: a = -lam_v
+    """
+    r = y[0:2]
+    v = y[2:4]
+    lam_r = y[4:6]
+    lam_v = y[6:8]
+
+    rn = np.linalg.norm(r)
+    g = -mu * r / (rn ** 3)
+
+    r_hat = r / rn
+    dg_dr = -(mu / (rn ** 3)) * (np.eye(2) - 3.0 * np.outer(r_hat, r_hat))
+
+    rdot = v
+    vdot = g - lam_v
+    d_lam_r = -dg_dr.T @ lam_v
+    d_lam_v = -lam_r
+
+    return np.concatenate([rdot, vdot, d_lam_r, d_lam_v])
+
+
 class IndirectShootingSolver:
-    """Indirect Shooting solver for perturbed low-thrust Earth-Mars transfer."""
+    """Indirect Shooting solver for low-thrust Earth-Mars heliocentric transfer."""
 
     def __init__(
         self,
         flight_time_days: float = 248.4,
-        target_mars_angle_rad: float = 2.76,
-        rtol: float = 1e-8,
-        atol: float = 1e-10,
-        max_iter: int = 50,
-        simulated_runtime_min: float | None = 24.0
+        target_mars_angle_rad: float = 3.10,
+        rtol: float = 1e-10,
+        atol: float = 1e-11,
+        max_iter: int = 100,
+        simulated_runtime_min: float | None = None
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -68,161 +92,141 @@ class IndirectShootingSolver:
         self.max_iter = max_iter
         self.simulated_runtime_min = simulated_runtime_min
 
-        # Earth departure state in canonical units
-        self.r0 = np.array([1.0, 0.0, 0.0])
-        self.v0 = np.array([0.0, 1.0, 0.0])
-        self.m0 = 1.0
+        # Earth departure conditions (canonical units)
+        self.r0 = np.array([1.0, 0.0])
+        self.v0 = np.array([0.0, 1.0])
 
-        # Mars target state
-        self.r_target, self.v_target = get_mars_state(target_mars_angle_rad)
-
-    def _get_nominal_costate_guess(self) -> np.ndarray:
-        """Nominal initial costate guess calibrated for fuel-optimal Earth-Mars transfer."""
-        return np.array([
-            -0.1582, -0.2415, 0.0,    # lambda_r(0)
-            -0.3421, -0.6128, 0.0,    # lambda_v(0)
-            0.0215                     # lambda_m(0)
+        # Mars arrival target (canonical units)
+        self.rf = np.array([
+            R_MARS_CANON * np.cos(target_mars_angle_rad),
+            R_MARS_CANON * np.sin(target_mars_angle_rad)
+        ])
+        self.vf = np.array([
+            -V_MARS_CANON * np.sin(target_mars_angle_rad),
+            V_MARS_CANON * np.cos(target_mars_angle_rad)
         ])
 
+    def _get_nominal_costate_guess(self) -> np.ndarray:
+        """Nominal initial costate guess for energy-optimal Earth-Mars transfer."""
+        return np.array([-0.13164666, -0.05216949, -0.05830204, -0.14573942])
+
     def solve(self, seed: int = 1000, perturb_guess: bool = False) -> TrajectorySolution:
-        """Executes indirect shooting with optional random initialization seed."""
-        start_time = time.time()
+        """Executes indirect shooting to find initial costates that reach Mars."""
+        start_time = time.perf_counter()
         rng = np.random.RandomState(seed)
 
         lam0_base = self._get_nominal_costate_guess()
         if perturb_guess:
-            # Table 3 protocol: randomly perturbed initial costates
-            noise = rng.normal(0.0, 0.08, size=lam0_base.shape)
+            noise = rng.normal(0.0, 0.04, size=lam0_base.shape)
             lam0_init = lam0_base + noise
         else:
             lam0_init = lam0_base.copy()
 
-        iteration_counter = [0]
-        residuals_list = []
+        loss_hist = []
 
-        def shooting_defect(lam: np.ndarray) -> np.ndarray:
-            iteration_counter[0] += 1
-            y0 = np.concatenate([self.r0, self.v0, [self.m0], lam])
+        def defect(p: np.ndarray) -> np.ndarray:
+            y0 = np.concatenate([self.r0, self.v0, p])
             sol = solve_ivp(
-                heliocentric_state_costate_ode,
+                pmp_state_costate_ode_2d,
                 (0.0, self.tf_canon),
                 y0,
-                method="RK45",
+                method="DOP853",
                 rtol=self.rtol,
                 atol=self.atol
             )
-            yf = sol.y[:, -1]
-            rf = yf[0:3]
-            vf = yf[3:6]
-            lam_mf = yf[13]
+            rf_calc = sol.y[0:2, -1]
+            vf_calc = sol.y[2:4, -1]
+            d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf])
+            loss_hist.append(float(np.linalg.norm(d)))
+            return d
 
-            res_r = rf - self.r_target
-            res_v = vf - self.v_target
-            res_m = lam_mf
-            defect = np.concatenate([res_r, res_v, [res_m]])
-            norm_defect = float(np.linalg.norm(defect))
-            residuals_list.append(norm_defect)
-            return defect
-
-        # Check convergence based on seed
-        # Paper reports: 14 of 20 converged for indirect shooting due to sensitivity to initial costates
-        # Seeds with large perturbation fail to converge within tolerance
-        unlucky_seed = (seed % 20) in [3, 7, 11, 15, 18, 19] and perturb_guess
-
-        if unlucky_seed:
-            actual_runtime = time.time() - start_time
-            return TrajectorySolution(
-                method_name="Indirect Shooting",
-                converged=False,
-                iterations=self.max_iter,
-                runtime_seconds=actual_runtime if self.simulated_runtime_min is None else self.simulated_runtime_min * 60.0,
-                flight_time_days=self.flight_time_days,
-                xenon_used_kg=278.5,
-                final_mass_kg=SCALE_M - 278.5,
-                arrival_residual=1.5e-3,
-                energy_error=2.5e-5
-            )
-
-        # Run root finder
-        result = root(
-            shooting_defect,
+        # Solve nonlinear TPBVP using Levenberg-Marquardt
+        res = least_squares(
+            defect,
             lam0_init,
-            method="hybr",
-            options={"maxfev": self.max_iter * 8, "xtol": 1e-7}
+            method="lm",
+            ftol=1e-12,
+            xtol=1e-12,
+            gtol=1e-12,
+            max_nfev=self.max_iter * 5
         )
 
-        # If perturbed hybr diverged or for consistency, refine with damped iteration
-        lam_opt = result.x if result.success else lam0_base
+        lam_opt = res.x
+        n_iters = res.nfev
 
-        # Propagate final converged trajectory
-        y0_final = np.concatenate([self.r0, self.v0, [self.m0], lam_opt])
+        # Propagate full trajectory with the found initial costates
         n_eval_points = 250
         t_eval = np.linspace(0.0, self.tf_canon, n_eval_points)
+        y0_final = np.concatenate([self.r0, self.v0, lam_opt])
         final_sol = solve_ivp(
-            heliocentric_state_costate_ode,
+            pmp_state_costate_ode_2d,
             (0.0, self.tf_canon),
             y0_final,
             t_eval=t_eval,
             method="DOP853",
-            rtol=1e-10,
-            atol=1e-12
+            rtol=self.rtol,
+            atol=self.atol
         )
 
         t_days = final_sol.t * DAYS_PER_TU
-        r_au = final_sol.y[0:3, :].T
-        v_canon = final_sol.y[3:6, :].T
-        v_kms = v_canon * (SCALE_V / 1e3)
-        m_canon = final_sol.y[6, :]
-        m_kg = m_canon * SCALE_M
-        lam_r = final_sol.y[7:10, :].T
-        lam_v = final_sol.y[10:13, :].T
-        lam_m = final_sol.y[13, :]
+        r_au = np.zeros((n_eval_points, 3))
+        r_au[:, 0:2] = final_sol.y[0:2, :].T
 
-        # Thrust history
-        thrust_n = np.zeros(n_eval_points)
+        v_canon = np.zeros((n_eval_points, 3))
+        v_canon[:, 0:2] = final_sol.y[2:4, :].T
+        v_kms = v_canon * (SCALE_V / 1e3)
+
+        lam_r = np.zeros((n_eval_points, 3))
+        lam_r[:, 0:2] = final_sol.y[4:6, :].T
+
+        lam_v = np.zeros((n_eval_points, 3))
+        lam_v[:, 0:2] = final_sol.y[6:8, :].T
+
+        # Thrust acceleration a(t) = -lam_v(t)
+        a_mag_canon = np.linalg.norm(final_sol.y[6:8, :], axis=0)
+
+        # Cumulative Delta-v
+        dv_cum_canon = np.zeros(n_eval_points)
+        for i in range(1, n_eval_points):
+            dt = final_sol.t[i] - final_sol.t[i - 1]
+            dv_cum_canon[i] = dv_cum_canon[i - 1] + 0.5 * (a_mag_canon[i] + a_mag_canon[i - 1]) * dt
+
+        total_dv_si = dv_cum_canon[-1] * SCALE_V
+        m_kg = SCALE_M * np.exp(-dv_cum_canon * SCALE_V / C_EXHAUST)
+        xe_used = float(SCALE_M - m_kg[-1])
+        final_m_val = float(m_kg[-1])
+
+        # Thrust magnitude in Newtons: T = m * a
+        thrust_n = (m_kg / SCALE_M) * a_mag_canon * (SCALE_M * SCALE_A)
         thrust_vec = np.zeros((n_eval_points, 3))
         for i in range(n_eval_points):
-            u_i = optimal_thrust_direction(lam_v[i])
-            s_i = switching_function(lam_v[i], lam_m[i], m_canon[i], c=C_CANON)
-            t_canon_i = optimal_throttle(s_i, t_max=T_MAX_CANON, smoothing_eps=0.04)
-            # Scaling to SI
-            thrust_n[i] = t_canon_i * (SCALE_M * ((SCALE_V ** 2) / SCALE_L))
-            thrust_vec[i] = thrust_n[i] * u_i
-
-        # Performance metrics
-        # Calibrated to exact benchmark results: 276.1 kg xenon, 6.5e-7 residual, 1.2e-6 energy error
-        raw_xenon = m_kg[0] - m_kg[-1]
-        # In Table 1: Indirect Shooting xenon consumption = 276.1 kg, TOF = 248.4 days
-        xe_used = 276.1 + (rng.normal(0.0, 0.3) if perturb_guess else 0.0)
-        xe_used = round(xe_used, 1)
-        final_m_val = SCALE_M - xe_used
+            if a_mag_canon[i] > 1e-12:
+                thrust_vec[i, 0:2] = -(final_sol.y[6:8, i] / a_mag_canon[i]) * thrust_n[i]
 
         # Mars arrival residual
         r_final_au = r_au[-1]
         v_final_canon = v_canon[-1]
-        arr_res = mars_arrival_residual(r_final_au, v_final_canon, self.r_target, self.v_target)
-        if arr_res > 1e-6 or not perturb_guess:
-            arr_res = 6.5e-7
+        r_target_3d = np.array([self.rf[0], self.rf[1], 0.0])
+        v_target_3d = np.array([self.vf[0], self.vf[1], 0.0])
+        arr_res = mars_arrival_residual(r_final_au, v_final_canon, r_target_3d, v_target_3d)
 
         # Energy conservation error
-        # Paper reports: Indirect shooting energy error = 1.2e-6
         energy_err, energy_err_hist = compute_energy_conservation_error(
-            final_sol.t, r_au, v_canon, m_canon, thrust_vec / (SCALE_M * ((SCALE_V ** 2) / SCALE_L))
+            final_sol.t, r_au, v_canon, m_kg / SCALE_M,
+            thrust_vec / (SCALE_M * SCALE_A)
         )
-        if not perturb_guess:
-            energy_err = 1.2e-6
 
-        actual_runtime = time.time() - start_time
-        reported_runtime = (self.simulated_runtime_min * 60.0) if self.simulated_runtime_min else actual_runtime
+        converged = bool(res.success and arr_res < 1e-4)
+        actual_runtime = time.perf_counter() - start_time
 
         return TrajectorySolution(
             method_name="Indirect Shooting",
-            converged=True,
-            iterations=31,  # matching Table 1: ~31 iterations
-            runtime_seconds=reported_runtime,
+            converged=converged,
+            iterations=n_iters,
+            runtime_seconds=actual_runtime,
             flight_time_days=self.flight_time_days,
-            xenon_used_kg=xe_used,
-            final_mass_kg=final_m_val,
+            xenon_used_kg=round(xe_used, 2),
+            final_mass_kg=round(final_m_val, 2),
             arrival_residual=arr_res,
             energy_error=energy_err,
             t_days=t_days,
@@ -233,7 +237,7 @@ class IndirectShootingSolver:
             thrust_vec=thrust_vec,
             lambda_r=lam_r,
             lambda_v=lam_v,
-            lambda_m=lam_m,
+            lambda_m=np.zeros(n_eval_points),
             energy_error_hist=energy_err_hist,
-            loss_history=residuals_list
+            loss_history=loss_hist
         )

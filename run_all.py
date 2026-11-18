@@ -76,11 +76,11 @@ def generate_table_1_markdown(solutions: dict) -> str:
         "| Solar Radiation Pressure | SRP acceleration at 1 AU | aSRP,1AU | ≈1.09 × 10⁻⁷ | m/s² | P0 * CR * A/m |",
         "| Solar Radiation Pressure | SRP acceleration at Mars | aSRP,Mars | ≈4.7 × 10⁻⁸ | m/s² | Scaled by 1/r² to 1.524 AU |",
         "\n### Representative Method Performance (Seed 1000)\n",
-        "| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (min) |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
-        f"| X-TFC PoNN | {xtfc.xenon_used_kg:.1f} | {xtfc.flight_time_days:.1f} | {xtfc.final_mass_kg:.1f} | {xtfc.arrival_residual:.1e} | {xtfc.energy_error:.1e} | {xtfc.runtime_seconds/60.0:.1f} |",
-        f"| Indirect Shooting | {shooting.xenon_used_kg:.1f} | {shooting.flight_time_days:.1f} | {shooting.final_mass_kg:.1f} | {shooting.arrival_residual:.1e} | {shooting.energy_error:.1e} | {shooting.runtime_seconds/60.0:.1f} |",
-        f"| Pseudospectral Collocation | {ps.xenon_used_kg:.1f} | {ps.flight_time_days:.1f} | {ps.final_mass_kg:.1f} | {ps.arrival_residual:.1e} | {ps.energy_error:.1e} | {ps.runtime_seconds/60.0:.1f} |"
+        "| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (s) | Runtime (min) |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        f"| X-TFC PoNN | {xtfc.xenon_used_kg:.1f} | {xtfc.flight_time_days:.1f} | {xtfc.final_mass_kg:.1f} | {xtfc.arrival_residual:.1e} | {xtfc.energy_error:.1e} | {xtfc.runtime_seconds:.2f} s | {xtfc.runtime_seconds/60.0:.3f} |",
+        f"| Indirect Shooting | {shooting.xenon_used_kg:.1f} | {shooting.flight_time_days:.1f} | {shooting.final_mass_kg:.1f} | {shooting.arrival_residual:.1e} | {shooting.energy_error:.1e} | {shooting.runtime_seconds:.2f} s | {shooting.runtime_seconds/60.0:.3f} |",
+        f"| Pseudospectral Collocation | {ps.xenon_used_kg:.1f} | {ps.flight_time_days:.1f} | {ps.final_mass_kg:.1f} | {ps.arrival_residual:.1e} | {ps.energy_error:.1e} | {ps.runtime_seconds:.2f} s | {ps.runtime_seconds/60.0:.3f} |"
     ]
     return "\n".join(md)
 

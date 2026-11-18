@@ -72,7 +72,7 @@ def cmd_method(args):
     print(f"Final Spacecraft Mass:  {sol.final_mass_kg:.1f} kg")
     print(f"Mars Arrival Residual:  {sol.arrival_residual:.2e}")
     print(f"Energy Conservation Err:{sol.energy_error:.2e}")
-    print(f"Convergence Runtime:    {sol.runtime_seconds/60.0:.1f} min")
+    print(f"Convergence Runtime:    {sol.runtime_seconds:.2f} s ({sol.runtime_seconds/60.0:.3f} min)")
 
 
 def cmd_benchmark(args):
