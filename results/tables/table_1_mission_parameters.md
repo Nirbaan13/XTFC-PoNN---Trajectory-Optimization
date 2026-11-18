@@ -43,6 +43,6 @@
 
 | Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (s) | Runtime (min) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| X-TFC PoNN | 288.1 | 247.6 | 929.9 | 5.8e-12 | 8.6e-06 | 0.88 s | 0.015 |
+| X-TFC PoNN | 288.1 | 247.6 | 929.9 | 5.8e-12 | 8.6e-06 | 0.91 s | 0.015 |
 | Indirect Shooting | 287.3 | 248.4 | 930.7 | 5.9e-15 | 8.6e-06 | 0.10 s | 0.002 |
-| Pseudospectral Collocation | 287.9 | 247.9 | 930.1 | 0.0e+00 | 3.1e-04 | 0.84 s | 0.014 |
+| Pseudospectral Collocation | 287.8 | 247.9 | 930.2 | 0.0e+00 | 3.4e-05 | 15.50 s | 0.258 |

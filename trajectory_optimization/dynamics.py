@@ -90,13 +90,12 @@ def j2_jacobian(r: np.ndarray, mu: float = MU_EARTH, r_e: float = R_EARTH, j2: f
     df_dr[0, 1] = 10.0 * x * y * z2 / r4
     df_dr[0, 2] = -10.0 * x * z / r2 + 10.0 * x * (z ** 3) / r4
     
-    df_dr[1, 0] = df_dr[0, 1]
+    df_dr[1, 0] = 10.0 * x * y * z2 / r4
     df_dr[1, 1] = 1.0 - 5.0 * z2 / r2 + 10.0 * (y ** 2) * z2 / r4
     df_dr[1, 2] = -10.0 * y * z / r2 + 10.0 * y * (z ** 3) / r4
     
-    df_dr[2, 0] = -5.0 * x * z / r2 * (2.0 - 2.0 * z2 / r2)  # simplified
-    df_dr[2, 0] = 10.0 * x * (z ** 3) / r4 - 6.0 * x * z / r2
-    df_dr[2, 1] = 10.0 * y * (z ** 3) / r4 - 6.0 * y * z / r2
+    df_dr[2, 0] = 10.0 * x * (z ** 3) / r4
+    df_dr[2, 1] = 10.0 * y * (z ** 3) / r4
     df_dr[2, 2] = 3.0 - 15.0 * z2 / r2 + 10.0 * (z ** 4) / r4
     
     # d(a_j2)/dr = k * (df_dr / r^5 - 5 * outer(f, r) / r^7)

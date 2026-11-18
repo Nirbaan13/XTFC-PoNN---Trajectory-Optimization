@@ -31,8 +31,7 @@ class XTFC_PoNN_Solver:
         target_mars_angle_rad: float = 3.10,
         n_collocation_nodes: int = 60,
         n_basis_terms: int = 16,
-        n_epochs: int = 500,
-        simulated_runtime_min: float | None = None
+        n_epochs: int = 500
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -40,7 +39,6 @@ class XTFC_PoNN_Solver:
         self.n_nodes = n_collocation_nodes
         self.n_basis = n_basis_terms
         self.n_epochs = n_epochs
-        self.simulated_runtime_min = simulated_runtime_min
 
         # Earth departure conditions (t = 0, tau = -1)
         self.r0 = np.array([1.0, 0.0])

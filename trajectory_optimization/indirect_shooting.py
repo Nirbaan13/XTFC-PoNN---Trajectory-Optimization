@@ -81,8 +81,7 @@ class IndirectShootingSolver:
         target_mars_angle_rad: float = 3.10,
         rtol: float = 1e-10,
         atol: float = 1e-11,
-        max_iter: int = 100,
-        simulated_runtime_min: float | None = None
+        max_iter: int = 100
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
@@ -90,7 +89,6 @@ class IndirectShootingSolver:
         self.rtol = rtol
         self.atol = atol
         self.max_iter = max_iter
-        self.simulated_runtime_min = simulated_runtime_min
 
         # Earth departure conditions (canonical units)
         self.r0 = np.array([1.0, 0.0])

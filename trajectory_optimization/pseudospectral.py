@@ -98,14 +98,12 @@ class PseudospectralCollocationSolver:
         self,
         flight_time_days: float = 247.9,
         target_mars_angle_rad: float = 3.10,
-        n_nodes: int = 60,
-        simulated_runtime_min: float | None = None
+        n_nodes: int = 180
     ):
         self.flight_time_days = flight_time_days
         self.tf_canon = flight_time_days / DAYS_PER_TU
         self.target_mars_angle_rad = target_mars_angle_rad
         self.n_nodes = n_nodes
-        self.simulated_runtime_min = simulated_runtime_min
 
         # Earth departure (t = 0)
         self.r0 = np.array([1.0, 0.0])

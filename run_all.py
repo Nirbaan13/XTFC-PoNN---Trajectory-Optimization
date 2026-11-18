@@ -27,6 +27,10 @@ from trajectory_optimization.plotting import (
     plot_figure_4_3_top_view,
     plot_perturbation_magnitudes
 )
+from trajectory_optimization.additions import (
+    run_unperturbed_control_benchmarks,
+    run_cross_validation
+)
 
 
 def generate_table_1_markdown(solutions: dict) -> str:
@@ -131,11 +135,34 @@ def main():
     print("  -> Table 3 saved to results/tables/table_3_robustness_comparison.md")
 
     # 6. Render All Figures
-    print("\n[Step 5/5] Generating Publication-Quality Figures...")
+    print("\n[Step 5/6] Generating Publication-Quality Figures...")
     plot_figure_4_1(solutions, figures_dir / "figure_4_1_heliocentric_results.png")
     plot_figure_4_2_schematic_3d(solutions, figures_dir / "figure_4_2_schematic_3d.png")
     plot_figure_4_3_top_view(solutions, figures_dir / "figure_4_3_top_view_2d.png")
     plot_perturbation_magnitudes(figures_dir / "perturbation_accelerations.png")
+
+    # 7. Two Additions: Unperturbed Control Runs & Cross-Validation
+    print("\n[Step 6/6] Executing Unperturbed Control Runs & Cross-Validation...")
+    unpert_comps = run_unperturbed_control_benchmarks()
+    cross_val = run_cross_validation(solutions["Pseudospectral Collocation"], solutions["Indirect Shooting"], solutions["X-TFC PoNN"])
+
+    additions_md = [
+        "# Additions: Unperturbed Controls & Cross-Validation Benchmarks\n",
+        "## 1. Unperturbed Control Run Comparison (No SRP vs Perturbed)",
+        "| Method | Perturbed Fuel (kg) | Unperturbed Fuel (kg) | Fuel Difference (kg) | Max Position Diff (km) |",
+        "| --- | --- | --- | --- | --- |"
+    ]
+    for comp in unpert_comps:
+        additions_md.append(f"| {comp.method} | {comp.fuel_perturbed_kg:.2f} | {comp.fuel_unperturbed_kg:.2f} | {comp.fuel_diff_kg:.2f} | {comp.max_position_diff_km:,.1f} |")
+
+    additions_md.extend([
+        "\n## 2. Cross-Validation Across Methods",
+        f"- **Pseudospectral Control Propagated via DOP853 (Solve_ivp)**: Terminal Arrival Error = {cross_val.collocation_dop853_terminal_residual:.3e}",
+        f"- **Indirect Shooting Hamiltonian Conservation Error**: {cross_val.shooting_hamiltonian_conservation_error:.3e}",
+        f"- **X-TFC PoNN Boundary Collocation Defect Norm**: {cross_val.xtfc_collocation_defect_norm:.3e}"
+    ])
+    (tables_dir / "additions_summary.md").write_text("\n".join(additions_md))
+    print("  -> Additions summary saved to results/tables/additions_summary.md")
 
     print("\n" + "=" * 80)
     print("SUMMARY OF BENCHMARK RESULTS")

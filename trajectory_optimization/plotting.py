@@ -124,19 +124,23 @@ def plot_figure_4_1(
     # --------------------------------------------------------------------------
     ax6 = fig.add_subplot(2, 3, 6)
     method_labels = list(solutions.keys())
-    residuals = [solutions[m].arrival_residual for m in method_labels]
+    # Display at least 1e-16 for visualization on log scale if 0.0
+    residuals_plot = [max(solutions[m].arrival_residual, 1e-16) for m in method_labels]
+    residuals_raw = [solutions[m].arrival_residual for m in method_labels]
     bar_colors = [colors[m] for m in method_labels]
     
-    bars = ax6.bar(method_labels, residuals, color=bar_colors, width=0.5, edgecolor="black")
+    bars = ax6.bar(method_labels, residuals_plot, color=bar_colors, width=0.5, edgecolor="black")
     ax6.set_yscale("log")
     ax6.set_title("(f) Mars Arrival Residual $\\varepsilon_M$ (Dimensionless)", fontsize=11, fontweight="bold")
     ax6.set_ylabel("Terminal Constraint Violation", fontsize=10)
-    ax6.set_ylim([1e-8, 1e-5])
+    min_res = min(residuals_plot)
+    ax6.set_ylim([min_res * 0.1, 1e-3])
     ax6.grid(True, which="both", linestyle="--", alpha=0.5, axis="y")
     
-    for bar in bars:
-        yval = bar.get_height()
-        ax6.text(bar.get_x() + bar.get_width() / 2.0, yval * 1.3, f"{yval:.1e}",
+    for idx, bar in enumerate(bars):
+        yval = residuals_raw[idx]
+        y_text = bar.get_height()
+        ax6.text(bar.get_x() + bar.get_width() / 2.0, y_text * 1.5, f"{yval:.1e}",
                  ha="center", va="bottom", fontsize=9, fontweight="bold")
 
     plt.tight_layout()
