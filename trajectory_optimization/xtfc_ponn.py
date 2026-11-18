@@ -45,10 +45,10 @@ class XTFC_PoNN_Solver:
         self,
         flight_time_days: float = 247.6,
         target_mars_angle_rad: float = 3.10,
-        n_collocation_nodes: int = 50,
-        n_basis_terms: int = 16,
-        n_epochs: int = 300,
-        t_max_n: float = 1.20,
+        n_collocation_nodes: int = 80,
+        n_basis_terms: int = 24,
+        n_epochs: int = 150,
+        t_max_n: float = T_MAX,
         hardware_t_max_n: float = T_MAX
     ):
         self.flight_time_days = flight_time_days
@@ -195,33 +195,30 @@ class XTFC_PoNN_Solver:
             lam_m = glm + dlmf
             dlam_m_dt = self.c_tau * dglm
 
-            # 14 ODE Residuals
+            # 14 ODE Residuals (fully vectorized across all N collocation nodes)
             res_r = dr_dt - v
-            res_v = np.zeros_like(v)
-            res_m = np.zeros_like(m)
-            res_lr = np.zeros_like(lam_r)
+
+            r_norm = np.linalg.norm(r, axis=1, keepdims=True)
+            r_hat = r / r_norm
+            g = -MU_EFF_CANON * r / (r_norm ** 3)
+
+            lv_norm = np.linalg.norm(lam_v, axis=1, keepdims=True)
+            lv_norm_safe = np.maximum(lv_norm, 1e-12)
+            u = -lam_v / lv_norm_safe
+
+            m_safe = np.maximum(m, 0.1)
+            s = (1.0 - lam_m) / C_CANON - lv_norm / m_safe
+            t_mag = self.t_max_c / (1.0 + np.exp(np.clip(s / 0.05, -50.0, 50.0)))
+            a_thrust = (t_mag / m_safe) * u
+
+            res_v = dv_dt - (g + a_thrust)
+            res_m = dm_dt - (-t_mag / C_CANON)
+
+            rdotlv = np.sum(r_hat * lam_v, axis=1, keepdims=True)
+            dg_dr_T_lv = -(MU_EFF_CANON / (r_norm ** 3)) * (lam_v - 3.0 * rdotlv * r_hat)
+            res_lr = dlam_r_dt - (-dg_dr_T_lv)
             res_lv = dlam_v_dt + lam_r
-            res_lm = np.zeros_like(lam_m)
-
-            for k in range(N):
-                rk = r[k]
-                mk = max(m[k, 0], 0.1)
-                lvk = lam_v[k]
-                lmk = lam_m[k, 0]
-
-                u_k = optimal_thrust_direction(lvk)
-                s_k = switching_function(lvk, lmk, mk, c=C_CANON)
-                t_mag = optimal_throttle(s_k, t_max=self.t_max_c, smoothing_eps=0.05)
-
-                gk = central_gravity(rk, mu=MU_EFF_CANON)
-                a_thrust = (t_mag / mk) * u_k
-
-                res_v[k] = dv_dt[k] - (gk + a_thrust)
-                res_m[k, 0] = dm_dt[k, 0] - (-t_mag / C_CANON)
-
-                dg_dr = central_gravity_jacobian(rk, mu=MU_EFF_CANON)
-                res_lr[k] = dlam_r_dt[k] - (-dg_dr.T @ lvk)
-                res_lm[k, 0] = dlam_m_dt[k, 0] - ((t_mag / (mk ** 2)) * np.dot(lvk, u_k))
+            res_lm = dlam_m_dt + (t_mag * lv_norm) / (m_safe ** 2)
 
             vec = np.concatenate([
                 res_r.flatten(), res_v.flatten(), res_m.flatten(),
@@ -233,7 +230,8 @@ class XTFC_PoNN_Solver:
 
         # Optimize network weights via Levenberg-Marquardt
         res = least_squares(eval_system, p0, method="lm", max_nfev=self.n_epochs)
-        converged = bool(res.success and loss_history[-1] < 1e-3)
+        r14_norm = float(np.linalg.norm(res.fun) / np.sqrt(len(res.fun)))
+        converged = bool(res.success and r14_norm < 1e-4)
 
         # Dense evaluation grid (250 points)
         n_eval = 250
@@ -287,6 +285,7 @@ class XTFC_PoNN_Solver:
 
         # Arrival residual (embedded analytically => machine precision)
         arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
+        converged = bool(res.success and r14_norm < 1e-4 and arr_res < 1e-6)
 
         # Energy conservation error
         energy_err, energy_err_hist = compute_energy_conservation_error(

@@ -13,6 +13,8 @@ import numpy as np
 from trajectory_optimization.benchmarks import (
     run_representative_benchmarks,
     run_robustness_protocol,
+    search_mars_arrival_angle,
+    format_table_mars_angle_search_markdown,
     format_table_3_markdown,
     format_table_e1_markdown,
     format_table_e2_markdown
@@ -80,11 +82,11 @@ def generate_table_1_markdown(solutions: dict) -> str:
         "| Solar Radiation Pressure | SRP acceleration at 1 AU | aSRP,1AU | ≈1.09 × 10⁻⁷ | m/s² | P0 * CR * A/m |",
         "| Solar Radiation Pressure | SRP acceleration at Mars | aSRP,Mars | ≈4.7 × 10⁻⁸ | m/s² | Scaled by 1/r² to 1.524 AU |",
         "\n### Representative Method Performance (Seed 1000)\n",
-        "| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Runtime (s) | Runtime (min) |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
-        f"| X-TFC PoNN | {xtfc.xenon_used_kg:.1f} | {xtfc.flight_time_days:.1f} | {xtfc.final_mass_kg:.1f} | {xtfc.arrival_residual:.1e} | {xtfc.energy_error:.1e} | {xtfc.runtime_seconds:.2f} s | {xtfc.runtime_seconds/60.0:.3f} |",
-        f"| Indirect Shooting | {shooting.xenon_used_kg:.1f} | {shooting.flight_time_days:.1f} | {shooting.final_mass_kg:.1f} | {shooting.arrival_residual:.1e} | {shooting.energy_error:.1e} | {shooting.runtime_seconds:.2f} s | {shooting.runtime_seconds/60.0:.3f} |",
-        f"| Pseudospectral Collocation | {ps.xenon_used_kg:.1f} | {ps.flight_time_days:.1f} | {ps.final_mass_kg:.1f} | {ps.arrival_residual:.1e} | {ps.energy_error:.1e} | {ps.runtime_seconds:.2f} s | {ps.runtime_seconds/60.0:.3f} |"
+        "| Method | Converged? | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Max Thrust (N) | Runtime (s) |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        f"| X-TFC PoNN | {'Yes' if xtfc.converged else 'No'} | {xtfc.xenon_used_kg:.1f} | {xtfc.flight_time_days:.1f} | {xtfc.final_mass_kg:.1f} | {xtfc.arrival_residual:.1e} | {xtfc.energy_error:.1e} | {np.max(xtfc.thrust_n):.4f} N | {xtfc.runtime_seconds:.2f} s |",
+        f"| Indirect Shooting | {'Yes' if shooting.converged else 'No'} | {shooting.xenon_used_kg:.1f} | {shooting.flight_time_days:.1f} | {shooting.final_mass_kg:.1f} | {shooting.arrival_residual:.1e} | {shooting.energy_error:.1e} | {np.max(shooting.thrust_n):.4f} N | {shooting.runtime_seconds:.2f} s |",
+        f"| Pseudospectral Collocation | {'Yes' if ps.converged else 'No'} | {ps.xenon_used_kg:.1f} | {ps.flight_time_days:.1f} | {ps.final_mass_kg:.1f} | {ps.arrival_residual:.1e} | {ps.energy_error:.1e} | {np.max(ps.thrust_n):.4f} N | {ps.runtime_seconds:.2f} s |"
     ]
     return "\n".join(md)
 
@@ -125,24 +127,29 @@ def main():
 
     table_e2_md = "# Table E2: Escape phase with J2 solved by the three methods\n\n" + format_table_e2_markdown()
     (tables_dir / "table_e2_escape_methods.md").write_text(table_e2_md)
-    print("  -> Table E2 saved to results/tables/table_e2_escape_methods.md")
+    # 5. Mars Arrival Angle Search
+    print("\n[Step 4/7] Searching Over Mars Arrival Angle Parameter (0.50 N Cap)...")
+    angle_results = search_mars_arrival_angle()
+    table_angle_md = format_table_mars_angle_search_markdown(angle_results)
+    (tables_dir / "table_mars_angle_search.md").write_text(table_angle_md)
+    print("  -> Mars arrival angle search table saved to results/tables/table_mars_angle_search.md")
 
-    # 5. Robustness Protocol (Table 3: 20 repeated runs)
-    print("\n[Step 4/5] Executing 20-Run Robustness Protocol (Table 3)...")
+    # 6. Robustness Protocol (Table 3: 20 repeated runs)
+    print("\n[Step 5/7] Executing 20-Run Robustness Protocol (Table 3)...")
     robustness_stats = run_robustness_protocol(n_runs=20, base_seed=1000)
     table_3_md = "# Table 3: Success rate and spread over 20 repeated runs (mean ± SD of converged runs)\n\n" + format_table_3_markdown(robustness_stats)
     (tables_dir / "table_3_robustness_comparison.md").write_text(table_3_md)
     print("  -> Table 3 saved to results/tables/table_3_robustness_comparison.md")
 
-    # 6. Render All Figures
-    print("\n[Step 5/6] Generating Publication-Quality Figures...")
+    # 7. Render All Figures
+    print("\n[Step 6/7] Generating Publication-Quality Figures...")
     plot_figure_4_1(solutions, figures_dir / "figure_4_1_heliocentric_results.png")
     plot_figure_4_2_schematic_3d(solutions, figures_dir / "figure_4_2_schematic_3d.png")
     plot_figure_4_3_top_view(solutions, figures_dir / "figure_4_3_top_view_2d.png")
     plot_perturbation_magnitudes(figures_dir / "perturbation_accelerations.png")
 
-    # 7. Two Additions: Unperturbed Control Runs & Cross-Validation
-    print("\n[Step 6/6] Executing Unperturbed Control Runs & Cross-Validation...")
+    # 8. Two Additions: Unperturbed Control Runs & Cross-Validation
+    print("\n[Step 7/7] Executing Unperturbed Control Runs & Cross-Validation...")
     unpert_comps = run_unperturbed_control_benchmarks(solutions)
     cross_val = run_cross_validation(solutions["Pseudospectral Collocation"], solutions["Indirect Shooting"], solutions["X-TFC PoNN"])
 
@@ -157,9 +164,11 @@ def main():
 
     additions_md.extend([
         "\n## 2. Cross-Validation Across Methods",
-        f"- **Pseudospectral Control Propagated via DOP853 (Solve_ivp)**: Terminal Arrival Error = {cross_val.collocation_dop853_terminal_residual:.3e}",
+        f"- **Pseudospectral Control Forward-Propagated via DOP853 (Solve_ivp)**: Terminal Arrival Residual = {cross_val.collocation_dop853_terminal_residual:.3e}",
+        f"- **Indirect Shooting Trajectory Collocation Defect Norm (LGL grid)**: {cross_val.shooting_collocation_defect_norm:.3e}",
         f"- **Indirect Shooting Hamiltonian Conservation Error**: {cross_val.shooting_hamiltonian_conservation_error:.3e}",
-        f"- **X-TFC PoNN Boundary Collocation Defect Norm**: {cross_val.xtfc_collocation_defect_norm:.3e}"
+        f"- **X-TFC PoNN Trajectory Collocation Defect Norm (LGL grid)**: {cross_val.xtfc_collocation_defect_norm:.3e}",
+        f"- **X-TFC PoNN Hamiltonian Conservation Error**: {cross_val.xtfc_hamiltonian_conservation_error:.3e}"
     ])
     (tables_dir / "additions_summary.md").write_text("\n".join(additions_md))
     print("  -> Additions summary saved to results/tables/additions_summary.md")

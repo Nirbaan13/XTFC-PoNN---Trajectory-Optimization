@@ -73,7 +73,7 @@ class IndirectShootingSolver:
         rtol: float = 1e-10,
         atol: float = 1e-11,
         max_iter: int = 100,
-        t_max_n: float = 1.20,
+        t_max_n: float = T_MAX,
         hardware_t_max_n: float = T_MAX
     ):
         self.flight_time_days = flight_time_days
@@ -118,40 +118,43 @@ class IndirectShootingSolver:
 
         loss_hist = []
 
-        # Homotopy on smoothing parameter epsilon
+        # Thrust and smoothing homotopy stages to robustly converge down to target T_max (0.50 N)
+        thrust_stages = [1.00, 0.75, self.t_max_n] if self.t_max_n < 0.95 else [self.t_max_n]
         eps_stages = [0.05, 0.02]
         p_curr = lam0_init.copy()
         total_fev = 0
 
-        for stage_idx, eps in enumerate(eps_stages):
-            def defect(p: np.ndarray) -> np.ndarray:
-                y0 = np.concatenate([self.r0, self.v0, [self.m0], p])
-                sol = solve_ivp(
-                    heliocentric_state_costate_ode,
-                    (0.0, self.tf_canon),
-                    y0,
-                    args=(MU_EFF_CANON, self.t_max_c, C_CANON, eps),
-                    method="DOP853",
-                    rtol=self.rtol * 10.0,
-                    atol=self.atol * 10.0
-                )
-                rf_calc = sol.y[0:3, -1]
-                vf_calc = sol.y[3:6, -1]
-                lam_m_f = sol.y[13, -1]
-                d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf, [lam_m_f]])
-                loss_hist.append(float(np.linalg.norm(d)))
-                return d
+        for t_stage in thrust_stages:
+            t_stage_c = t_stage / (SCALE_M * SCALE_A)
+            for eps in eps_stages:
+                def defect(p: np.ndarray) -> np.ndarray:
+                    y0 = np.concatenate([self.r0, self.v0, [self.m0], p])
+                    sol = solve_ivp(
+                        heliocentric_state_costate_ode,
+                        (0.0, self.tf_canon),
+                        y0,
+                        args=(MU_EFF_CANON, t_stage_c, C_CANON, eps),
+                        method="DOP853",
+                        rtol=self.rtol * 10.0,
+                        atol=self.atol * 10.0
+                    )
+                    rf_calc = sol.y[0:3, -1]
+                    vf_calc = sol.y[3:6, -1]
+                    lam_m_f = sol.y[13, -1]
+                    d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf, [lam_m_f]])
+                    loss_hist.append(float(np.linalg.norm(d)))
+                    return d
 
-            res = least_squares(
-                defect,
-                p_curr,
-                method="lm",
-                max_nfev=self.max_iter,
-                ftol=1e-12,
-                xtol=1e-12
-            )
-            p_curr = res.x
-            total_fev += res.nfev
+                res = least_squares(
+                    defect,
+                    p_curr,
+                    method="lm",
+                    max_nfev=self.max_iter,
+                    ftol=1e-12,
+                    xtol=1e-12
+                )
+                p_curr = res.x
+                total_fev += res.nfev
 
         # Final high-precision integration on dense time grid
         eps_final = eps_stages[-1]
@@ -197,7 +200,7 @@ class IndirectShootingSolver:
         xe_used = float(SCALE_M - m_kg[-1])
         final_m_kg = float(m_kg[-1])
         arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
-        converged = bool(arr_res < 1e-5)
+        converged = bool(arr_res < 1e-6)
 
         # Energy conservation error
         energy_err, energy_err_hist = compute_energy_conservation_error(

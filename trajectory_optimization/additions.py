@@ -34,8 +34,10 @@ class UnperturbedComparison:
 @dataclass
 class CrossValidationResults:
     collocation_dop853_terminal_residual: float
+    shooting_collocation_defect_norm: float
     shooting_hamiltonian_conservation_error: float
     xtfc_collocation_defect_norm: float
+    xtfc_hamiltonian_conservation_error: float
 
 
 def run_unperturbed_control_benchmarks(
@@ -74,25 +76,23 @@ def run_cross_validation(
     shooting_sol: TrajectorySolution | None = None,
     xtfc_sol: TrajectorySolution | None = None
 ) -> CrossValidationResults:
-    """Cross-validates solutions across methods."""
+    """Cross-validates solutions across all three methods against each other's optimality conditions."""
     if ps_sol is None:
-        ps_sol = PseudospectralCollocationSolver(flight_time_days=247.9, n_nodes=60).solve(seed=1000)
+        ps_sol = PseudospectralCollocationSolver(flight_time_days=247.9).solve(seed=1000)
     if shooting_sol is None:
-        shooting_sol = IndirectShootingSolver().solve(seed=1000)
+        shooting_sol = IndirectShootingSolver(flight_time_days=248.4).solve(seed=1000)
     if xtfc_sol is None:
-        xtfc_sol = XTFC_PoNN_Solver().solve(seed=1000)
+        xtfc_sol = XTFC_PoNN_Solver(flight_time_days=247.6).solve(seed=1000)
 
-    # 1. Propagate Pseudospectral control history through DOP853
+    # 1. Propagate Pseudospectral control history through DOP853 continuous ODE
     t_nodes = ps_sol.t_days / DAYS_PER_TU
     ux_interp = interp1d(t_nodes, ps_sol.thrust_vec[:, 0] / (SCALE_M * SCALE_A), kind="cubic", fill_value="extrapolate")
     uy_interp = interp1d(t_nodes, ps_sol.thrust_vec[:, 1] / (SCALE_M * SCALE_A), kind="cubic", fill_value="extrapolate")
 
     def ode(t: float, y: np.ndarray) -> np.ndarray:
-        r = y[0:3]
-        v = y[3:6]
-        m = y[6]
         u_acc = np.array([float(ux_interp(t)), float(uy_interp(t)), 0.0])
         u_norm = np.linalg.norm(u_acc)
+        m = max(y[6], 0.1)
         t_mag = u_norm * m
         t_dir = u_acc / u_norm if u_norm > 1e-12 else np.zeros(3)
         return heliocentric_dynamics(t, y, t_dir, t_mag, mu_eff=MU_EFF_CANON, c=C_CANON)
@@ -108,14 +108,52 @@ def run_cross_validation(
         ps_sol.r_au[-1], ps_sol.v_kms[-1] / (SCALE_V / 1e3)
     )
 
-    # 2. Shooting Hamiltonian conservation error
-    h_err = shooting_sol.energy_error
+    # LGL grid for collocation defect verification (N = 80)
+    from .pseudospectral import lgl_nodes_and_weights, lgl_differentiation_matrix
+    N_check = 80
+    tau_chk, _ = lgl_nodes_and_weights(N_check)
+    D_chk = lgl_differentiation_matrix(tau_chk)
 
-    # 3. Collocation defect norm of X-TFC trajectory
-    xtfc_defect = xtfc_sol.arrival_residual
+    # 2. Check Indirect Shooting trajectory against Collocation defect constraints
+    t_shoot = shooting_sol.t_days / DAYS_PER_TU
+    t_scale_s = (shooting_sol.flight_time_days / DAYS_PER_TU) / 2.0
+    t_nodes_s = t_scale_s * (tau_chk + 1.0)
+    r_interp_s = interp1d(t_shoot, shooting_sol.r_au, axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_s)
+    v_interp_s = interp1d(t_shoot, shooting_sol.v_kms / (SCALE_V / 1e3), axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_s)
+    u_interp_s = interp1d(t_shoot, shooting_sol.thrust_vec / (SCALE_M * SCALE_A), axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_s)
+
+    dr_s = D_chk @ r_interp_s
+    dv_s = D_chk @ v_interp_s
+    def_r_s = dr_s - t_scale_s * v_interp_s
+    def_v_s = np.zeros_like(dv_s)
+    for k in range(N_check):
+        rk = r_interp_s[k]
+        gk = -MU_EFF_CANON * rk / (np.linalg.norm(rk) ** 3)
+        def_v_s[k] = dv_s[k] - t_scale_s * (gk + u_interp_s[k])
+    shoot_colloc_defect = float(np.linalg.norm(np.concatenate([def_r_s.flatten(), def_v_s.flatten()])) / np.sqrt(6 * N_check))
+
+    # 3. Check X-TFC trajectory against Collocation defect constraints
+    t_xtfc = xtfc_sol.t_days / DAYS_PER_TU
+    t_scale_x = (xtfc_sol.flight_time_days / DAYS_PER_TU) / 2.0
+    t_nodes_x = t_scale_x * (tau_chk + 1.0)
+    r_interp_x = interp1d(t_xtfc, xtfc_sol.r_au, axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_x)
+    v_interp_x = interp1d(t_xtfc, xtfc_sol.v_kms / (SCALE_V / 1e3), axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_x)
+    u_interp_x = interp1d(t_xtfc, xtfc_sol.thrust_vec / (SCALE_M * SCALE_A), axis=0, kind="cubic", fill_value="extrapolate")(t_nodes_x)
+
+    dr_x = D_chk @ r_interp_x
+    dv_x = D_chk @ v_interp_x
+    def_r_x = dr_x - t_scale_x * v_interp_x
+    def_v_x = np.zeros_like(dv_x)
+    for k in range(N_check):
+        rk = r_interp_x[k]
+        gk = -MU_EFF_CANON * rk / (np.linalg.norm(rk) ** 3)
+        def_v_x[k] = dv_x[k] - t_scale_x * (gk + u_interp_x[k])
+    xtfc_colloc_defect = float(np.linalg.norm(np.concatenate([def_r_x.flatten(), def_v_x.flatten()])) / np.sqrt(6 * N_check))
 
     return CrossValidationResults(
         collocation_dop853_terminal_residual=float(dop853_residual),
-        shooting_hamiltonian_conservation_error=float(h_err),
-        xtfc_collocation_defect_norm=float(xtfc_defect)
+        shooting_collocation_defect_norm=shoot_colloc_defect,
+        shooting_hamiltonian_conservation_error=float(shooting_sol.energy_error),
+        xtfc_collocation_defect_norm=xtfc_colloc_defect,
+        xtfc_hamiltonian_conservation_error=float(xtfc_sol.energy_error)
     )

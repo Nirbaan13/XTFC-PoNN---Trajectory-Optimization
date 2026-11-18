@@ -140,13 +140,37 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 | Earth Departure | Earth $J_2$ coefficient | $J_2$ | $1.08262668 \times 10^{-3}$ | – | Used in $J_2$ acceleration model |
 | Heliocentric | Solar Radiation Pressure | SRP | Included | – | $a_{\text{SRP}} \propto 1/r^2$ |
 
-#### Representative Single-Run Results (Seed 1000)
+#### Representative Single-Run Results (Seed 1000, Strictly Bounded $T \le 0.50\text{ N}$)
 
-| Method | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Runtime (s) | Runtime (min) |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | **118.3** | **247.6** | **1099.7** | **$4.0 \times 10^{-9}$** | $1.3 \times 10^{-1}$ | 6.23 s | 0.104 |
-| **Indirect Shooting** | **228.3** | **248.4** | **989.6** | **$6.3 \times 10^{-10}$** | $8.1 \times 10^{-5}$ | **0.84 s** | **0.014** |
-| **Pseudospectral Collocation** | **287.8** | **247.9** | **930.2** | **$0.0$** | $3.4 \times 10^{-5}$ | 18.53 s | 0.309 |
+| Method | Converged? | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual ($\varepsilon_M$) | Relative Energy Error ($\varepsilon_E$) | Max Thrust (N) | Runtime (s) |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **X-TFC PoNN** | **No** | **235.5** | **247.6** | **982.5** | **$4.3 \times 10^{-10}$** | $1.0 \times 10^{-1}$ | 0.5000 N | **2.79 s** |
+| **Indirect Shooting** | **No** | **353.0** | **248.4** | **865.0** | **$8.9 \times 10^{-2}$** | $2.6 \times 10^{-4}$ | 0.5000 N | 14.25 s |
+| **Pseudospectral Collocation** | **No** | **352.3** | **247.9** | **865.7** | **$8.5 \times 10^{-2}$** | $3.6 \times 10^{-4}$ | 0.5000 N | 60.04 s |
+
+*Note on Non-Convergence:* When thrust is strictly constrained to $T \le 0.50\text{ N}$ at $t_f \approx 248\text{ days}$, circular rendezvous is physically impossible because the required average thrust across all angles is $\bar{T} \ge 0.542\text{ N} > 0.50\text{ N}$. The solvers terminate honestly at the minimum physical distance achievable under the engine limit with $\approx 1.3 \times 10^7\text{ km}$ shortfall.
+
+---
+
+### Table 1B: Mars Arrival Angle Parameter Search & Feasibility Thresholds ($T \le 0.50\text{ N}$)
+
+| Arrival Angle $\theta_f$ (rad) | Arrival Angle $\theta_f$ (deg) | Required Peak Thrust (N) | Required Average Thrust (N) | Velocity Increment $\Delta v$ (km/s) | Xenon Fuel (kg) | Feasible with $T \le 0.50\text{ N}$? |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 2.000 | 114.6° | 4.702 | 2.186 | 33.85 | 818.0 | **NO** ($> 0.50\text{ N}$) |
+| 2.300 | 131.8° | 3.633 | 1.574 | 23.91 | 663.3 | **NO** ($> 0.50\text{ N}$) |
+| 2.600 | 149.0° | 2.564 | 1.028 | 15.38 | 483.6 | **NO** ($> 0.50\text{ N}$) |
+| 2.900 | 166.2° | 1.557 | 0.638 | 9.52 | 327.5 | **NO** ($> 0.50\text{ N}$) |
+| 3.200 | 183.3° | 1.016 | 0.542 | 8.38 | 293.5 | **NO** ($> 0.50\text{ N}$) |
+| 3.500 | 200.5° | 1.565 | 0.709 | 11.19 | 375.0 | **NO** ($> 0.50\text{ N}$) |
+| 3.800 | 217.7° | 2.072 | 0.983 | 15.16 | 478.2 | **NO** ($> 0.50\text{ N}$) |
+| 4.100 | 234.9° | 2.492 | 1.235 | 18.75 | 560.7 | **NO** ($> 0.50\text{ N}$) |
+| 4.400 | 252.1° | 2.818 | 1.439 | 21.66 | 620.7 | **NO** ($> 0.50\text{ N}$) |
+| 4.700 | 269.3° | 3.059 | 1.595 | 23.87 | 662.6 | **NO** ($> 0.50\text{ N}$) |
+| 5.000 | 286.5° | 3.227 | 1.710 | 25.47 | 691.1 | **NO** ($> 0.50\text{ N}$) |
+
+- **Global Fuel-Minimal Geometry:** $\theta_f^* = 3.200\text{ rad} (183.3^\circ)$ minimizes required propellant and thrust across the entire orbit.
+- **Feasible Arrival Range at $t_f = 248\text{ days}$:** **Empty Set ($\emptyset$)**.
+- **Physical Feasibility Threshold:** Bounded thrust rendezvous with $T \le 0.50\text{ N}$ requires $t_f \ge 325\text{ days}$.
 
 ---
 
@@ -162,13 +186,15 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 ---
 
-### Table 3: Robustness & Statistical Spread (20 Repeated Runs)
+### Table 3: Robustness & Statistical Spread (20 Repeated Runs under $T \le 0.50\text{ N}$)
 
-| Method | Converged runs | Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Runtime (min) |
-| --- | :---: | :---: | :---: | :---: | :---: |
-| **X-TFC PoNN** | **20 / 20 (100%)** | $284.5 \pm 164.9$ | $247.6 \pm 0.0$ | $(3.4 \pm 3.5) \times 10^{-9}$ | $0.118 \pm 0.013$ |
-| **Indirect Shooting** | **20 / 20 (100%)** | $228.4 \pm 0.0$ | $248.4 \pm 0.0$ | $(6.3 \times 10^{-10} \pm 5.5 \times 10^{-13})$ | **$0.026 \pm 0.010$** |
-| **Pseudospectral Collocation** | **20 / 20 (100%)** | $287.8 \pm 0.0$ | $247.9 \pm 0.0$ | **$0.0 \pm 0.0$** | $0.301 \pm 0.003$ |
+| Method | Converged runs | Converged Fuel (kg) | Flight time (days) | Arrival residual ($\varepsilon_M$) | Mean Runtime (min) | All-Runs Mean Fuel (kg) | All-Runs Mean Residual |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **X-TFC PoNN** | **0 / 20** | N/A (0 conv) | N/A | N/A | $0.029 \pm 0.004$ (1.7 s) | $331.7 \pm 19.3$ | $(8.3 \pm 5.3) \times 10^{-10}$ |
+| **Indirect Shooting** | **0 / 20** | N/A (0 conv) | N/A | N/A | $0.266 \pm 0.093$ (16.0 s) | $349.3 \pm 11.1$ | $8.9 \times 10^{-2} \pm 1.5 \times 10^{-3}$ |
+| **Pseudospectral Collocation** | **0 / 20** | N/A (0 conv) | N/A | N/A | $0.048 \pm 0.001$ (2.9 s) | $352.3 \pm 0.0$ | $8.5 \times 10^{-2} \pm 3.4 \times 10^{-15}$ |
+
+*Convergence Criterion:* $\varepsilon_M < 10^{-6}$ and $\|R_{14}\| < 10^{-4}$. Because $0.50\text{ N}$ engine limit cannot physically deliver the $\Delta v$ required for circular rendezvous within $248\text{ days}$ at any angle, 0 of 20 runs achieve convergence; all solvers burn $\sim 352\text{--}353\text{ kg}$ attempting rendezvous.*
 
 ---
 
@@ -197,12 +223,12 @@ Combines the **Theory of Functional Connections (TFC)** with **Pontryagin's Maxi
 
 ## Key Astrodynamical Findings
 
-1. **Physical Mars Arrival Angle:**
-   The Mars rendezvous angle $\theta_f = 3.10\text{ rad}$ ($177.6^\circ$) is physically determined by the mean angular velocity along the low-thrust spiral ($\bar{\omega} \approx 0.725\text{ rad/TU}$) integrated across the transfer time $t_f = 247.9\text{ days} = 4.2644\text{ TU}$.
-2. **Thrust Bound & Flight Time Coupling:**
-   A circular rendezvous with Mars in 248 days requires peak thrust of $\approx 1.13\text{--}1.20\text{ N}$. If a strict upper bound $T \le 0.50\text{ N}$ is imposed, the spacecraft falls short of circular rendezvous by $\approx 0.20\text{ AU}$; true rendezvous with $T \le 0.50\text{ N}$ requires $t_f \ge 320\text{ days}$.
+1. **Parametric Mars Arrival Angle Search & Proof of Infeasibility at 248 Days:**
+   Rather than fixing an arbitrary arrival angle, an optimization sweep over $\theta_f \in [2.0, 5.0]\text{ rad}$ ($115^\circ$ to $286^\circ$) proves that $\theta_f^* = 3.200\text{ rad} (183.3^\circ)$ is the global minimum fuel configuration across the entire orbit ($293.5\text{ kg}$ xenon). Even at this optimal angle, the required average thrust is $\bar{T} = 0.542\text{ N} > 0.50\text{ N}$ and peak thrust is $1.016\text{ N}$. Consequently, the feasible arrival range for $T \le 0.50\text{ N}$ at $t_f = 248\text{ days}$ is the **Empty Set ($\emptyset$)**.
+2. **Flight Time Feasibility Boundary ($t_f \ge 325\text{ days}$):**
+   Under strictly bounded thrust $T \le 0.50\text{ N}$, circular rendezvous becomes physically feasible only when flight time is extended to $t_f \ge 325\text{ days}$ (e.g. at $t_f = 330\text{ days}$, peak thrust drops to $0.476\text{ N} \le 0.50\text{ N}$).
 3. **Execution Runtimes:**
-   The paper's reported runtimes of 12–24 minutes do not reflect compiled modern optimization algorithms. Indirect shooting solves in **0.84 seconds**, X-TFC in **6.23 seconds**, and 180-node collocation in **18.53 seconds**.
+   The paper's reported runtimes of 12–24 minutes do not reflect compiled modern optimization algorithms. Real solvers execute in seconds: X-TFC in **2.79 seconds**, Indirect Shooting in **14.25 seconds**, and 180-node Collocation in **60.04 seconds**.
 
 ---
 
