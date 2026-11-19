@@ -1,22 +1,9 @@
-"""Earth-Mars Low-Thrust Trajectory Optimization package.
+"""Earth-Mars low-thrust trajectory optimization: X-TFC PoNN, indirect shooting
+and LGL pseudospectral collocation on one common fuel-optimal problem.
 
-Benchmarking X-TFC PoNN, Indirect Shooting, and Pseudospectral Collocation
-under J2 and Solar Radiation Pressure perturbations.
+Submodules are imported explicitly by callers (e.g.
+``from trajectory_optimization.indirect_shooting import IndirectShootingSolver``)
+to keep import time low.
 """
 
-from .constants import *
-from .dynamics import *
-from .indirect_shooting import IndirectShootingSolver, TrajectorySolution
-from .xtfc_ponn import XTFC_PoNN_Solver
-from .pseudospectral import PseudospectralCollocationSolver
-from .escape_phase import propagate_escape_phase, generate_table_e1, generate_table_e2
-from .metrics import compute_table_2_perturbations, format_table_2_markdown
-from .benchmarks import run_representative_benchmarks, run_robustness_protocol
-from .plotting import (
-    plot_figure_4_1,
-    plot_figure_4_2_schematic_3d,
-    plot_figure_4_3_top_view,
-    plot_perturbation_magnitudes
-)
-
-__version__ = "1.0.0"
+__version__ = "2.0.0"

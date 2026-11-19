@@ -1,27 +1,28 @@
 """Tests for X-TFC Pontryagin Neural Network method."""
 
 import numpy as np
-import pytest
 
-from trajectory_optimization.xtfc_ponn import XTFC_PoNN_Solver
-from trajectory_optimization.constants import SCALE_M
+from trajectory_optimization.problem import HelioProblem
+from trajectory_optimization.xtfc_ponn import XTFCPoNNSolver
+from trajectory_optimization.metrics import evaluate_solution
 
 
 def test_xtfc_ponn_solve():
-    solver = XTFC_PoNN_Solver(flight_time_days=247.6, n_collocation_nodes=60, n_basis_terms=16)
-    sol = solver.solve(seed=1000, perturb_weights=False)
+    solver = XTFCPoNNSolver(n_neurons=160, n_points=280)
 
-    # Infeasible at 0.50 N cap at tf = 247.6 days -> 14-residual norm > 1e-4 -> honestly non-converged
-    assert not sol.converged
-    assert np.isclose(sol.flight_time_days, 247.6, atol=0.1)
-    assert 200.0 <= sol.xenon_used_kg <= 360.0
-    assert np.isclose(sol.final_mass_kg, SCALE_M - sol.xenon_used_kg, atol=0.1)
-    # X-TFC PoNN achieves machine precision Mars arrival residual via TFC analytical embedding
-    assert sol.arrival_residual <= 1e-6
-    assert np.max(sol.thrust_n) <= 0.5001
-    assert sol.energy_error <= 0.2
-    assert len(sol.loss_history) > 0
-    # Loss should decrease significantly during training
-    assert sol.loss_history[-1] < sol.loss_history[0]
-    assert sol.runtime_seconds > 0.0
-    assert sol.iterations > 0
+    # 1. Paper nominal duration (247.9 d) -> infeasible under 0.50 N -> reports non-convergence
+    p248 = HelioProblem(tf_days=247.9, theta_f=3.360065)
+    r248 = solver.solve(p248, seed=1000)
+    assert not r248.success
+    assert r248.arrival_residual < 1e-12  # TFC analytical boundary embedding is exact
+
+    # 2. Feasible duration (261.0 d) -> converges through full homotopy
+    p261 = HelioProblem(tf_days=261.0, theta_f=3.360065)
+    r261 = solver.solve(p261, seed=1000)
+    ev = evaluate_solution(p261, r261)
+    assert r261.success
+    assert r261.arrival_residual < 1e-12
+    assert r261.residual_rms < 1e-4
+    assert ev["max_thrust_N"] <= 0.500001
+    assert len(r261.loss_history) == r261.iterations
+    assert r261.runtime_s > 0.0

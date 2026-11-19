@@ -1,48 +1,42 @@
 # Table 1: Initial Mission, Spacecraft, Propulsion, Orbital and Numerical Parameters
 
-| Parameter Category | Parameter | Symbol | Assumed Initial Value / Setting | Unit | Application / Justification |
-| --- | --- | --- | --- | --- | --- |
-| Mission | Departure body | – | Earth | – | Initial planetary body |
-| Mission | Arrival body | – | Mars | – | Terminal planetary body |
-| Mission | Mission type | – | Low-thrust interplanetary transfer | – | Common mission definition for all algorithms |
-| Mission | Transfer type | – | Earth–Mars heliocentric transfer | – | Same for X-TFC, indirect shooting and collocation |
-| Mission | Nominal transfer time | tf | 247.6–248.4 | days | Heliocentric transfer time; nominal target ≈248 days |
-| Mission | Reference transfer time | tf,ref | 247.9 | days | Representative common value for numerical initialization |
-| Mission | Total mission time | ttot | ≈474 | days | Escape (≈226 days) plus heliocentric (≈248 days) |
-| Mission | Propulsion mode | – | Solar-electric ion propulsion | – | Consistent with Dawn-type spacecraft configuration |
-| Mission | Eclipse modeling | – | Not included | – | Explicit methodological assumption |
-| Spacecraft | Mass at start of heliocentric phase | m0 | 1,218 | kg | Dawn-class mass used at start of heliocentric phase |
-| Spacecraft | Xenon available for heliocentric | mXe,0 | ≈300 | kg | Must exceed reported consumption of 274.8–276.1 kg |
-| Spacecraft | Final spacecraft mass | mf | ≈941.9–943.2 | kg | Initial mass minus xenon consumption |
-| Spacecraft | Propellant | – | Xenon | – | Ion propulsion propellant |
-| Spacecraft | Propellant consumption | Δmprop | 274.8–276.1 | kg | Heliocentric phase |
-| Spacecraft | Spacecraft dry mass | mdry | ≈918 | kg | m0 − mXe,0 = 1,218 − 300 kg |
-| Spacecraft | Solar-array configuration | – | Large deployable solar arrays | – | Consistent with Dawn-type configuration |
-| Propulsion | Maximum thrust | Tmax | ≈0.50 | N | Uprated Dawn-derived thruster set |
-| Propulsion | Minimum thrust | Tmin | 0 | N | Allows coast/low-thrust control |
-| Propulsion | Specific impulse | Isp | ≈3,100 | s | Representative ion-propulsion assumption |
-| Propulsion | Standard gravity | g0 | 9.80665 | m/s² | Standard gravitational acceleration |
-| Propulsion | Maximum mass-flow rate | ṁmax | ≈1.64 × 10⁻⁵ | kg/s | Tmax / (Isp * g0) |
-| Earth Departure | Parking-orbit altitude | hp | ≈500 | km | Initial circular parking orbit |
-| Earth Departure | Earth equatorial radius | RE | 6,378.137 | km | Earth gravitational model |
-| Earth Departure | Earth gravitational parameter | μE | 398,600.4418 | km³/s² | Earth departure dynamics |
-| Earth Departure | Earth J2 coefficient | J2 | 1.08262668 × 10⁻³ | – | Used in J2 acceleration model |
-| Earth Departure | Departure perturbation | – | Earth J2 | – | Applied during parking-orbit escape |
-| Heliocentric Dynamics | Sun gravitational parameter | μS | 1.32712440018 × 10¹¹ | km³/s² | Main heliocentric gravitational parameter |
-| Heliocentric Dynamics | Earth heliocentric orbit radius | rE | ≈1.0 | AU | Initial heliocentric condition |
-| Heliocentric Dynamics | Mars heliocentric orbit radius | rM | ≈1.524 | AU | Terminal heliocentric condition |
-| Heliocentric Dynamics | Astronomical unit | AU | 149,597,870.7 | km | Distance normalization |
-| Solar Radiation Pressure | SRP included | – | Yes | – | Applied during heliocentric transfer |
-| Solar Radiation Pressure | Solar pressure at 1 AU | P0 | ≈4.56 × 10⁻⁶ | N/m² | Reference solar radiation pressure |
-| Solar Radiation Pressure | Reflectivity coefficient | CR | ≈1.2 | – | Spacecraft optical coefficient |
-| Solar Radiation Pressure | Area-to-mass ratio | A/m | ≈0.02 | m²/kg | Large-solar-array configuration |
-| Solar Radiation Pressure | SRP acceleration at 1 AU | aSRP,1AU | ≈1.09 × 10⁻⁷ | m/s² | P0 * CR * A/m |
-| Solar Radiation Pressure | SRP acceleration at Mars | aSRP,Mars | ≈4.7 × 10⁻⁸ | m/s² | Scaled by 1/r² to 1.524 AU |
+## Part A: Problem Specification & Physical Constants
 
-### Representative Method Performance (Seed 1000)
+| Parameter Category | Parameter | Symbol | Setting / Computed Value | Unit | Notes |
+| --- | --- | :---: | :---: | :---: | --- |
+| Mission | Departure / Arrival body | – | Earth → Mars | – | Two-phase low-thrust transfer |
+| Mission | Paper nominal heliocentric transfer time | t_f,nom | 247.90 | days | Common fixed time for paper scenario (4.2644 TU) |
+| Mission | Minimum feasible transfer time at 0.50 N | t_min | 260.8333 | days | Free-tf, free-θ_f 180-node LGL minimum-time solution (4.4869 TU) |
+| Mission | Shortest all-method converged duration | t_f,feas | 261.00 | days | Common fixed time for feasible benchmark (4.4897 TU) |
+| Mission | Target Mars arrival longitude | θ_f | 192.5175 (3.360065) | deg (rad) | Common target state for all three methods |
+| Spacecraft | Parking-orbit initial wet mass | m_park | 1538.6 | kg | 500 km circular parking orbit |
+| Spacecraft | Heliocentric initial mass | m_0 | 1218.0 | kg | Mass after escape spiral (1218.04 kg computed) |
+| Spacecraft | Nominal dry mass / xenon budget | m_dry / m_Xe,0 | 918.0 / 300.0 | kg | Paper specification (m_0 = m_dry + m_Xe,0) |
+| Propulsion | Thrust bounds | [T_min, T_max] | [0.0, 0.50] | N | Strictly enforced in all three solvers |
+| Propulsion | Specific impulse & standard gravity | I_sp, g_0 | 3100.0, 9.80665 | s, m/s² | Exhaust velocity c = 30400.61 m/s |
+| Propulsion | Maximum mass-flow rate | ṁ_max | 1.6447e-05 (1.4210) | kg/s (kg/d) | T_max / (I_sp g_0) |
+| Earth Departure | Parking altitude & radius | h_p, r_p | 500.0, 6878.137 | km | μ_E = 398600.4418 km³/s², J_2 = 1.08262668e-03 |
+| Earth Departure | Escape duration & propellant (i=28.5°) | t_esc, Δm_esc | 225.58, 320.56 | days, kg | DOP853 3D Cartesian propagation to E = 0 (Δv = 7.103 km/s) |
+| Earth Departure | Equatorial J_2 acceleration at 500 km | a_J2(500 km) | 1.177e-02 | m/s² | 36.2× max thrust acceleration |
+| Heliocentric | Sun gravitational parameter & AU | μ_S, AU | 132712440018.00, 149,597,870.7 | km³/s², km | r_E = 1.000 AU, r_M = 1.524 AU |
+| Solar Radiation Pressure | P_0, C_R, A/m | P_0, C_R, A/m | 4.56e-06, 1.20, 0.020 | N/m², –, m²/kg | K_SRP = 2.4492e+15 m³/s² (K_SRP/μ_S = 1.8455e-05) |
+| Solar Radiation Pressure | SRP acceleration at 1 AU / 1.524 AU | a_SRP | 1.094e-07 / 4.712e-08 | m/s² | Explicit radial perturbation a_SRP = K_SRP r / r³ |
 
-| Method | Converged? | Propellant Used (kg) | Flight Time (days) | Final Mass (kg) | Mars Arrival Residual | Energy Error | Max Thrust (N) | Runtime (s) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| X-TFC PoNN | No | 235.5 | 247.6 | 982.5 | 4.3e-10 | 1.0e-01 | 0.5000 N | 2.79 s |
-| Indirect Shooting | No | 353.0 | 248.4 | 865.0 | 8.9e-02 | 2.6e-04 | 0.5000 N | 14.25 s |
-| Pseudospectral Collocation | No | 352.3 | 247.9 | 865.7 | 8.5e-02 | 3.6e-04 | 0.5000 N | 60.04 s |
+## Part B: Computed Solver Performance (Seed 1000 Representative Run)
+
+### 1. Paper Nominal Scenario (tf = 247.9 days, θ_f = 192.52°, T_max = 0.50 N — Below Minimum Feasible Time t_min = 260.83 days)
+
+| Method | Converged? | Propellant Δm_Xe (kg) | Final Mass m_f (kg) | Flight Time t_f (days) | Solver Terminal ε_M | DOP853 Re-prop ε_M | 14-ODE RMS | 180-LGL Defect RMS | Energy Error ε_E | Max Thrust (N) | Iterations | Func / Jac Evals | Runtime (s) | Runtime (min) | Warm Start / Continuation |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
+| X-TFC PoNN | False | 295.54 | 922.46 | 247.90 | 0.00e+00 | 6.50e-01 | 1.71e-01 | 1.15e+00 | 1.95e-01 | 0.4998 | 15 (L0=3.08e-01→Lf=2.91e-02) | 23 / 15 | 22.79 | 0.380 | deterministic polar/tangential guess (eps=1 shooting did not converge) |
+| Indirect shooting | False | 352.27 | 865.73 | 247.90 | 3.48e-02 | 3.48e-02 | 1.85e-02 | 2.00e-03 | 5.80e-05 | 0.5000 | 2118 | 1,426,644 / 1 | 13.73 | 0.229 | none (random costate draw) |
+| Pseudospectral collocation | False | 340.84 | 877.16 | 247.90 | 3.17e-02 | 3.22e-02 | 2.65e+04 | 9.24e-04 | 2.55e-03 | 0.5000 | 170 | 542 / 344 | 58.92 | 0.982 | none (seeded polar interpolation) (slack=3.17e-02) |
+
+### 2. Shortest All-Method Converged Scenario (tf = 261.0 days, θ_f = 192.52°, T_max = 0.50 N)
+
+| Method | Converged? | Propellant Δm_Xe (kg) | Final Mass m_f (kg) | Flight Time t_f (days) | Solver Terminal ε_M | DOP853 Re-prop ε_M | 14-ODE RMS | 180-LGL Defect RMS | Energy Error ε_E | Max Thrust (N) | Iterations | Func / Jac Evals | Runtime (s) | Runtime (min) | Warm Start / Continuation |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
+| X-TFC PoNN | True | 370.65 | 847.35 | 261.00 | 0.00e+00 | 6.44e-04 | 7.75e-05 | 7.20e-04 | 7.80e-04 | 0.5000 | 129 (L0=4.10e-09→Lf=6.00e-09) | 151 / 129 | 63.98 | 1.066 | projected from eps=1 smoothed shooting extremal |
+| Indirect shooting | True | 368.28 | 849.72 | 261.00 | 2.82e-11 | 5.61e-04 | 1.16e-03 | 3.58e-03 | 3.31e-04 | 0.5000 | 1105 | 516,950 / 10 | 5.07 | 0.084 | none (random costate draw) |
+| Pseudospectral collocation | True | 368.35 | 849.65 | 261.00 | 0.00e+00 | 4.81e-05 | 2.76e+01 | 3.31e-11 | 7.88e-05 | 0.5000 | 48 | 160 / 98 | 12.09 | 0.202 | none (seeded polar interpolation) |
+

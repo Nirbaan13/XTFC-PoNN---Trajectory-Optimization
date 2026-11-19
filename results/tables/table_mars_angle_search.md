@@ -1,30 +1,37 @@
-# Parameter Search: Mars Arrival Angle Feasibility & Fuel Optimality
+# Mars Arrival Angle Sweep and Minimum-Time Feasibility Analysis (T_max = 0.50 N)
 
-**Nominal Transfer Time:** $t_f = 247.9\text{ days}$  
+## 1. Minimum-Time Rendezvous Problem (Free tf, Free Arrival Longitude θ_f, 180 LGL Nodes)
 
-**Fuel-Minimal Arrival Angle:** $\theta_f^* = 3.200\text{ rad} (183.3^\circ)$  
+| Metric | Value |
+| --- | --- |
+| Solver status | `Solve_Succeeded` (`success = True`) |
+| Minimum transfer time `t_min` | **260.8333 days** (4.486880 TU) |
+| Optimal arrival longitude `θ_f(t_min)` | **192.5175°** (3.360065 rad) |
+| Propellant consumed at `t_min` | **370.65 kg** |
+| IPOPT iterations (`N = 180`) | 8 |
+| Wall-clock runtime | 5.24 s |
 
-**Minimum Fuel Consumption:** $293.5\text{ kg}$  
+## 2. Bounded-Thrust Angle Sweep at Paper Nominal Duration (tf = 247.9 days)
 
+| θ_f (deg) | θ_f (rad) | Collocation Converged? | Collocation Fuel (kg) | Collocation Slack Norm | Collocation Re-prop ε_M | Shooting Converged? | Shooting Fuel (kg) | Shooting ε_M |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 165.0° | 2.8798 | False | 343.36 | 3.726e-01 | 3.726e-01 | False | 352.27 | 4.041e-01 |
+| 175.0° | 3.0543 | False | 307.78 | 1.516e-01 | 1.516e-01 | False | 352.25 | 1.364e-01 |
+| 180.0° | 3.1416 | False | 341.07 | 5.110e-02 | 5.116e-02 | False | 352.27 | 4.949e-02 |
+| 185.0° | 3.2289 | False | 286.92 | 3.102e-02 | 3.102e-02 | False | 352.27 | 1.942e-02 |
+| 190.0° | 3.3161 | False | 291.55 | 3.218e-02 | 3.221e-02 | False | 352.27 | 2.378e-02 |
+| 192.5° | 3.3601 | False | 274.01 | 4.008e-02 | 4.012e-02 | False | 352.27 | 2.127e-01 |
+| 195.0° | 3.4034 | False | 285.38 | 4.489e-02 | 4.497e-02 | False | 352.27 | 7.624e-02 |
+| 200.0° | 3.4907 | False | 228.57 | 7.003e-02 | 7.004e-02 | False | 352.27 | 2.089e-01 |
+| 210.0° | 3.6652 | False | 249.44 | 1.064e-01 | 1.064e-01 | False | 352.27 | 7.741e-02 |
 
-| Arrival Angle $\theta_f$ (rad) | Arrival Angle $\theta_f$ (deg) | Required Peak Thrust (N) | Required Average Thrust (N) | Velocity Increment $\Delta v$ (km/s) | Xenon Fuel (kg) | Feasible with $T \le 0.50\text{ N}$? |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 2.000 | 114.6° | 4.702 | 2.186 | 33.85 | 818.0 | **NO** ($> 0.50\text{ N}$) |
-| 2.300 | 131.8° | 3.633 | 1.574 | 23.91 | 663.3 | **NO** ($> 0.50\text{ N}$) |
-| 2.600 | 149.0° | 2.564 | 1.028 | 15.38 | 483.6 | **NO** ($> 0.50\text{ N}$) |
-| 2.900 | 166.2° | 1.557 | 0.638 | 9.52 | 327.5 | **NO** ($> 0.50\text{ N}$) |
-| 3.200 | 183.3° | 1.016 | 0.542 | 8.38 | 293.5 | **NO** ($> 0.50\text{ N}$) |
-| 3.500 | 200.5° | 1.565 | 0.709 | 11.19 | 375.0 | **NO** ($> 0.50\text{ N}$) |
-| 3.800 | 217.7° | 2.072 | 0.983 | 15.16 | 478.2 | **NO** ($> 0.50\text{ N}$) |
-| 4.100 | 234.9° | 2.492 | 1.235 | 18.75 | 560.7 | **NO** ($> 0.50\text{ N}$) |
-| 4.400 | 252.1° | 2.818 | 1.439 | 21.66 | 620.7 | **NO** ($> 0.50\text{ N}$) |
-| 4.700 | 269.3° | 3.059 | 1.595 | 23.87 | 662.6 | **NO** ($> 0.50\text{ N}$) |
-| 5.000 | 286.5° | 3.227 | 1.710 | 25.47 | 691.1 | **NO** ($> 0.50\text{ N}$) |
+## 3. Bounded-Thrust Angle Sweep at Feasible Duration (tf = 261.0 days)
 
-### Feasibility & Physical Interpretation
-- **Global Fuel-Minimal Geometry:** $\theta_f^* = 3.10\text{ rad} (177.6^\circ)$ represents the exact global minimum fuel and minimum thrust configuration across the entire orbit.
-- **Feasible Angle Range for $T \le 0.50\text{ N}$:** **Empty Set ($\emptyset$)**.
-- **Mathematical Proof of Infeasibility at $t_f = 248\text{ days}$:**
-  Even at the global minimum angle $\theta_f = 3.10\text{ rad}$, the required average thrust is $\bar{T} = 0.540\text{ N} > 0.50\text{ N}$, and the required peak thrust is $0.977\text{ N}$.
-  Because an engine strictly limited to $T \le 0.50\text{ N}$ cannot deliver an average thrust of $0.540\text{ N}$, **no arrival angle in the entire 360-degree orbit allows circular-to-circular rendezvous within 248 days**.
-- **Threshold Flight Time for $T \le 0.50\text{ N}$:** Bounded thrust rendezvous becomes physically feasible only when flight time is extended to $t_f \ge 325\text{ days}$ (e.g. at $t_f = 330\text{ days}$, peak thrust is $0.476\text{ N} \le 0.50\text{ N}$).
+| θ_f (deg) | θ_f (rad) | Collocation Converged? | Collocation Fuel (kg) | Collocation Slack Norm | Collocation Re-prop ε_M | Shooting Converged? | Shooting Fuel (kg) | Shooting ε_M |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 191.5° | 3.3423 | False | 283.28 | 1.653e-02 | 1.660e-02 | False | 370.72 | 3.253e-04 |
+| 192.0° | 3.3510 | True | 369.96 | 0.000e+00 | 6.490e-05 | True | 369.93 | 1.177e-14 |
+| 192.5° | 3.3601 | True | 368.35 | 0.000e+00 | 4.801e-05 | True | 368.28 | 9.364e-13 |
+| 193.0° | 3.3685 | False | 312.62 | 8.824e-03 | 8.962e-03 | True | 368.86 | 2.454e-13 |
+| 193.5° | 3.3772 | False | 282.94 | 2.375e-02 | 2.380e-02 | False | 370.89 | 3.395e-05 |
+

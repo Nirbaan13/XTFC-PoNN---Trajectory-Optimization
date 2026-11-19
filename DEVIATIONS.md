@@ -1,37 +1,18 @@
-# DEVIATIONS.md: Differences from Paper Claims & Implementations
+# Documented Software and Numerical Deviations from the Manuscript (`DEVIATIONS.md`)
 
-This document explicitly identifies all discrepancies, refinements, or algorithmic differences between the original paper text and the genuine computational implementation in this repository.
+This file documents every difference between the manuscript's description/claims and the actual implementation and computed results.
 
----
+## 1. Software Framework Substitutions
 
-## 1. Computational Frameworks & Software
+1. **Direct Pseudospectral Collocation (`CasADi + IPOPT` in place of `Dymos + IPOPT`):** The manuscript states that pseudospectral collocation was implemented in Dymos with IPOPT. Because Dymos requires `pyOptSparse` compiled against IPOPT headers (not available as a prebuilt wheel in this Linux environment), we implement the exact same 180-node Legendre-Gauss-Lobatto (LGL) differentiation-matrix defect transcription $(D\mathbf{X})_k = (t_f/2)\mathbf{f}(\mathbf{X}_k, \mathbf{u}_k, T_k)$ directly in `CasADi 3.8.2` solved with `IPOPT` (MUMPS linear solver). All 180 LGL nodes are used in every single run, including all 20 robustness runs.
+2. **Indirect Shooting Root-Finder (`scipy.optimize.fsolve` with `least_squares(method='lm')` Fallback):** Each homotopy level $\varepsilon$ is solved first with `scipy.optimize.fsolve` (MINPACK `hybrd`), exactly as stated in the paper. At the initial coarse level $\varepsilon = 1.0$, random costate guesses frequently lie outside the local Newton basin of `fsolve`; when `fsolve` fails to reach the level tolerance ($10^{-9}$), the solver automatically falls back to `scipy.optimize.least_squares(method='lm')` (MINPACK `lmdif`) from the same starting point, and logs which algorithm closed each level.
+3. **X-TFC PoNN Implementation (`JAX` + `NumPy` ELM with Analytical TFC Constrained Expressions):** Implemented as a single-hidden-layer $\tanh$ Extreme Learning Machine with exact TFC boundary-constrained expressions for $\mathbf{r}(0), \mathbf{r}(t_f), \mathbf{v}(0), \mathbf{v}(t_f), m(0), \lambda_m(t_f)=0$, JAX forward-mode automatic differentiation for the 14-state ODE Jacobian, and Levenberg-Marquardt training.
+4. **Removal of Table E2:** Section 3 and Section 5 of the paper state that the escape phase is a prescribed tangential-thrust propagation rather than an optimal control solve. In accordance with Requirement F, Table E1 is retained and the redundant Table E2 has been deleted.
 
-| Item | Original Paper Statement | Actual Implementation in Repo | Reason for Deviation |
-| :--- | :--- | :--- | :--- |
-| **Collocation NLP Framework** | "using the Dymos software with the IPOPT optimizer" | **CasADi (v3.8.2) + IPOPT (v3.14.19)** with MUMPS linear solver | Dymos requires pyOptSparse and custom Fortran compilers. CasADi provides official precompiled IPOPT with C-compiled automatic differentiation, solving the identical LGL collocation NLP on 180 nodes. |
-| **Collocation Objective & Formulation** | Single-stage optimization minimizing propellant | **Two-stage collocation**: Stage 1 solves energy-optimal problem as initial guess; Stage 2 solves true fuel-optimal NLP minimizing propellant $(m_0 - m_f)$ with explicit mass state $m(t_k)$ and strict $m(t_k)\|\mathbf{u}_k\| \le 0.50\text{ N}$ | Direct fuel-optimal collocation with bang-bang switching exhibits severe local minima and Jacobian singular arcs without warm-starting; Stage 1 energy-optimal profile provides an unbiased initial guess. |
-| **Shooting Solver Root-Finder** | "using the SciPy modules solve_ivp and fsolve" | **`scipy.integrate.solve_ivp` (DOP853) + Levenberg-Marquardt root-finder** with $\varepsilon$-homotopy | Plain `fsolve` (Powell's hybrid dogleg) diverges due to extreme sensitivity of the 7 initial costates; Levenberg-Marquardt with continuation stages provides quadratic curvature convergence. |
-| **X-TFC Neural Architecture** | "Python tfc module ... 4,300 epochs" | **TFC Constrained Expressions + Chebyshev Basis with Levenberg-Marquardt** | The `tfc` package is a research wrapper around Chebyshev/CPNs; here we implement the exact analytical TFC Hermite constrained expressions and Chebyshev basis in vectorized NumPy for speed, stability, and transparency. Evaluates the full 14-residual norm $\|R_{14}\|$. |
+## 2. Physical and Numerical Discrepancies Between Paper Claims and Computed Results
 
----
+1. **Minimum Transfer Time vs Paper Nominal Duration ($t_f = 247.9\text{ days}$):** The 180-node minimum-time NLP proves that the shortest physically possible circular Mars rendezvous duration under $T \le 0.50\text{ N}$ with $m_0 = 1,218.0\text{ kg}$ and $I_{\text{sp}} = 3,100\text{ s}$ is **$t_{\min} = 260.8333\text{ days}$**. Consequently, at $t_f = 247.9\text{ days}$, all three solvers fail to converge (`converged = False`), and the 180-node collocation solver can only return a soft-slack continuation fallback with terminal slack norm `3.169e-02`.
+2. **Propellant Consumption at Feasible Duration ($t_f = 261.0\text{ days}$):** At the shortest duration where all three methods converge ($t_f = 261.0\text{ days}$), the computed xenon consumption is **368.28 kg** (Indirect shooting), **368.35 kg** (Pseudospectral collocation), and **370.65 kg** (X-TFC PoNN), compared to the paper's claimed 274.8–276.1 kg.
+3. **X-TFC Iteration Count and Final Physics Loss:** Instead of 4,300 epochs decaying from $1.2 \times 10^{-1}$ to $2.8 \times 10^{-8}$, Levenberg-Marquardt training across the 10-step $\varepsilon$-homotopy at $t_f = 261.0\text{ days}$ takes **129 LM iterations**, with mean-squared 14-ODE residual loss moving from `4.10e-09` to `6.00e-09` (RMS residual `7.75e-05`).
+4. **Wall-Clock Runtimes:** Measured wall-clock runtimes with `time.perf_counter()` at $t_f = 261.0\text{ days}$ are **63.98 s** (1.066 min) for X-TFC PoNN, **5.07 s** (0.084 min) for Indirect shooting, and **12.09 s** (0.202 min) for 180-node Pseudospectral collocation, rather than the paper's 18.6, 24.0, and 12.2 minutes.
 
-## 2. Solver Runtimes & Efficiency
-
-| Method | Paper Stated Runtime | Actual Measured Wall-Clock Runtime | Reason for Deviation |
-| :--- | :---: | :---: | :--- |
-| **X-TFC PoNN** | $\approx 18.6\text{ minutes}$ | **$\approx 2.8\text{ seconds}$** | Vectorized matrix operations with BLAS/LAPACK and Levenberg-Marquardt quadratic curvature steps achieve loss minimization in seconds. |
-| **Indirect Shooting** | $\approx 24.0\text{ minutes}$ | **$\approx 14.3\text{ seconds}$** | Vectorized 14-state ODE integration using high-order `DOP853` with continuation and Levenberg-Marquardt converges in seconds. |
-| **Pseudospectral Collocation** | $\approx 12.2\text{ minutes}$ | **$\approx 60.0\text{ seconds}$** | CasADi generates exact C-compiled sparse derivatives and uses MUMPS sparse linear algebra on 180 LGL nodes. |
-
----
-
-## 3. Physical & Astrodynamical Discrepancies
-
-| Parameter / Constraint | Paper Stated Claim | Real Computed Result | Astrodynamical Analysis |
-| :--- | :---: | :---: | :--- |
-| **Maximum Thrust Bound** | $\max T \le 0.50\text{ N}$ for $t_f \approx 248\text{ days}$ | Strictly enforced $\max T \le 0.50\text{ N}$; transfer **falls short of Mars by $0.085\text{--}0.089\text{ AU}$** ($1.3 \times 10^7\text{ km}$) | Full parametric sweep over arrival angles $\theta_f \in [2.0, 5.0]\text{ rad}$ proves the required average thrust is $\bar{T} \ge 0.541\text{ N} > 0.50\text{ N}$ across all angles. An engine limited to $0.50\text{ N}$ cannot physically deliver the necessary impulse in $248\text{ days}$. Bounded thrust rendezvous requires $t_f \ge 325\text{ days}$. |
-| **Mars Arrival Phase Angle** | Unstated / assumed fixed | Swept across $[2.0, 5.0]\text{ rad}$; global minimum fuel angle is **$\theta_f^* = 3.200\text{ rad} (183.3^\circ)$** | Feasible angle range for $T \le 0.50\text{ N}$ at $t_f \approx 248\text{ days}$ is **Empty set ($\emptyset$)**. |
-| **Heliocentric Xenon Fuel** | $274.8\text{--}276.1\text{ kg}$ | **$352.3\text{ kg}$ (Collocation), $353.0\text{ kg}$ (Shooting)** under $0.50\text{ N}$ cap ($228.4\text{ kg}$ if thrust unbounded) | Under strictly bounded $0.50\text{ N}$ thrust, both physical solvers burn full available throttle ($\approx 352\text{--}353\text{ kg}$) attempting to reach Mars. The paper's narrow band of $274.8\text{--}276.1\text{ kg}$ was an artifact of artificial hardcoding. |
-| **Mars Terminal Residual** | $3.2 \times 10^{-7}\text{ to }6.5 \times 10^{-7}$ (all $< 10^{-6}$) | **$8.5 \times 10^{-2}$ (Collocation), $8.9 \times 10^{-2}$ (Shooting)** | Because $0.50\text{ N}$ thrust is physically insufficient to achieve circular rendezvous in $248\text{ days}$, both physical solvers terminate at the closest achievable distance, properly reporting non-convergence. |
-| **Robustness Success Rate** | 19/20 (X-TFC), 14/20 (Shooting), 20/20 (Collocation) | **0 / 20 converged** across all three methods under $T \le 0.50\text{ N}$ | With $T \le 0.50\text{ N}$ strictly enforced, no run can satisfy $\varepsilon_M < 10^{-6}$ in $248\text{ days}$. The paper's "14 of 20" was produced by a hardcoded `unlucky_seeds` list. |
-| **Table E2 (Escape Solved by 3 Methods)** | Three solvers solved optimal escape with slight differences | Escape is a prescribed tangential spiral, not an optimal control solve | Discretizing 3,000+ revolutions is computationally intractable for standard indirect shooting or direct collocation; the values in the original paper were manual offsets from Table E1. |

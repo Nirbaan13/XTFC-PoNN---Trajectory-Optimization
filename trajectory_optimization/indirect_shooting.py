@@ -1,234 +1,171 @@
-"""Indirect Shooting Method for 3D Fuel-Optimal Heliocentric Trajectory Optimization.
+"""Indirect shooting for the 3-D, 14-state, fuel-optimal heliocentric problem.
 
-Solves the two-point boundary value problem (TPBVP) formulated via Pontryagin's
-Maximum Principle (PMP) using DOP853 numerical integration and Levenberg-Marquardt
-least-squares root finding for the 7 initial costates:
-    p = [lambda_rx(0), lambda_ry(0), lambda_rz(0), lambda_vx(0), lambda_vy(0), lambda_vz(0), lambda_m(0)]
-
-Boundary Conditions (7 equations):
-    r(tf) - r_Mars(tf) = 0   (3 position errors)
-    v(tf) - v_Mars(tf) = 0   (3 velocity errors)
-    lambda_m(tf) = 0         (Transversality condition for free final mass)
-
-Physical Justification for Mars Arrival Angle theta_f = 3.10 rad (177.6 deg):
-    Departure angular velocity is omega_E = 1.0 rad/TU. Mars circular angular velocity is
-    omega_M = sqrt(mu / 1.524^3) = 0.5315 rad/TU. The mean orbital angular rate along the
-    spiral transfer is ~0.725 rad/TU. Over nominal transfer time tf = 248.4 days = 4.2729 TU,
-    the expected physical sweep angle is Delta theta = 0.725 * 4.2729 = 3.10 rad (177.6 deg),
-    corresponding to a near-half revolution low-thrust spiral.
+Unknowns : z = lambda(t0) = [lam_r0 (3), lam_v0 (3), lam_m0]           (7)
+Residual : [r(tf) - r_M, v(tf) - v_M, lam_m(tf)]                        (7)
+Throttle : T = Tmax / (1 + exp(S/eps)),  S = (1 - lam_m)/c - |lam_v|/m
+Homotopy : eps is reduced along a fixed schedule; each level is solved with
+           scipy.optimize.fsolve (MINPACK hybrd, as in the paper).  If fsolve
+           does not reach the tolerance at a level, scipy.optimize.least_squares
+           (method="lm", MINPACK lmdif) is tried from the same start point.
+           Which solver closed each level is recorded.
+Integrator: solve_ivp DOP853.
 """
 
-from dataclasses import dataclass, field
+from __future__ import annotations
+
 import time
+from dataclasses import dataclass, field
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.optimize import least_squares
+from scipy.optimize import fsolve, least_squares
 
-from .constants import (
-    MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON, T_MAX
+from .problem import HelioProblem
+from .helio_dynamics import (
+    make_rhs14, arrival_residual, energy_balance_error, smooth_throttle,
+    switching_function, smoothed_hamiltonian, hamiltonian,
 )
-from .dynamics import (
-    central_gravity, central_gravity_jacobian,
-    optimal_thrust_direction, switching_function, optimal_throttle,
-    get_mars_state, mars_arrival_residual,
-    compute_energy_conservation_error,
-    heliocentric_state_costate_ode
-)
+
+DEFAULT_EPS_SCHEDULE = (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)
+
+
+def random_initial_costates(seed: int) -> np.ndarray:
+    """Documented random costate guess: lam_r0, lam_v0 ~ U(-1, 1)^3, lam_m0 ~ U(0, 1).
+
+    Bounds follow from the canonical scaling: with cost J = int T/c dt and
+    c ~ 1, the switching condition |lam_v|/m ~ (1 - lam_m)/c gives |lam_v| = O(1),
+    lam_r = -d(lam_v)/dt = O(1) per TU, and lam_m decreases monotonically to
+    lam_m(tf) = 0, so lam_m0 >= 0.
+    """
+    rng = np.random.default_rng(seed)
+    return np.concatenate([rng.uniform(-1, 1, 3), rng.uniform(-1, 1, 3), rng.uniform(0, 1, 1)])
 
 
 @dataclass
-class TrajectorySolution:
-    method_name: str
-    converged: bool
-    iterations: int
-    runtime_seconds: float
-    flight_time_days: float
-    xenon_used_kg: float
-    final_mass_kg: float
+class ShootingResult:
+    method: str
+    success: bool
+    status: str
+    lam0: np.ndarray
+    eps_final_target: float
+    eps_reached: float | None
+    t: np.ndarray
+    Y: np.ndarray                  # dense samples, M x 14
+    fuel_canon: float
     arrival_residual: float
-    energy_error: float
-
-    # Time history arrays
-    t_days: np.ndarray = field(default_factory=lambda: np.zeros(0))
-    r_au: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
-    v_kms: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
-    m_kg: np.ndarray = field(default_factory=lambda: np.zeros(0))
-    thrust_n: np.ndarray = field(default_factory=lambda: np.zeros(0))
-    thrust_vec: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
-    lambda_r: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
-    lambda_v: np.ndarray = field(default_factory=lambda: np.zeros((0, 3)))
-    lambda_m: np.ndarray = field(default_factory=lambda: np.zeros(0))
-    energy_error_hist: np.ndarray = field(default_factory=lambda: np.zeros(0))
-    loss_history: list[float] = field(default_factory=list)
+    lam_m_tf: float
+    nonlinear_iterations: int      # propagations requested by fsolve/LM (function evaluations)
+    n_propagations: int
+    n_rhs: int
+    n_jacobian_builds: int
+    runtime_s: float
+    level_log: list
+    history: list                  # residual norm per propagation
+    extra: dict = field(default_factory=dict)
 
 
 class IndirectShootingSolver:
-    """Indirect Shooting solver for 3D fuel-optimal Earth-Mars heliocentric transfer."""
+    def __init__(self, eps_schedule=DEFAULT_EPS_SCHEDULE, rtol: float = 1e-10, atol: float = 1e-12,
+                 level_tol: float = 1e-9, maxfev_per_level: int = 150, n_dense: int = 2001):
+        self.eps_schedule = tuple(eps_schedule)
+        self.rtol, self.atol = rtol, atol
+        self.level_tol = level_tol
+        self.maxfev = maxfev_per_level
+        self.n_dense = n_dense
 
-    def __init__(
-        self,
-        flight_time_days: float = 248.4,
-        target_mars_angle_rad: float = 3.10,
-        rtol: float = 1e-10,
-        atol: float = 1e-11,
-        max_iter: int = 100,
-        t_max_n: float = T_MAX,
-        hardware_t_max_n: float = T_MAX
-    ):
-        self.flight_time_days = flight_time_days
-        self.tf_canon = flight_time_days / DAYS_PER_TU
-        self.target_mars_angle_rad = target_mars_angle_rad
-        self.rtol = rtol
-        self.atol = atol
-        self.max_iter = max_iter
-        self.t_max_n = t_max_n
-        self.t_max_c = t_max_n / (SCALE_M * SCALE_A)
-        self.hardware_t_max_n = hardware_t_max_n
+    # ------------------------------------------------------------------
+    def propagate(self, prob: HelioProblem, lam0: np.ndarray, eps: float, dense=False, counter=None):
+        y0 = np.concatenate([prob.r0, prob.v0, [prob.m0], lam0])
+        rhs = make_rhs14(prob, eps, counter)
+        return solve_ivp(rhs, (0.0, prob.tf), y0, method="DOP853", rtol=self.rtol, atol=self.atol,
+                         dense_output=dense)
 
-        # Earth departure conditions (3D canonical units)
-        self.r0 = np.array([1.0, 0.0, 0.0])
-        self.v0 = np.array([0.0, 1.0, 0.0])
-        self.m0 = 1.0
+    def residual(self, prob, lam0, eps, counter=None):
+        try:
+            sol = self.propagate(prob, lam0, eps, counter=counter)
+        except (ValueError, ZeroDivisionError, OverflowError, FloatingPointError):
+            return np.full(7, 1e3)
+        if sol.status != 0 or not np.all(np.isfinite(sol.y[:, -1])):
+            return np.full(7, 1e3)
+        yf = sol.y[:, -1]
+        return np.concatenate([yf[0:3] - prob.rf, yf[3:6] - prob.vf, [yf[13]]])
 
-        # Mars arrival target (3D canonical units)
-        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
+    # ------------------------------------------------------------------
+    def solve(self, prob: HelioProblem, seed: int | None = 1000, lam0_guess: np.ndarray | None = None,
+              eps_schedule=None) -> ShootingResult:
+        t_start = time.perf_counter()
+        sched = tuple(eps_schedule) if eps_schedule is not None else self.eps_schedule
+        z = random_initial_costates(seed) if lam0_guess is None else np.array(lam0_guess, float)
+        rhs_counter = [0]
+        history: list = []
+        n_prop = [0]
+        jac_builds = 0
+        level_log = []
+        eps_reached = None
+        ok_all = True
+        status = ""
 
-    def _get_nominal_costate_guess(self) -> np.ndarray:
-        """Nominal 7 initial costates for fuel-optimal Earth-Mars transfer:
-        [lambda_rx, lambda_ry, lambda_rz, lambda_vx, lambda_vy, lambda_vz, lambda_m]
-        """
-        return np.array([
-            -1.03027692, -0.33727032, 0.0,
-            -0.37460015, -1.14211797, 0.0,
-            0.22513572
-        ])
+        for eps in sched:
+            def F(zz, eps=eps):
+                n_prop[0] += 1
+                r = self.residual(prob, zz, eps, rhs_counter)
+                history.append(float(np.linalg.norm(r)))
+                return r
 
-    def solve(self, seed: int = 1000, perturb_guess: bool = False) -> TrajectorySolution:
-        """Executes indirect shooting to find the 7 initial costates that reach Mars."""
-        start_time = time.perf_counter()
-        rng = np.random.RandomState(seed)
+            z_start = z.copy()
+            nprop0 = n_prop[0]
+            zf, info, ier, msg = fsolve(F, z_start, full_output=True, xtol=1e-13, maxfev=self.maxfev)
+            jac_builds += 1  # hybrd builds one forward-difference Jacobian then Broyden-updates
+            res_norm = float(np.linalg.norm(info["fvec"]))
+            used = "fsolve"
+            if not (np.all(np.isfinite(zf)) and res_norm < self.level_tol):
+                lm = least_squares(F, z_start, method="lm", xtol=1e-15, ftol=1e-15, gtol=1e-15,
+                                   max_nfev=self.maxfev * 2)
+                res_lm = float(np.linalg.norm(lm.fun))
+                jac_builds += int(lm.njev) if lm.njev is not None else 0
+                if res_lm < res_norm or not np.isfinite(res_norm):
+                    zf, res_norm, used = lm.x, res_lm, "lm"
+                else:
+                    used = "fsolve (lm fallback did not improve)"
+            level_ok = bool(np.all(np.isfinite(zf)) and res_norm < self.level_tol)
+            level_log.append({"eps": eps, "solver": used, "residual": res_norm, "ok": level_ok,
+                              "propagations": n_prop[0] - nprop0})
+            if not level_ok:
+                ok_all = False
+                status = f"homotopy stopped at eps={eps:g} ({used}, |res|={res_norm:.2e})"
+                break
+            z = zf
+            eps_reached = eps
 
-        lam0_base = self._get_nominal_costate_guess()
-        if perturb_guess:
-            noise = rng.normal(0.0, 0.03, size=lam0_base.shape)
-            lam0_init = lam0_base + noise
+        eps_eval = eps_reached if eps_reached is not None else sched[0]
+        if not ok_all and eps_reached is None:
+            z_eval = zf  # report the unconverged last iterate at the first level
         else:
-            lam0_init = lam0_base.copy()
-
-        loss_hist = []
-
-        # Thrust and smoothing homotopy stages to robustly converge down to target T_max (0.50 N)
-        thrust_stages = [1.00, 0.75, self.t_max_n] if self.t_max_n < 0.95 else [self.t_max_n]
-        eps_stages = [0.05, 0.02]
-        p_curr = lam0_init.copy()
-        total_fev = 0
-
-        for t_stage in thrust_stages:
-            t_stage_c = t_stage / (SCALE_M * SCALE_A)
-            for eps in eps_stages:
-                def defect(p: np.ndarray) -> np.ndarray:
-                    y0 = np.concatenate([self.r0, self.v0, [self.m0], p])
-                    sol = solve_ivp(
-                        heliocentric_state_costate_ode,
-                        (0.0, self.tf_canon),
-                        y0,
-                        args=(MU_EFF_CANON, t_stage_c, C_CANON, eps),
-                        method="DOP853",
-                        rtol=self.rtol * 10.0,
-                        atol=self.atol * 10.0
-                    )
-                    rf_calc = sol.y[0:3, -1]
-                    vf_calc = sol.y[3:6, -1]
-                    lam_m_f = sol.y[13, -1]
-                    d = np.concatenate([rf_calc - self.rf, vf_calc - self.vf, [lam_m_f]])
-                    loss_hist.append(float(np.linalg.norm(d)))
-                    return d
-
-                res = least_squares(
-                    defect,
-                    p_curr,
-                    method="lm",
-                    max_nfev=self.max_iter,
-                    ftol=1e-12,
-                    xtol=1e-12
-                )
-                p_curr = res.x
-                total_fev += res.nfev
-
-        # Final high-precision integration on dense time grid
-        eps_final = eps_stages[-1]
-        n_eval = 250
-        t_eval = np.linspace(0.0, self.tf_canon, n_eval)
-        y0_final = np.concatenate([self.r0, self.v0, [self.m0], p_curr])
-
-        sol_final = solve_ivp(
-            heliocentric_state_costate_ode,
-            (0.0, self.tf_canon),
-            y0_final,
-            args=(MU_EFF_CANON, self.t_max_c, C_CANON, eps_final),
-            method="DOP853",
-            t_eval=t_eval,
-            rtol=self.rtol,
-            atol=self.atol
+            z_eval = z
+        sol = self.propagate(prob, z_eval, eps_eval, dense=True)
+        t = np.linspace(0.0, prob.tf, self.n_dense)
+        Y = sol.sol(t).T if sol.status == 0 else np.full((self.n_dense, 14), np.nan)
+        yf = Y[-1]
+        eps_m = arrival_residual(prob, yf[0:3], yf[3:6]) if sol.status == 0 else float("nan")
+        lam_m_tf = float(yf[13])
+        success = ok_all and eps_m < 1e-6 and abs(lam_m_tf) < 1e-6
+        if ok_all:
+            status = "converged through full eps schedule" if success else "schedule finished but tolerance not met"
+        runtime = time.perf_counter() - t_start
+        return ShootingResult(
+            method="Indirect shooting", success=bool(success), status=status, lam0=z_eval,
+            eps_final_target=sched[-1], eps_reached=eps_reached, t=t, Y=Y,
+            fuel_canon=float(prob.m0 - yf[6]), arrival_residual=float(eps_m), lam_m_tf=lam_m_tf,
+            nonlinear_iterations=n_prop[0], n_propagations=n_prop[0], n_rhs=rhs_counter[0],
+            n_jacobian_builds=jac_builds, runtime_s=runtime, level_log=level_log, history=history,
+            extra={"eps_eval": eps_eval},
         )
 
-        actual_runtime = time.perf_counter() - start_time
 
-        # Extract 3D trajectory profiles
-        r_au = sol_final.y[0:3].T
-        v_canon = sol_final.y[3:6].T
-        v_kms = v_canon * (SCALE_V / 1e3)
-        m_canon = sol_final.y[6]
-        m_kg = m_canon * SCALE_M
-
-        lam_r = sol_final.y[7:10].T
-        lam_v = sol_final.y[10:13].T
-        lam_m = sol_final.y[13]
-
-        # Compute thrust profile
-        thrust_n = np.zeros(n_eval)
-        thrust_vec = np.zeros((n_eval, 3))
-        for i in range(n_eval):
-            u_i = optimal_thrust_direction(lam_v[i])
-            s_i = switching_function(lam_v[i], lam_m[i], m_canon[i], c=C_CANON)
-            t_mag_c = optimal_throttle(s_i, t_max=self.t_max_c, smoothing_eps=eps_final)
-            thrust_n[i] = t_mag_c * (SCALE_M * SCALE_A)
-            thrust_vec[i] = thrust_n[i] * u_i
-
-        # Performance metrics
-        xe_used = float(SCALE_M - m_kg[-1])
-        final_m_kg = float(m_kg[-1])
-        arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
-        converged = bool(arr_res < 1e-6)
-
-        # Energy conservation error
-        energy_err, energy_err_hist = compute_energy_conservation_error(
-            t_eval, r_au, v_canon, m_canon,
-            thrust_vec / (SCALE_M * SCALE_A)
-        )
-
-        t_days = t_eval * DAYS_PER_TU
-
-        return TrajectorySolution(
-            method_name="Indirect Shooting",
-            converged=converged,
-            iterations=total_fev,
-            runtime_seconds=actual_runtime,
-            flight_time_days=self.flight_time_days,
-            xenon_used_kg=round(xe_used, 2),
-            final_mass_kg=round(final_m_kg, 2),
-            arrival_residual=arr_res,
-            energy_error=energy_err,
-            t_days=t_days,
-            r_au=r_au,
-            v_kms=v_kms,
-            m_kg=m_kg,
-            thrust_n=thrust_n,
-            thrust_vec=thrust_vec,
-            lambda_r=lam_r,
-            lambda_v=lam_v,
-            lambda_m=lam_m,
-            energy_error_hist=energy_err_hist,
-            loss_history=loss_hist
-        )
+def shooting_controls(prob: HelioProblem, Y: np.ndarray, eps: float):
+    """Thrust magnitude and direction implied by the costates on a dense grid."""
+    lv = Y[:, 10:13]
+    lvn = np.linalg.norm(lv, axis=1)
+    S = (1.0 - Y[:, 13]) / prob.c - lvn / Y[:, 6]
+    T = np.array([smooth_throttle(s, prob.t_max, eps) for s in S])
+    U = -lv / lvn[:, None]
+    return T, U, S

@@ -1,317 +1,313 @@
-"""Extreme Theory of Functional Connections Pontryagin Neural Network (X-TFC PoNN).
+"""X-TFC Pontryagin Neural Network (PoNN) for the 14-state fuel-optimal problem.
 
-Solves the 3D fuel-optimal low-thrust Earth-Mars transfer by analytically embedding
-boundary conditions via TFC constrained expressions and optimizing neural network
-weights on Pontryagin state-costate 14-ODE residuals using nonlinear least-squares (LM).
+Architecture (Schiassi et al. 2020; D'Ambrosio & Furfaro 2024)
+---------------------------------------------------------------
+* One hidden layer, tanh activation, L neurons, FIXED random input weights
+  and biases (extreme learning machine).  The random draw is controlled by
+  the run seed.  Hidden-unit centres c_l ~ U(-1, 1) and slopes
+  w_l = s_l * U(w_min, w_max) (random sign s_l); bias b_l = -w_l c_l.
+* Trainable output weights beta (14 x L): one free function per
+  state/costate component.
+* TFC constrained expressions on tau in [-1, 1], t = (tau + 1) tf / 2:
+    r_i, v_i : y = h beta + (1-tau)/2 (y0 - h(-1) beta) + (1+tau)/2 (yf - h(1) beta)
+    m        : y = h beta + (m0 - h(-1) beta)
+    lam_m    : y = h beta - h(1) beta           (lam_m(tf) = 0)
+    lam_r, lam_v : y = h beta                   (free)
+  so the departure state, Mars arrival state, m(0) and lam_m(tf) = 0 hold
+  exactly for every beta.
+* Loss = mean of squared residuals of all 14 state/costate ODEs at N
+  uniformly spaced collocation points in [-1, 1].  The residual Jacobian
+  w.r.t. beta is assembled from the analytic derivative of the tanh basis
+  and the JAX automatic derivative d f / d y of the 14-state right-hand side.
+* Training: Levenberg-Marquardt (damped Gauss-Newton).  LM is used instead
+  of Adam because the loss is a nonlinear least-squares problem in beta;
+  this is the standard X-TFC training algorithm.  One LM step = one
+  recorded iteration.  The paper's 4,300 epochs is used only as the total
+  iteration budget; the iterations actually used are reported.
+* The throttle is smoothed with the same eps homotopy as indirect shooting.
 
-Boundary Conditions Embedded Analytically:
-    r(-1) = r0, r(1) = rf  (Earth departure and Mars arrival position)
-    v(-1) = v0, v(1) = vf  (Earth departure and Mars arrival velocity)
-    m(-1) = m0             (Initial spacecraft wet mass 1218 kg)
-    lambda_m(1) = 0        (Transversality condition for free final mass)
-
-Collocation Residuals:
-    Evaluates all 14 ODE residuals across CGL collocation nodes:
-    - 3 kinematic residuals (dr/dt - v)
-    - 3 dynamic residuals (dv/dt - (g + (T/m)u))
-    - 1 mass depletion residual (dm/dt - (-T/c))
-    - 3 costate lambda_r residuals (dlam_r/dt + (dg/dr)^T lam_v)
-    - 3 costate lambda_v residuals (dlam_v/dt + lam_r)
-    - 1 costate lambda_m residual (dlam_m/dt - (T/m^2)(lam_v . u))
+Initialisation (disclosed in result.warm_start):
+- If ``init_from`` is provided, the free functions are fitted by linear
+  least squares to that trajectory and ``init_label`` is recorded.
+- If ``warm_start_from_eps1`` is True (default), the smooth eps=1.0
+  two-point boundary value problem is first solved by single-level
+  shooting (fast, ~1 s) and projected onto the random basis as the starting
+  point at eps=1.0 before the LM homotopy refines beta down to eps=0.001.
+  If the eps=1.0 shooting solve fails (e.g. on an infeasible problem), it
+  falls back automatically to the deterministic polar/tangential guess and
+  records that fallback in ``warm_start``.
 """
 
-from dataclasses import dataclass
+from __future__ import annotations
+
 import time
+from dataclasses import dataclass, field
 import numpy as np
-from scipy.optimize import least_squares
+import jax
+import jax.numpy as jnp
 
-from .constants import (
-    MU_EFF_CANON, T_MAX_CANON, C_CANON, C_EXHAUST, SCALE_T, SCALE_L, SCALE_V, SCALE_M,
-    SCALE_A, DAYS_PER_TU, R_MARS_CANON, V_MARS_CANON, T_MAX
-)
-from .dynamics import (
-    central_gravity, central_gravity_jacobian,
-    optimal_thrust_direction, switching_function, optimal_throttle,
-    get_mars_state, mars_arrival_residual,
-    compute_energy_conservation_error
-)
-from .indirect_shooting import TrajectorySolution
+from .problem import HelioProblem
+from .helio_dynamics import arrival_residual
+from .indirect_shooting import IndirectShootingSolver
+
+jax.config.update("jax_enable_x64", True)
+
+DEFAULT_EPS_SCHEDULE = (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)
 
 
-class XTFC_PoNN_Solver:
-    """X-TFC Pontryagin Neural Network solver for 3D fuel-optimal Earth-Mars transfers."""
+def _f14(y, mu_k, tmax, c, eps):
+    r, v, m = y[0:3], y[3:6], y[6]
+    lr, lv, lm = y[7:10], y[10:13], y[13]
+    r2 = jnp.dot(r, r)
+    rn = jnp.sqrt(r2)
+    ir3 = 1.0 / (r2 * rn)
+    lvn = jnp.sqrt(jnp.dot(lv, lv))
+    u = -lv / lvn
+    S = (1.0 - lm) / c - lvn / m
+    T = 0.5 * tmax * (1.0 - jnp.tanh(0.5 * S / eps))
+    acc = -mu_k * r * ir3 + T / m * u
+    rdl = jnp.dot(r, lv) / r2
+    jtl = -mu_k * ir3 * (lv - 3.0 * r * rdl)
+    return jnp.concatenate([v, acc, jnp.array([-T / c]), -jtl, -lr, jnp.array([-T / m ** 2 * lvn])])
 
-    def __init__(
-        self,
-        flight_time_days: float = 247.6,
-        target_mars_angle_rad: float = 3.10,
-        n_collocation_nodes: int = 80,
-        n_basis_terms: int = 24,
-        n_epochs: int = 150,
-        t_max_n: float = T_MAX,
-        hardware_t_max_n: float = T_MAX
-    ):
-        self.flight_time_days = flight_time_days
-        self.tf_canon = flight_time_days / DAYS_PER_TU
-        self.target_mars_angle_rad = target_mars_angle_rad
-        self.n_nodes = n_collocation_nodes
-        self.n_basis = n_basis_terms
-        self.n_epochs = n_epochs
-        self.t_max_n = t_max_n
-        self.t_max_c = t_max_n / (SCALE_M * SCALE_A)
-        self.hardware_t_max_n = hardware_t_max_n
 
-        # Earth departure conditions (t = 0, tau = -1)
-        self.r0 = np.array([1.0, 0.0, 0.0])
-        self.v0 = np.array([0.0, 1.0, 0.0])
-        self.m0 = 1.0
+_f14_batch = jax.jit(jax.vmap(_f14, in_axes=(0, None, None, None, None)))
+_jf14_batch = jax.jit(jax.vmap(jax.jacfwd(_f14), in_axes=(0, None, None, None, None)))
 
-        # Mars arrival target (t = tf, tau = +1)
-        self.rf, self.vf = get_mars_state(target_mars_angle_rad)
 
-        # Collocation nodes in [-1, 1] (Chebyshev-Gauss-Lobatto)
-        i = np.arange(self.n_nodes)
-        self.tau_nodes = -np.cos(np.pi * i / (self.n_nodes - 1))
-        self.c_tau = 2.0 / self.tf_canon
-        self.t_nodes = (self.tf_canon / 2.0) * (self.tau_nodes + 1.0)
-        self.t_days = self.t_nodes * DAYS_PER_TU
+@dataclass
+class XTFCResult:
+    method: str
+    success: bool
+    status: str
+    tau: np.ndarray
+    t: np.ndarray
+    Y: np.ndarray            # N x 14 at collocation points
+    beta: np.ndarray
+    fuel_canon: float
+    arrival_residual: float  # on the network's own solution (exact by construction)
+    residual_rms: float      # RMS of all 14 ODE residuals (final level)
+    residual_max: float
+    eps_reached: float | None
+    iterations: int
+    loss_history: list
+    level_log: list
+    runtime_s: float
+    n_residual_evals: int
+    n_jacobian_evals: int
+    n_neurons: int
+    n_points: int
+    warm_start: str
+    extra: dict = field(default_factory=dict)
+    model: "XTFCModel | None" = None
 
-        # Chebyshev orthogonal polynomial basis evaluated at collocation nodes
-        self.T, self.dT = self._chebyshev_basis(self.tau_nodes, self.n_basis)
-        self.T_m1 = np.array([(-1.0) ** k for k in range(self.n_basis)])
-        self.T_p1 = np.ones(self.n_basis)
 
-        # 1st order TFC boundary switching functions
-        self.phi0 = 0.5 * (1.0 - self.tau_nodes)[:, None]
-        self.phi1 = 0.5 * (1.0 + self.tau_nodes)[:, None]
-        self.dphi0 = -0.5
-        self.dphi1 = 0.5
+class XTFCModel:
+    """Holds the random basis and constrained expressions; evaluates Y(tau)."""
 
-    def _chebyshev_basis(self, tau: np.ndarray, num_terms: int) -> tuple[np.ndarray, np.ndarray]:
-        """Evaluates Chebyshev polynomials T_k(tau) and their derivatives dT_k/dtau."""
-        n_pts = len(tau)
-        T = np.zeros((n_pts, num_terms))
-        dT = np.zeros((n_pts, num_terms))
+    def __init__(self, prob: HelioProblem, n_neurons: int, seed: int, w_min=1.0, w_max=None):
+        rng = np.random.default_rng(seed)
+        self.L = n_neurons
+        w_max = w_max if w_max is not None else max(10.0, 0.18 * n_neurons)
+        centres = rng.uniform(-1.0, 1.0, n_neurons)
+        slopes = rng.uniform(w_min, w_max, n_neurons) * rng.choice([-1.0, 1.0], n_neurons)
+        self.W = slopes
+        self.b = -slopes * centres
+        self.prob = prob
+        y0 = np.concatenate([prob.r0, prob.v0])
+        yf = np.concatenate([prob.rf, prob.vf])
+        self.y0, self.yf = y0, yf
 
-        T[:, 0] = 1.0
-        dT[:, 0] = 0.0
-        if num_terms > 1:
-            T[:, 1] = tau
-            dT[:, 1] = 1.0
+    def basis(self, tau):
+        z = np.tanh(np.outer(tau, self.W) + self.b)
+        return z, (1.0 - z ** 2) * self.W
 
-        for k in range(2, num_terms):
-            T[:, k] = 2.0 * tau * T[:, k - 1] - T[:, k - 2]
-            dT[:, k] = 2.0 * T[:, k - 1] + 2.0 * tau * dT[:, k - 1] - dT[:, k - 2]
+    def operators(self, tau):
+        """A (14, N, L), Ad (14, N, L), particular parts P (N, 14), Pd (N, 14)."""
+        H, Hd = self.basis(tau)
+        h0, hf = self.basis(np.array([-1.0]))[0][0], self.basis(np.array([1.0]))[0][0]
+        N = len(tau)
+        p1, p2 = (1 - tau) / 2, (1 + tau) / 2
+        A = np.zeros((14, N, self.L))
+        Ad = np.zeros((14, N, self.L))
+        P = np.zeros((N, 14))
+        Pd = np.zeros((N, 14))
+        for i in range(6):
+            A[i] = H - np.outer(p1, h0) - np.outer(p2, hf)
+            Ad[i] = Hd + 0.5 * h0[None, :] - 0.5 * hf[None, :]
+            P[:, i] = p1 * self.y0[i] + p2 * self.yf[i]
+            Pd[:, i] = -0.5 * self.y0[i] + 0.5 * self.yf[i]
+        A[6] = H - h0[None, :]
+        Ad[6] = Hd
+        P[:, 6] = self.prob.m0
+        for i in range(7, 13):
+            A[i] = H
+            Ad[i] = Hd
+        A[13] = H - hf[None, :]
+        Ad[13] = Hd
+        return A, Ad, P, Pd
 
-        return T, dT
+    def evaluate(self, beta, tau):
+        A, Ad, P, Pd = self.operators(tau)
+        Y = np.einsum("inl,il->ni", A, beta) + P
+        dY = (np.einsum("inl,il->ni", Ad, beta) + Pd) * 2.0 / self.prob.tf
+        return Y, dY
 
-    def solve(self, seed: int = 1000, perturb_weights: bool = False) -> TrajectorySolution:
-        """Trains the X-TFC PoNN using nonlinear least-squares and returns the solution."""
-        start_time = time.perf_counter()
-        rng = np.random.RandomState(seed)
 
-        M = self.n_basis
-        N = self.n_nodes
+def _guess_functions(prob: HelioProblem, tau: np.ndarray):
+    """Deterministic state/costate guess (independent of the run seed)."""
+    s = (tau + 1) / 2
+    th_f = np.arctan2(prob.rf[1], prob.rf[0]) % (2 * np.pi)
+    if th_f < 1e-3:
+        th_f += 2 * np.pi
+    R0, Rf = np.linalg.norm(prob.r0), np.linalg.norm(prob.rf)
 
-        # Baseline physical state profiles for weight initialization
-        th_prof = np.linspace(0.0, self.target_mars_angle_rad, N)
-        r_prof = np.linspace(1.0, R_MARS_CANON, N)
-        r_init = np.column_stack([r_prof * np.cos(th_prof), r_prof * np.sin(th_prof), np.zeros(N)])
-        v_init = np.column_stack([
-            -np.sqrt(MU_EFF_CANON / r_prof) * np.sin(th_prof),
-            np.sqrt(MU_EFF_CANON / r_prof) * np.cos(th_prof),
-            np.zeros(N)
-        ])
-        m_init = np.linspace(1.0, 0.78, N)[:, None]
+    def pos(ss):
+        b = 3 * ss ** 2 - 2 * ss ** 3
+        rr = R0 + (Rf - R0) * b
+        return np.stack([rr * np.cos(th_f * ss), rr * np.sin(th_f * ss), prob.rf[2] * ss], axis=1)
 
-        lam_r_init = np.column_stack([np.full(N, -1.03), np.full(N, -0.34), np.zeros(N)])
-        lam_v_init = np.column_stack([np.full(N, -0.37), np.full(N, -1.14), np.zeros(N)])
-        lam_m_init = np.linspace(0.22, 0.0, N)[:, None]
+    ds = 1e-6
+    r = pos(s)
+    v = (pos(np.minimum(s + ds, 1)) - pos(np.maximum(s - ds, 0))) / (
+        (np.minimum(s + ds, 1) - np.maximum(s - ds, 0))[:, None] * prob.tf)
+    m = 1.0 - 0.5 * prob.t_max / prob.c * prob.tf * s
+    vhat = v / np.linalg.norm(v, axis=1)[:, None]
+    lv = -(m / prob.c)[:, None] * vhat
+    t = s * prob.tf
+    lr = -np.gradient(lv, t, axis=0)
+    lm = np.zeros_like(s)
+    return np.hstack([r, v, m[:, None], lr, lv, lm[:, None]])
 
-        if perturb_weights:
-            r_init += rng.normal(0.0, 0.02, size=r_init.shape)
-            v_init += rng.normal(0.0, 0.02, size=v_init.shape)
-            lam_r_init += rng.normal(0.0, 0.02, size=lam_r_init.shape)
-            lam_v_init += rng.normal(0.0, 0.02, size=lam_v_init.shape)
 
-        W_r, _, _, _ = np.linalg.lstsq(self.T, r_init, rcond=None)
-        W_v, _, _, _ = np.linalg.lstsq(self.T, v_init, rcond=None)
-        W_m, _, _, _ = np.linalg.lstsq(self.T, m_init, rcond=None)
-        W_lr, _, _, _ = np.linalg.lstsq(self.T, lam_r_init, rcond=None)
-        W_lv, _, _, _ = np.linalg.lstsq(self.T, lam_v_init, rcond=None)
-        W_lm, _, _, _ = np.linalg.lstsq(self.T, lam_m_init, rcond=None)
+class XTFCPoNNSolver:
+    def __init__(self, n_neurons: int = 160, n_points: int = 280, eps_schedule=DEFAULT_EPS_SCHEDULE,
+                 iter_budget: int = 4300, max_iter_per_level: int = 15, level_tol: float = 1e-4,
+                 final_tol: float = 1e-4, warm_start_from_eps1: bool = True, w_max: float | None = None):
+        self.L = n_neurons
+        self.N = n_points
+        self.eps_schedule = tuple(eps_schedule)
+        self.iter_budget = iter_budget
+        self.max_iter_level = max_iter_per_level
+        self.level_tol = level_tol
+        self.final_tol = final_tol
+        self.warm_start_from_eps1 = warm_start_from_eps1
+        self.w_max = w_max
 
-        p0 = np.concatenate([
-            W_r.flatten(), W_v.flatten(), W_m.flatten(),
-            W_lr.flatten(), W_lv.flatten(), W_lm.flatten()
-        ])
+    def solve(self, prob: HelioProblem, seed: int = 1000, init_from: np.ndarray | None = None,
+              init_label: str | None = None) -> XTFCResult:
+        t_start = time.perf_counter()
+        model = XTFCModel(prob, self.L, seed, w_max=self.w_max)
+        tau = np.linspace(-1.0, 1.0, self.N)
+        t = (tau + 1.0) * prob.tf / 2.0
+        A, Ad, P, Pd = model.operators(tau)
+        k = 2.0 / prob.tf
+        mu_k = prob.mu - prob.k_srp
 
-        loss_history = []
+        # ---- initial beta: least-squares fit of the free functions to the guess
+        if init_from is not None:
+            G = init_from
+            warm_desc = init_label or "caller-supplied trajectory"
+        elif self.warm_start_from_eps1:
+            sh1 = IndirectShootingSolver(eps_schedule=(self.eps_schedule[0],))
+            rs1 = sh1.solve(prob, seed=1000)
+            if rs1.success:
+                sol_d = sh1.propagate(prob, rs1.lam0, self.eps_schedule[0], dense=True)
+                G = sol_d.sol(t).T
+                warm_desc = f"projected from eps={self.eps_schedule[0]:g} smoothed shooting extremal"
+            else:
+                G = _guess_functions(prob, tau)
+                warm_desc = f"deterministic polar/tangential guess (eps={self.eps_schedule[0]:g} shooting did not converge)"
+        else:
+            G = _guess_functions(prob, tau)
+            warm_desc = "none (deterministic polar/tangential guess)"
 
-        def eval_system(p: np.ndarray) -> np.ndarray:
-            idx = 0
-            Wr = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-            Wv = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-            Wm = p[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
-            Wlr = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-            Wlv = p[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-            Wlm = p[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
+        beta = np.zeros((14, self.L))
+        for i in range(14):
+            beta[i] = np.linalg.lstsq(A[i], G[:, i] - P[:, i], rcond=1e-13)[0]
 
-            # TFC Constrained Expressions:
-            # 1. Position: r(-1) = r0, r(1) = rf exactly
-            gr = self.T @ Wr
-            dgr = self.dT @ Wr
-            dr0 = self.r0 - self.T_m1 @ Wr
-            drf = self.rf - self.T_p1 @ Wr
-            r = gr + self.phi0 * dr0 + self.phi1 * drf
-            dr_dt = self.c_tau * (dgr + self.dphi0 * dr0 + self.dphi1 * drf)
+        n_res = [0]
+        n_jac = [0]
 
-            # 2. Velocity: v(-1) = v0, v(1) = vf exactly
-            gv = self.T @ Wv
-            dgv = self.dT @ Wv
-            dv0 = self.v0 - self.T_m1 @ Wv
-            dvf = self.vf - self.T_p1 @ Wv
-            v = gv + self.phi0 * dv0 + self.phi1 * dvf
-            dv_dt = self.c_tau * (dgv + self.dphi0 * dv0 + self.dphi1 * dvf)
+        def residual(beta, eps):
+            n_res[0] += 1
+            Y = np.einsum("inl,il->ni", A, beta) + P
+            dY = (np.einsum("inl,il->ni", Ad, beta) + Pd) * k
+            F = np.asarray(_f14_batch(jnp.asarray(Y), mu_k, prob.t_max, prob.c, eps))
+            return dY - F, Y
 
-            # 3. Mass: m(-1) = m0 exactly
-            gm = self.T @ Wm
-            dgm = self.dT @ Wm
-            dm0 = self.m0 - (self.T_m1 @ Wm)[0]
-            m = gm + dm0
-            dm_dt = self.c_tau * dgm
+        def jacobian(Y, eps):
+            n_jac[0] += 1
+            Jf = np.asarray(_jf14_batch(jnp.asarray(Y), mu_k, prob.t_max, prob.c, eps))
+            J = -np.einsum("nij,jnl->nijl", Jf, A)
+            for i in range(14):
+                J[:, i, i, :] += k * Ad[i]
+            return J.reshape(self.N * 14, 14 * self.L)
 
-            # 4. Costates
-            lam_r = self.T @ Wlr
-            dlam_r_dt = self.c_tau * (self.dT @ Wlr)
+        loss_hist: list = []
+        level_log: list = []
+        it_total = 0
+        eps_reached = None
+        status = ""
+        R, Y = residual(beta, self.eps_schedule[0])
+        for eps in self.eps_schedule:
+            R, Y = residual(beta, eps)
+            loss = float(np.mean(R ** 2))
+            lam = 1e-6
+            it_level = 0
+            while it_level < self.max_iter_level and it_total < self.iter_budget:
+                J = jacobian(Y, eps)
+                r = R.reshape(-1)
+                JtJ = J.T @ J
+                g = J.T @ r
+                diag = np.diag(JtJ).copy()
+                improved = False
+                d_rel = 0.0
+                for _ in range(10):
+                    try:
+                        step = np.linalg.solve(JtJ + lam * (np.diag(diag) + 1e-12 * np.eye(len(g))), -g)
+                    except np.linalg.LinAlgError:
+                        lam *= 10
+                        continue
+                    beta_try = beta + step.reshape(14, self.L)
+                    R_try, Y_try = residual(beta_try, eps)
+                    loss_try = float(np.mean(R_try ** 2)) if np.all(np.isfinite(R_try)) else np.inf
+                    if loss_try < loss:
+                        d_rel = (loss - loss_try) / max(loss, 1e-30)
+                        beta, R, Y, loss = beta_try, R_try, Y_try, loss_try
+                        lam = max(lam / 3.0, 1e-13)
+                        improved = True
+                        break
+                    lam *= 4.0
+                it_level += 1
+                it_total += 1
+                loss_hist.append(loss)
+                if not improved or d_rel < 1e-3:
+                    break
+            rms = float(np.sqrt(loss))
+            ok = rms < self.level_tol
+            level_log.append({"eps": eps, "iterations": it_level, "rms_residual": rms, "ok": ok})
+            if not ok:
+                status = f"eps={eps:g}: RMS 14-residual {rms:.2e} > {self.level_tol:g} after {it_level} LM iterations"
+                if it_total >= self.iter_budget:
+                    status += " (iteration budget exhausted)"
+                break
+            eps_reached = eps
 
-            lam_v = self.T @ Wlv
-            dlam_v_dt = self.c_tau * (self.dT @ Wlv)
-
-            # 5. Mass costate: lambda_m(1) = 0 exactly (transversality)
-            glm = self.T @ Wlm
-            dglm = self.dT @ Wlm
-            dlmf = 0.0 - (self.T_p1 @ Wlm)[0]
-            lam_m = glm + dlmf
-            dlam_m_dt = self.c_tau * dglm
-
-            # 14 ODE Residuals (fully vectorized across all N collocation nodes)
-            res_r = dr_dt - v
-
-            r_norm = np.linalg.norm(r, axis=1, keepdims=True)
-            r_hat = r / r_norm
-            g = -MU_EFF_CANON * r / (r_norm ** 3)
-
-            lv_norm = np.linalg.norm(lam_v, axis=1, keepdims=True)
-            lv_norm_safe = np.maximum(lv_norm, 1e-12)
-            u = -lam_v / lv_norm_safe
-
-            m_safe = np.maximum(m, 0.1)
-            s = (1.0 - lam_m) / C_CANON - lv_norm / m_safe
-            t_mag = self.t_max_c / (1.0 + np.exp(np.clip(s / 0.05, -50.0, 50.0)))
-            a_thrust = (t_mag / m_safe) * u
-
-            res_v = dv_dt - (g + a_thrust)
-            res_m = dm_dt - (-t_mag / C_CANON)
-
-            rdotlv = np.sum(r_hat * lam_v, axis=1, keepdims=True)
-            dg_dr_T_lv = -(MU_EFF_CANON / (r_norm ** 3)) * (lam_v - 3.0 * rdotlv * r_hat)
-            res_lr = dlam_r_dt - (-dg_dr_T_lv)
-            res_lv = dlam_v_dt + lam_r
-            res_lm = dlam_m_dt + (t_mag * lv_norm) / (m_safe ** 2)
-
-            vec = np.concatenate([
-                res_r.flatten(), res_v.flatten(), res_m.flatten(),
-                res_lr.flatten(), res_lv.flatten(), res_lm.flatten()
-            ])
-            loss = float(np.mean(vec ** 2))
-            loss_history.append(loss)
-            return vec
-
-        # Optimize network weights via Levenberg-Marquardt
-        res = least_squares(eval_system, p0, method="lm", max_nfev=self.n_epochs)
-        r14_norm = float(np.linalg.norm(res.fun) / np.sqrt(len(res.fun)))
-        converged = bool(res.success and r14_norm < 1e-4)
-
-        # Dense evaluation grid (250 points)
-        n_eval = 250
-        tau_eval = np.linspace(-1.0, 1.0, n_eval)
-        t_eval_canon = (self.tf_canon / 2.0) * (tau_eval + 1.0)
-        t_days = t_eval_canon * DAYS_PER_TU
-
-        T_eval, dT_eval = self._chebyshev_basis(tau_eval, M)
-        phi0_e = 0.5 * (1.0 - tau_eval)[:, None]
-        phi1_e = 0.5 * (1.0 + tau_eval)[:, None]
-
-        idx = 0
-        Wr = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-        Wv = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-        Wm = res.x[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
-        Wlr = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-        Wlv = res.x[idx:idx + M * 3].reshape((M, 3)); idx += M * 3
-        Wlm = res.x[idx:idx + M * 1].reshape((M, 1)); idx += M * 1
-
-        dr0 = self.r0 - self.T_m1 @ Wr
-        drf = self.rf - self.T_p1 @ Wr
-        r_au = (T_eval @ Wr) + phi0_e * dr0 + phi1_e * drf
-
-        dv0 = self.v0 - self.T_m1 @ Wv
-        dvf = self.vf - self.T_p1 @ Wv
-        v_canon = (T_eval @ Wv) + phi0_e * dv0 + phi1_e * dvf
-        v_kms = v_canon * (SCALE_V / 1e3)
-
-        dm0 = self.m0 - (self.T_m1 @ Wm)[0]
-        m_canon = ((T_eval @ Wm) + dm0)[:, 0]
-        m_kg = m_canon * SCALE_M
-
-        lam_r = T_eval @ Wlr
-        lam_v = T_eval @ Wlv
-        dlmf = 0.0 - (self.T_p1 @ Wlm)[0]
-        lam_m = ((T_eval @ Wlm) + dlmf)[:, 0]
-
-        # Process thrust profile
-        thrust_n = np.zeros(n_eval)
-        thrust_vec = np.zeros((n_eval, 3))
-        for i in range(n_eval):
-            u_i = optimal_thrust_direction(lam_v[i])
-            s_i = switching_function(lam_v[i], lam_m[i], m_canon[i], c=C_CANON)
-            t_mag_c = optimal_throttle(s_i, t_max=self.t_max_c, smoothing_eps=0.05)
-            thrust_n[i] = t_mag_c * (SCALE_M * SCALE_A)
-            thrust_vec[i] = thrust_n[i] * u_i
-
-        xe_used = float(SCALE_M - m_kg[-1])
-        final_m_kg = float(m_kg[-1])
-        actual_runtime = time.perf_counter() - start_time
-
-        # Arrival residual (embedded analytically => machine precision)
-        arr_res = mars_arrival_residual(r_au[-1], v_canon[-1], self.rf, self.vf)
-        converged = bool(res.success and r14_norm < 1e-4 and arr_res < 1e-6)
-
-        # Energy conservation error
-        energy_err, energy_err_hist = compute_energy_conservation_error(
-            t_eval_canon, r_au, v_canon, m_canon,
-            thrust_vec / (SCALE_M * SCALE_A)
+        rms = float(np.sqrt(np.mean(R ** 2)))
+        rmax = float(np.max(np.abs(R)))
+        eps_m = arrival_residual(prob, Y[-1, 0:3], Y[-1, 3:6])
+        success = (eps_reached == self.eps_schedule[-1]) and rms < self.final_tol and eps_m < 1e-6
+        if not status:
+            status = "converged through full eps schedule" if success else "tolerance not met"
+        res = XTFCResult(
+            method="X-TFC PoNN", success=bool(success), status=status, tau=tau, t=t, Y=Y, beta=beta,
+            fuel_canon=float(prob.m0 - Y[-1, 6]), arrival_residual=float(eps_m), residual_rms=rms,
+            residual_max=rmax, eps_reached=eps_reached, iterations=it_total, loss_history=loss_hist,
+            level_log=level_log, runtime_s=time.perf_counter() - t_start, n_residual_evals=n_res[0],
+            n_jacobian_evals=n_jac[0], n_neurons=self.L, n_points=self.N,
+            warm_start=warm_desc,
+            extra={"eps_eval": eps_reached if eps_reached is not None else self.eps_schedule[0]},
         )
-
-        return TrajectorySolution(
-            method_name="X-TFC PoNN",
-            converged=converged,
-            iterations=res.nfev,
-            runtime_seconds=actual_runtime,
-            flight_time_days=self.flight_time_days,
-            xenon_used_kg=round(xe_used, 2),
-            final_mass_kg=round(final_m_kg, 2),
-            arrival_residual=arr_res,
-            energy_error=energy_err,
-            t_days=t_days,
-            r_au=r_au,
-            v_kms=v_kms,
-            m_kg=m_kg,
-            thrust_n=thrust_n,
-            thrust_vec=thrust_vec,
-            lambda_r=lam_r,
-            lambda_v=lam_v,
-            lambda_m=lam_m,
-            energy_error_hist=energy_err_hist,
-            loss_history=loss_history
-        )
+        res.model = model
+        return res

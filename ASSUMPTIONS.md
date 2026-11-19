@@ -1,75 +1,28 @@
-# ASSUMPTIONS.md: Model & Methodological Assumptions
+# Mathematical, Physical, and Numerical Assumptions (`ASSUMPTIONS.md`)
 
-This document lists all explicit modeling, numerical, and astrodynamical assumptions used in this repository, in strict adherence to scientific honesty.
+This document records every modeling assumption and initialization rule used in the codebase.
 
----
+## 1. Two-Phase Mission Architecture and Boundary Conditions
 
-## 1. Heliocentric Problem Formulation & Coordinate System
+1. **Phase 1 (Earth Escape Spiral):** Starts from a circular parking orbit at altitude $h_p = 500.0\text{ km}$ ($r_p = 6878.137\text{ km}$) with initial mass $m_{\text{park}} = 1538.6\text{ kg}$ and continuous tangential thrust $T = 0.50\text{ N}$ ($I_{\text{sp}} = 3100.0\text{ s}, g_0 = 9.80665\text{ m/s}^2$). Integrated in 3-D Cartesian coordinates with Earth's $J_2$ acceleration using `solve_ivp(DOP853, rtol=1e-10, atol=1e-11)` until two-body specific mechanical energy reaches $E = v^2/2 - \mu_E/r = 0$. At the reference inclination $i = 28.5^\circ$, escape occurs at $t_{\text{esc}} = 225.58\text{ days}$ with final mass $m_0 = 1218.04\text{ kg}$.
+2. **Phase 2 (Heliocentric Rendezvous):** Starts at $r_0 = [1, 0, 0]\text{ AU}$ with $v_0 = [0, 1, 0] V_E$ ($v_\infty = 0$) and $m(0) = 1218.0\text{ kg}$. Unless the optional 3-D Keplerian ephemeris is selected, Mars is modeled on a coplanar circular orbit of radius $r_M = 1.524\text{ AU}$ with circular speed $v_M = \sqrt{\mu_S / r_M}$.
+3. **Common Target State Across All Three Methods:** All three solvers receive the exact same `HelioProblem` instance (same $t_f$, same target arrival longitude $\theta_f$, same $T_{\max} = 0.50\text{ N}$, same 14-state 3-D dynamics).
 
-1. **Planetary Bodies & Ephemerides:**
-   - **Earth Departure ($t = 0$):** Assumed circular coplanar orbit at $r_E = 1.0\text{ AU} = 149,597,870.7\text{ km}$, orbital velocity $v_E = \sqrt{\mu_S / r_E} \approx 29.7847\text{ km/s}$. Departure occurs with zero hyperbolic excess velocity ($v_\infty = 0$) at position $\mathbf{r}_0 = [1.0, 0.0, 0.0]^T\text{ AU}$ and velocity $\mathbf{v}_0 = [0.0, 1.0, 0.0]^T\text{ VU}$.
-   - **Mars Arrival ($t = t_f$):** Assumed circular coplanar orbit at $r_M = 1.524\text{ AU} = 227,987,154.9\text{ km}$, circular orbital velocity $v_M = \sqrt{\mu_{\text{eff}} / r_M} \approx 24.126\text{ km/s}$.
-   - **Mars Arrival Phase Angle ($\theta_f$):** 
-     - *Parametric Angle Search:* Rather than fixing an arbitrary arrival phase angle, the Mars arrival angle was treated as a free optimization parameter and swept across the orbital domain $\theta_f \in [2.0, 5.0]\text{ rad}$ ($115^\circ$ to $286^\circ$).
-     - *Global Minimum Fuel Geometry:* The numerical sweep proves that the global minimum-fuel and minimum-peak-thrust configuration occurs at $\theta_f^* = 3.200\text{ rad} (183.3^\circ)$ (near $\pi\text{ rad}$, corresponding to a near-half revolution low-thrust transfer arc), requiring $293.5\text{ kg}$ xenon fuel.
-     - *Thrust Requirements Across All Angles:* Even at the optimal angle $\theta_f^* = 3.200\text{ rad}$, circular-to-circular rendezvous requires a minimum peak thrust of $1.016\text{ N}$ and a trajectory-averaged thrust of $\bar{T} = 0.542\text{ N}$. Across all other angles, required peak thrust increases up to $4.70\text{ N}$.
-     - *Feasible Range for $T \le 0.50\text{ N}$ at $t_f \approx 248\text{ days}$:* **Empty set ($\emptyset$)**. Because the minimum average thrust across the transfer physically exceeds the engine's maximum capability ($\bar{T} = 0.542\text{ N} > 0.50\text{ N}$), **no arrival angle anywhere on Mars's orbit allows rendezvous within 248 days under $T \le 0.50\text{ N}$**.
+## 2. Selection of Mars Arrival Longitude and Feasibility Dual Protocol
 
-2. **Flight Time Feasibility Boundary ($t_f \ge 325\text{ days}$ for $T_{\max} \le 0.50\text{ N}$):**
-   - When the hardware ceiling $T \le 0.50\text{ N}$ is strictly enforced at $t_f = 247.9\text{ days}$, all three solvers honestly terminate with terminal position shortfalls of $\approx 0.085\text{--}0.089\text{ AU}$ ($1.27\text{--}1.32 \times 10^7\text{ km}$) and maximum fuel burn ($\approx 352\text{--}354\text{ kg}$).
-   - Parameter sweeps over flight time reveal that circular Earth-Mars transfer under strictly bounded thrust $T \le 0.50\text{ N}$ becomes physically feasible only when transfer duration is extended to $t_f \ge 325\text{ days}$ (e.g. at $t_f = 330\text{ days}$, required peak thrust drops to $0.476\text{ N} \le 0.50\text{ N}$).
-   - Consequently, the paper's simultaneous claim of achieving circular rendezvous in $248\text{ days}$ while strictly observing $T_{\max} \le 0.50\text{ N}$ is **physically and mathematically contradicted**.
+1. **Minimum-Time Feasibility Problem:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. To determine the physical feasibility boundary without assuming any arbitrary angle, we solve the 180-node LGL minimum-time problem with free $t_f$ and free arrival longitude $\theta_f$ subject to $0 \le T \le 0.50\text{ N}$. The resulting global minimum transfer time is **$t_{\min} = 260.8333\text{ days}$** at optimal arrival longitude **$\theta_f^* = 192.5175^\circ$** (3.360065 rad).
+2. **Dual Benchmark Protocol:** Because the paper's nominal duration $t_f = 247.9\text{ days}$ is shorter than $t_{\min} = 260.83\text{ days}$, circular rendezvous at $T \le 0.50\text{ N}$ is physically infeasible at $t_f = 247.9\text{ days}$ for every arrival longitude $\theta_f \in [0, 2\pi)$. Following Requirement E, we run and report the full benchmark protocol on two scenarios at the optimal arrival longitude $\theta_f = 192.5175^\circ$:
+   - **Paper Nominal Scenario:** $t_f = 247.9\text{ days}$ (all three solvers run without relaxation and report non-convergence).
+   - **Shortest All-Method Converged Scenario:** $t_f = 261.0\text{ days}$ (all three solvers run on the identical feasible problem).
 
-3. **Canonical Astrodynamic Units:**
-   To ensure numerical conditioning and avoid machine precision loss from large distances ($\sim 10^{11}\text{ m}$) and small mass flow rates ($\sim 10^{-5}\text{ kg/s}$):
-   - Length unit: $1\text{ AU} = 1.495978707 \times 10^{11}\text{ m}$
-   - Velocity unit: $V_U = \sqrt{\mu_S / 1\text{ AU}} \approx 29.78469\text{ km/s}$
-   - Time unit: $T_U = 1\text{ AU} / V_U \approx 5.02264 \times 10^6\text{ s} \approx 58.1324\text{ days}$
-   - Mass unit: $M_U = m_0 = 1,218.0\text{ kg}$
-   - Force unit: $F_U = M_U V_U^2 / 1\text{ AU} \approx 7.2228\text{ N}$
+## 3. Pontryagin Optimality System and Throttle Smoothing
 
-4. **Solar Radiation Pressure (SRP) Model:**
-   - SRP acceleration is purely radial: $\mathbf{a}_{\text{SRP}} = K \frac{\mathbf{r}}{r^3}$, where $K = P_0 C_R (A/m) (1\text{ AU})^2 \approx 2.45 \times 10^{15}\text{ m}^3/\text{s}^2$.
-   - Effective solar gravity: $\mu_{\text{eff}} = \mu_S - K$, reducing central gravity by the dimensionless fraction $K / \mu_S \approx 1.8459 \times 10^{-5}$.
-   - No eclipse modeling during heliocentric transfer.
+1. **Hamiltonian and Switching Function:** With cost $J = \int_0^{t_f} (T/c)\,dt = m_0 - m(t_f)$, $H = T/c + \boldsymbol{\lambda}_r \cdot \mathbf{v} + \boldsymbol{\lambda}_v \cdot (\mathbf{g} + \mathbf{a}_{\text{SRP}} + (T/m)\mathbf{u}) - \lambda_m T/c$, yielding $\mathbf{u}^* = -\boldsymbol{\lambda}_v / \|\boldsymbol{\lambda}_v\|$ and switching function $S = (1 - \lambda_m)/c - \|\boldsymbol{\lambda}_v\|/m$.
+2. **Smoothed Throttle Homotopy:** Both Indirect shooting and X-TFC PoNN use the logistic throttle smoothing $T(S; \varepsilon) = \frac{T_{\max}}{2}(1 - \tanh(S / (2\varepsilon)))$ along the 10-step homotopy schedule $\varepsilon \in (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)$.
 
----
+## 4. Seeded Initial Guess Procedures
 
-## 2. Pontryagin Maximum Principle & Fuel-Optimal Control (14-State System)
+1. **Indirect Shooting:** For each seed $s$, the 7 initial costates are drawn from $\boldsymbol{\lambda}_{r0} \sim U(-1, 1)^3$, $\boldsymbol{\lambda}_{v0} \sim U(-1, 1)^3$, and $\lambda_{m0} \sim U(0, 1)$.
+2. **X-TFC PoNN:** For each seed $s$, hidden-layer centers $c_l \sim U(-1, 1)$ and slopes $w_l = \pm U(1, w_{\max})$ ($b_l = -w_l c_l$) are drawn randomly and held fixed. When `warm_start_from_eps1 = True`, the smooth $\varepsilon = 1.0$ trajectory is projected onto the random basis to initialize $\boldsymbol{\beta}$ at $\varepsilon = 1.0$, and this warm start is explicitly disclosed in `warm_start`.
+3. **Pseudospectral Collocation (180 LGL Nodes):** For each seed $s$, the initial trajectory guess is generated by polar radius/angle interpolation with seed-random shape exponent $p \sim U(0.6, 1.6)$, radial perturbation amplitude $A \sim U(-0.08, 0.08)\text{ AU}$, thrust fraction $U(0.3, 0.9) T_{\max}$, and in-plane pointing offset $U(-0.6, 0.6)\text{ rad}$.
 
-1. **Hamiltonian & 14-State System:**
-   - State: $\mathbf{x} = [\mathbf{r}, \mathbf{v}, m]^T \in \mathbb{R}^7$.
-   - Costate: $\boldsymbol{\lambda} = [\boldsymbol{\lambda}_r, \boldsymbol{\lambda}_v, \lambda_m]^T \in \mathbb{R}^7$.
-   - Hamiltonian:
-     $$H = \frac{T}{c} + \boldsymbol{\lambda}_r \cdot \mathbf{v} + \boldsymbol{\lambda}_v \cdot \left(\mathbf{g}(\mathbf{r}) + \mathbf{a}_{\text{SRP}}(\mathbf{r}) + \frac{T}{m} \mathbf{u}\right) - \lambda_m \frac{T}{c}$$
-   - Optimal thrust direction: $\mathbf{u}^* = -\frac{\boldsymbol{\lambda}_v}{\|\boldsymbol{\lambda}_v\|}$.
-   - Switching function:
-     $$S = \frac{1 - \lambda_m}{c} - \frac{\|\boldsymbol{\lambda}_v\|}{m}$$
-   - State ODEs:
-     $$\dot{\mathbf{r}} = \mathbf{v}, \quad \dot{\mathbf{v}} = \mathbf{g}(\mathbf{r}) + \mathbf{a}_{\text{SRP}}(\mathbf{r}) + \frac{T}{m} \mathbf{u}^*, \quad \dot{m} = -\frac{T}{c}$$
-   - Costate ODEs:
-     $$\dot{\boldsymbol{\lambda}}_r = -\left[\frac{\partial \mathbf{g}}{\partial \mathbf{r}} + \frac{\partial \mathbf{a}_{\text{SRP}}}{\partial \mathbf{r}}\right]^T \boldsymbol{\lambda}_v, \quad \dot{\boldsymbol{\lambda}}_v = -\boldsymbol{\lambda}_r, \quad \dot{\lambda}_m = -\frac{T}{m^2} \|\boldsymbol{\lambda}_v\|$$
-   - Free final mass transversality condition: $\lambda_m(t_f) = 0$.
-
-2. **Throttle Law Smoothing:**
-   - Bang-bang control: $T = T_{\max}$ when $S < 0$, $T = 0$ when $S > 0$.
-   - Smoothed via homotopy parameter $\varepsilon > 0$:
-     $$T(S; \varepsilon) = \frac{T_{\max}}{1 + e^{S / \varepsilon}}$$
-
-3. **Collocation Formulation:**
-   - Solved in two stages: Stage 1 minimizes quadratic control effort $\sum w_k \|\mathbf{u}_k\|^2$ as a smooth initial guess; Stage 2 solves the true fuel-optimal NLP minimizing propellant $(m_0 - m_f)$ subject to explicit mass depletion $m_k - m_{k-1} = -\Delta t_k \bar{T}_k / c$ and strict thrust limits $m(t_k) \|\mathbf{u}(t_k)\| \le 0.50\text{ N}$.
-
-4. **X-TFC Neural Architecture:**
-   - Single hidden layer network with Chebyshev orthogonal polynomial basis.
-   - Exact analytical Hermite boundary embedding guarantees $r(0) = r_0$, $r(t_f) = r_f$, $v(0) = v_0$, $v(t_f) = v_f$, $m(0) = m_0$, and $\lambda_m(t_f) = 0$ to machine precision.
-   - Evaluates the complete 14-residual norm $\|R_{14}\|$ across all collocation nodes; converges only if $\|R_{14}\| < 10^{-4}$ and arrival residual $< 10^{-6}$.
-
----
-
-## 3. Earth Parking Orbit Escape Phase
-
-1. **Dynamics:**
-   - Initial 500 km altitude circular orbit: $r_p = R_E + 500\text{ km} = 6,878.137\text{ km}$.
-   - Thrust: tangential along velocity vector $\mathbf{u} = \mathbf{v} / \|\mathbf{v}\|$ at maximum magnitude $T = 0.50\text{ N}$.
-   - Earth $J_2 = 1.08262668 \times 10^{-3}$.
-   - Termination condition: two-body specific energy reaches parabolic escape $E = \frac{v^2}{2} - \frac{\mu_E}{r} = 0$.
