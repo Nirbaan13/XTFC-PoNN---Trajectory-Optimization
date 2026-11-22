@@ -164,12 +164,16 @@ def evaluate_solution(
     fuel_state = float(prob.m0 - m_grid[-1])
     mass_balance_err_kg = kg(prob, abs(fuel_state - fuel_int))
 
-    # Thrust bound check
+    # Thrust bound check, throttle switch count, and coast-arc duration
     T_newton = newton(prob, T_grid)
+    t_days = days_from_tu(t_grid)
     max_thrust_N = float(np.max(T_newton))
     min_thrust_N = float(np.min(T_newton))
     mean_thrust_N = float(np.mean(T_newton))
     thrust_bound_ok = bool(max_thrust_N <= prob.t_max_newton + 1e-6)
+    n_throttle_switches, coast_duration_days = analyze_throttle_profile(
+        t_days, T_newton, prob.t_max_newton
+    )
 
     # Error against high-precision shooting reference
     ref_pos_rms_au = float("nan")
@@ -198,6 +202,8 @@ def evaluate_solution(
         "min_thrust_N": min_thrust_N,
         "mean_thrust_N": mean_thrust_N,
         "thrust_bound_ok": thrust_bound_ok,
+        "n_throttle_switches": int(n_throttle_switches),
+        "coast_duration_days": float(coast_duration_days),
         "mass_balance_err_kg": mass_balance_err_kg,
         "ode14_rms": ode14_rms,
         "lgl180_defect_rms": lgl180_defect_rms,
@@ -217,7 +223,7 @@ def evaluate_solution(
         "ref_vel_rms_vu": ref_vel_rms_vu,
         "ref_fuel_diff_kg": ref_fuel_diff_kg,
         # time series for plotting
-        "t_days": days_from_tu(t_grid),
+        "t_days": t_days,
         "r_au": r_grid,
         "v_vu": v_grid,
         "m_kg": m_grid * prob.m0_kg,
@@ -225,6 +231,54 @@ def evaluate_solution(
         "U": U_grid,
         "eps_E_profile": eps_E_prof,
     }
+
+
+def analyze_throttle_profile(
+    t_days: np.ndarray,
+    T_newton: np.ndarray,
+    t_max_newton: float,
+    low_frac: float = 0.25,
+    high_frac: float = 0.75,
+) -> tuple[int, float]:
+    """Counts hysteresis-filtered bang-bang throttle switches and coast duration (days).
+
+    A switch is counted whenever the normalized throttle T / T_max transitions
+    between the ON state (>= high_frac) and the OFF state (<= low_frac).
+    Coast-arc duration is the integrated time with T < 0.5 * T_max.
+    """
+    if len(T_newton) == 0 or t_max_newton <= 0.0:
+        return 0, 0.0
+    frac = np.asarray(T_newton, dtype=float) / float(t_max_newton)
+    state = None
+    switches = 0
+    for val in frac:
+        if val >= high_frac:
+            cur = 1
+        elif val <= low_frac:
+            cur = 0
+        else:
+            continue
+        if state is None:
+            state = cur
+        elif cur != state:
+            switches += 1
+            state = cur
+    coast_mask = (frac < 0.5).astype(float)
+    coast_days = float(np.trapezoid(coast_mask, t_days))
+    return int(switches), coast_days
+
+
+def wilson_ci(k: int, n: int, z: float = 1.959963984540054) -> tuple[float, float]:
+    """95% Wilson score confidence interval for binomial proportion k / n."""
+    if n <= 0:
+        return (0.0, 1.0)
+    p = k / n
+    z2 = z * z
+    denom = 1.0 + z2 / n
+    center = (p + z2 / (2.0 * n)) / denom
+    half = (z / denom) * float(np.sqrt((p * (1.0 - p) + z2 / (4.0 * n)) / n))
+    return (max(0.0, center - half), min(1.0, center + half))
+
 
 
 # ---------------------------------------------------------------------------

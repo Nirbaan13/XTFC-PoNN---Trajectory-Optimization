@@ -251,6 +251,54 @@ def main():
     plot_figure_4_3_top_view(rep_feas, output_path=figures_dir / "figure_4_3_top_view_2d.png")
     plot_perturbation_magnitudes(output_path=figures_dir / "perturbation_accelerations.png")
 
+    # Load stored Phase 1 and Phase 2 JSON data if available and regenerate their tables & figures
+    import json
+    from trajectory_optimization.phase_studies import (
+        format_phase1_scan_markdown,
+        format_phase1_multi_tf_markdown,
+        format_phase2_markdown,
+    )
+    from trajectory_optimization.plotting import (
+        plot_phase1_feasibility_scan,
+        plot_phase1_multi_tf_robustness,
+        plot_phase2_basin_and_hybrid,
+    )
+
+    p1_data = None
+    p1_scan_md = None
+    p1_multi_tf_md = None
+    p1_json = Path("results/phase1_results.json")
+    if p1_json.exists():
+        p1_data = json.loads(p1_json.read_text(encoding="utf-8"))
+        if "scan" in p1_data:
+            p1_scan_md = format_phase1_scan_markdown(p1_data["scan"])
+            (tables_dir / "table_phase1_feasibility_scan.md").write_text(p1_scan_md, encoding="utf-8")
+            plot_phase1_feasibility_scan(
+                p1_data["scan"],
+                output_path=figures_dir / "figure_phase1_feasibility_scan.png",
+            )
+        if "multi_tf_robustness" in p1_data:
+            rob_map = {float(k): v for k, v in p1_data["multi_tf_robustness"].items()}
+            ang_map = {float(k): v for k, v in p1_data["selected_angles"].items()}
+            p1_multi_tf_md = format_phase1_multi_tf_markdown(ang_map, rob_map)
+            (tables_dir / "table_phase1_multi_tf_robustness.md").write_text(p1_multi_tf_md, encoding="utf-8")
+            plot_phase1_multi_tf_robustness(
+                rob_map,
+                output_path=figures_dir / "figure_phase1_multi_tf_robustness.png",
+            )
+
+    p2_data = None
+    p2_md = None
+    p2_json = Path("results/phase2_results.json")
+    if p2_json.exists():
+        p2_data = json.loads(p2_json.read_text(encoding="utf-8"))
+        p2_md = format_phase2_markdown(p2_data)
+        (tables_dir / "table_phase2_basin_and_hybrid.md").write_text(p2_md, encoding="utf-8")
+        plot_phase2_basin_and_hybrid(
+            p2_data,
+            output_path=figures_dir / "figure_phase2_basin_and_hybrid.png",
+        )
+
     print("==================================================================", flush=True)
     print("STEP 8: Generating Table 1, REPORT.md, ASSUMPTIONS.md, DEVIATIONS.md, README.md", flush=True)
     print("==================================================================", flush=True)
@@ -273,6 +321,11 @@ def main():
         "disc_conv": disc_conv,
         "kepl_comp": kepl_comp,
         "additions_md": additions_md,
+        "phase1": p1_data,
+        "phase1_scan_md": p1_scan_md,
+        "phase1_multi_tf_md": p1_multi_tf_md,
+        "phase2": p2_data,
+        "phase2_md": p2_md,
     }
     table_1_md = generate_table_1_markdown(data)
     (tables_dir / "table_1_mission_parameters.md").write_text(table_1_md, encoding="utf-8")

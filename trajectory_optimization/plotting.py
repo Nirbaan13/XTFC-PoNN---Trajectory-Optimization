@@ -271,3 +271,186 @@ def plot_perturbation_magnitudes(
     fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
     return output_path
+
+
+def plot_phase1_feasibility_scan(
+    scan_data: dict,
+    output_path: str | Path = "results/figures/figure_phase1_feasibility_scan.png",
+) -> Path:
+    """Plots Phase 1.1 global minimum-time feasibility scan t_min(theta_f)."""
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    rows = scan_data["fixed_rows"]
+    th_0rev, t_0rev = [], []
+    th_1rev, t_1rev = [], []
+    th_fail = []
+    for r in rows:
+        if r["t_min_days"] is None:
+            th_fail.append(r["theta_f_deg"])
+        elif r["best_guess_mode"] == "spiral_1rev":
+            th_1rev.append(r["theta_f_deg"])
+            t_1rev.append(r["t_min_days"])
+        else:
+            th_0rev.append(r["theta_f_deg"])
+            t_0rev.append(r["t_min_days"])
+
+    fig, ax = plt.subplots(figsize=(11, 6), dpi=300)
+    if th_0rev:
+        ax.plot(th_0rev, t_0rev, "o-", color="#1f77b4", linewidth=2, markersize=6, label="Fixed-$\\theta_f$ $t_{\\min}$ (0-rev branch, N=80)")
+    if th_1rev:
+        ax.plot(th_1rev, t_1rev, "s--", color="#ff7f0e", linewidth=1.8, markersize=6, label="Fixed-$\\theta_f$ $t_{\\min}$ (1-rev spiral branch, N=80)")
+    if th_fail:
+        y_mark = 225.0
+        ax.scatter(th_fail, [y_mark] * len(th_fail), marker="x", color="#7f7f7f", s=55, label="Non-converged (0/4 starts)")
+
+    ax.scatter(
+        [scan_data["global_theta_f_deg"]],
+        [scan_data["global_t_min_days"]],
+        color="#2ca02c", s=140, marker="*", zorder=5,
+        label=f"Free-$\\theta_f$ global min (N=180): {scan_data['global_t_min_days']:.2f} d @ {scan_data['global_theta_f_deg']:.1f}°",
+    )
+    ax.axhline(247.9, color="#d62728", linestyle=":", linewidth=2, label="Paper nominal duration (247.9 d)")
+
+    ax.set_title("Phase 1.1: Global Minimum-Time Feasibility Scan at $T_{\\max} = 0.50\\text{ N}$", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Target Mars Arrival Longitude $\\theta_f$ (deg)", fontsize=11)
+    ax.set_ylabel("Minimum Transfer Time $t_{\\min}(\\theta_f)$ (days)", fontsize=11)
+    ax.set_xlim(55, 305)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend(loc="best", fontsize=9)
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_phase1_multi_tf_robustness(
+    rob_by_tf: dict,
+    output_path: str | Path = "results/figures/figure_phase1_multi_tf_robustness.png",
+) -> Path:
+    """Plots Phase 1.2–1.4 convergence rates (with 95% Wilson CI) and fuel/coast vs tf."""
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    tf_keys = sorted(rob_by_tf.keys(), key=lambda k: float(k))
+    tfs = [float(rob_by_tf[k]["tf_days"]) for k in tf_keys]
+    methods = [
+        ("X-TFC PoNN (warm)", "#1f77b4"),
+        ("X-TFC PoNN (no warm start)", "#17becf"),
+        ("Indirect shooting", "#d62728"),
+        ("Pseudospectral collocation", "#2ca02c"),
+    ]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5), dpi=300)
+    x = np.arange(len(tfs))
+    w = 0.19
+    for idx, (m, col) in enumerate(methods):
+        rates = [rob_by_tf[k]["methods"][m]["conv_rate"] * 100.0 for k in tf_keys]
+        lo = [max(0.0, (rob_by_tf[k]["methods"][m]["conv_rate"] - rob_by_tf[k]["methods"][m]["ci95_low"]) * 100.0) for k in tf_keys]
+        hi = [max(0.0, (rob_by_tf[k]["methods"][m]["ci95_high"] - rob_by_tf[k]["methods"][m]["conv_rate"]) * 100.0) for k in tf_keys]
+        ax1.bar(x + (idx - 1.5) * w, rates, w, yerr=[lo, hi], capsize=3, label=m, color=col, edgecolor="black", alpha=0.88)
+
+    ax1.set_xticks(x)
+    ax1.set_xticklabels([f"{tf:.1f} d\n({rob_by_tf[k]['theta_f_deg']:.0f}°)" for k, tf in zip(tf_keys, tfs)], fontsize=9)
+    ax1.set_ylabel("Convergence Rate (%) [95% Wilson CI]", fontsize=10)
+    ax1.set_ylim(0, 112)
+    ax1.set_title("(a) 20-Run Convergence Across Transfer Durations", fontsize=11, fontweight="bold")
+    ax1.grid(True, linestyle="--", alpha=0.5, axis="y")
+    ax1.legend(loc="upper left", fontsize=8)
+
+    # Panel (b): Converged fuel and coast-arc duration vs tf for Shooting & Collocation
+    ax2_r = ax2.twinx()
+    for m, col, mk in [("Indirect shooting", "#d62728", "o"), ("Pseudospectral collocation", "#2ca02c", "s")]:
+        tf_c, fu_c, co_c = [], [], []
+        for k, tf in zip(tf_keys, tfs):
+            d = rob_by_tf[k]["methods"][m]
+            if d["n_converged"] > 0:
+                tf_c.append(tf)
+                fu_c.append(d["conv_fuel_kg"]["mean"])
+                co_c.append(d["conv_coast_days"]["mean"])
+        if tf_c:
+            ax2.plot(tf_c, fu_c, marker=mk, color=col, linewidth=2, label=f"{m} Fuel (kg)")
+            ax2_r.plot(tf_c, co_c, marker=mk, linestyle="--", color=col, alpha=0.7, linewidth=1.6, label=f"{m} Coast (d)")
+    ax2.set_xlabel("Transfer Duration $t_f$ (days)", fontsize=10)
+    ax2.set_ylabel("Mean Converged Propellant (kg)", fontsize=10)
+    ax2_r.set_ylabel("Mean Coast-Arc Duration (days) [Dashed]", fontsize=10)
+    ax2.set_title("(b) Fuel & Coast-Arc Duration at Fuel-Minimal $\\theta_f^*(t_f)$", fontsize=11, fontweight="bold")
+    ax2.grid(True, linestyle="--", alpha=0.5)
+    h1, l1 = ax2.get_legend_handles_labels()
+    h2, l2 = ax2_r.get_legend_handles_labels()
+    ax2.legend(h1 + h2, l1 + l2, loc="best", fontsize=8)
+
+    plt.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_phase2_basin_and_hybrid(
+    p2_data: dict,
+    output_path: str | Path = "results/figures/figure_phase2_basin_and_hybrid.png",
+) -> Path:
+    """Plots Phase 2A 100-seed convergence rates + fuel distribution and Phase 2B hybrid comparison."""
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    methods = [
+        ("X-TFC PoNN (no warm start)", "X-TFC\n(no warm start)", "#17becf"),
+        ("Indirect shooting (random costates)", "Shooting\n(random)", "#d62728"),
+        ("Pseudospectral collocation (random guess)", "Collocation\n(180 LGL)", "#2ca02c"),
+        ("Hybrid (X-TFC -> Indirect shooting)", "Hybrid\n(X-TFC→Shoot)", "#9467bd"),
+    ]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13.5, 5.5), dpi=300)
+    x = np.arange(len(methods))
+    rates, lo, hi, cols, labels = [], [], [], [], []
+    for key, lbl, col in methods:
+        d = p2_data["methods"][key]
+        r = d["conv_rate"] * 100.0
+        rates.append(r)
+        lo.append(max(0.0, (d["conv_rate"] - d["ci95_low"]) * 100.0))
+        hi.append(max(0.0, (d["ci95_high"] - d["conv_rate"]) * 100.0))
+        cols.append(col)
+        labels.append(lbl)
+
+    bars = ax1.bar(x, rates, width=0.55, yerr=[lo, hi], capsize=5, color=cols, edgecolor="black", alpha=0.9)
+    for bar, (key, _, _) in zip(bars, methods):
+        d = p2_data["methods"][key]
+        ax1.text(
+            bar.get_x() + bar.get_width() / 2,
+            min(106.0, d["ci95_high"] * 100.0 + 2.5),
+            f"{d['n_converged']}/{d['n_runs']}",
+            ha="center", va="bottom", fontsize=9, fontweight="bold",
+        )
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(labels, fontsize=9)
+    ax1.set_ylabel("Convergence Rate (%) [95% Wilson CI]", fontsize=10)
+    ax1.set_ylim(0, 114)
+    ax1.set_title(
+        f"(a) 100-Seed Basin & Hybrid Convergence ($t_f={p2_data['tf_days']:.1f}$ d, $\\theta_f^*={p2_data['theta_f_deg']:.1f}^\\circ$)",
+        fontsize=10.5, fontweight="bold",
+    )
+    ax1.grid(True, linestyle="--", alpha=0.5, axis="y")
+
+    # Panel (b): Final fuel distribution for methods with >=1 converged run
+    fuel_lists, flabels, fcols = [], [], []
+    for key, lbl, col in methods:
+        d = p2_data["methods"][key]
+        vals = [r["fuel_kg"] for r in d["runs"] if r["converged"]]
+        if vals:
+            fuel_lists.append(vals)
+            flabels.append(lbl)
+            fcols.append(col)
+    if fuel_lists:
+        bp = ax2.boxplot(fuel_lists, tick_labels=flabels, patch_artist=True, showfliers=True)
+        for patch, col in zip(bp["boxes"], fcols):
+            patch.set_facecolor(col)
+            patch.set_alpha(0.6)
+    ax2.set_ylabel("Converged Propellant Consumption (kg)", fontsize=10)
+    ax2.set_title("(b) Final Fuel Distribution Across Converged Seeds", fontsize=10.5, fontweight="bold")
+    ax2.grid(True, linestyle="--", alpha=0.5, axis="y")
+
+    plt.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+

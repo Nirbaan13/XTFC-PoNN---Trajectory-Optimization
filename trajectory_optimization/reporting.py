@@ -174,16 +174,16 @@ def generate_report_markdown(data: dict) -> str:
         f"**{e1[2].final_mass_kg:.2f} kg** (paper: 225.6 days, 320.6 kg, 1,218.0 kg → **{st_e1_t}**). "
         f"Table 2 perturbation ratios ($J_2 / a_T = {t2[0].ratio_pert_to_thrust:.1f}$ at 500 km; "
         f"$a_{{\\text{{SRP}}}} = {t2[3].a_pert_m_s2:.2e}\\text{{ m/s}}^2$ at 1 AU) match the paper's analytical formulas (**{st_t2_j2}**).\n"
-        f"2. **Minimum-Time Heliocentric Feasibility at $T_{{\\max}} = 0.50\\text{{ N}}$:** "
+        f"2. **Minimum-Time Heliocentric Feasibility Scan at $T_{{\\max}} = 0.50\\text{{ N}}$:** "
         f"Solving the 180-node LGL minimum-time rendezvous problem with free transfer duration $t_f$ and free Mars arrival longitude $\\theta_f$ "
-        f"(with $m_0 = 1,218.0\\text{{ kg}}, I_{{\\text{{sp}}}} = 3,100\\text{{ s}}, T \\le 0.50\\text{{ N}}$) yields a global minimum transfer time of "
+        f"(with $m_0 = 1,218.0\\text{{ kg}}, I_{{\\text{{sp}}}} = 3,100\\text{{ s}}, T \\le 0.50\\text{{ N}}$) yields a minimum transfer time of "
         f"**$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$** at arrival longitude **$\\theta_f = {np.degrees(mt['theta_f_rad']):.4f}^\\circ$** "
         f"({mt['theta_f_rad']:.6f} rad), consuming **{mt['fuel_canon']*1218.0:.2f} kg** of xenon.\n"
-        f"3. **Infeasibility of the Paper's Nominal $t_f = {p248.tf_days:.1f}\\text{{ days}}$ Scenario Under $T \\le 0.50\\text{{ N}}$:** "
-        f"Because $t_f = {p248.tf_days:.1f}\\text{{ days}} < t_{{\\min}} = {mt['tf_days']:.2f}\\text{{ days}}$, no trajectory with $T \\le 0.50\\text{{ N}}$ "
-        f"can satisfy both Earth departure and circular Mars rendezvous in {p248.tf_days:.1f} days. Across the bounded-thrust angle sweep at "
-        f"$t_f = {p248.tf_days:.1f}\\text{{ days}}$, **{n_conv_248_sweep} of {len(sw248)}** tested arrival angles converge (minimum slack norm "
-        f"`{min(r['col_slack_norm'] for r in sw248):.3e}` at $\\theta_f = {min(sw248, key=lambda r: r['col_slack_norm'])['theta_deg']:.1f}^\\circ$). "
+        f"3. **Non-Convergence at the Paper's Nominal $t_f = {p248.tf_days:.1f}\\text{{ days}}$ Duration Under $T \\le 0.50\\text{{ N}}$:** "
+        f"Because $t_f = {p248.tf_days:.1f}\\text{{ days}}$ lies below the shortest transfer time found in our global scan ($t_{{\\min}} = {mt['tf_days']:.2f}\\text{{ days}}$), "
+        f"no tested solver or initialization achieved a converged circular Mars rendezvous at $t_f = {p248.tf_days:.1f}\\text{{ days}}$ under $T \\le 0.50\\text{{ N}}$. "
+        f"Across the bounded-thrust angle sweep at $t_f = {p248.tf_days:.1f}\\text{{ days}}$, **{n_conv_248_sweep} of {len(sw248)}** tested arrival angles converged "
+        f"(minimum slack norm `{min(r['col_slack_norm'] for r in sw248):.3e}` at $\\theta_f = {min(sw248, key=lambda r: r['col_slack_norm'])['theta_deg']:.1f}^\\circ$). "
         f"In the 20-run robustness protocol at $t_f = {p248.tf_days:.1f}\\text{{ days}}$, convergence rates are "
         f"**{rob248['X-TFC PoNN']['n_converged']}/20** (X-TFC PoNN), "
         f"**{rob248['Indirect shooting']['n_converged']}/20** (Indirect shooting), and "
@@ -196,7 +196,7 @@ def generate_report_markdown(data: dict) -> str:
         f"DOP853 re-propagated $\\varepsilon_M = {psf['reprop_arrival_residual']:.2e}$, zero slack), and "
         f"X-TFC PoNN consumes **{xtf['fuel_kg']:.2f} kg** (14-ODE RMS residual `{xtf['ode14_rms']:.2e}`, "
         f"DOP853 re-propagated $\\varepsilon_M = {xtf['reprop_arrival_residual']:.2e}$). "
-        f"Notice that near $t_{{\\min}}$, the spacecraft must thrust near full throttle for almost the entire transfer, burning "
+        f"Near $t_{{\\min}}$, the spacecraft must thrust near full throttle for almost the entire transfer, burning "
         f"$\\approx {shf['fuel_kg']:.1f}\\text{{--}}{xtf['fuel_kg']:.1f}\\text{{ kg}}$ of xenon (exceeding the paper's 300 kg nominal xenon budget and "
         f"274.8–276.1 kg claim).\n",
         "## 2. Claim-by-Claim Numerical Audit Table\n",
@@ -218,8 +218,8 @@ def generate_report_markdown(data: dict) -> str:
         f"| Table 3 Convergence (20 runs) | XT: 19/20, SH: 14/20, PS: 20/20 | XT: {rob248['X-TFC PoNN']['n_converged']}/20, SH: {rob248['Indirect shooting']['n_converged']}/20, PS: {rob248['Pseudospectral collocation']['n_converged']}/20 | XT: {robf['X-TFC PoNN']['n_converged']}/20, SH: {robf['Indirect shooting']['n_converged']}/20, PS: {robf['Pseudospectral collocation']['n_converged']}/20 | **{st_rob248_xt} / PARTIAL** |",
         "",
         "## 3. Summary of Angle-Sweep, Unperturbed Control, and Perturbation Sensitivity\n",
-        f"- **Bounded-Thrust Angle Sweep:** At $t_f = {p248.tf_days:.1f}\\text{{ days}}$, {n_conv_248_sweep}/{len(sw248)} angles converge. "
-        f"At $t_f = {pf.tf_days:.1f}\\text{{ days}}$, {n_conv_feas_sweep}/{len(swf)} angles converge under both indirect shooting and 180-node collocation.\n"
+        f"- **Bounded-Thrust Angle Sweep:** At $t_f = {p248.tf_days:.1f}\\text{{ days}}$, {n_conv_248_sweep}/{len(sw248)} angles converged. "
+        f"At $t_f = {pf.tf_days:.1f}\\text{{ days}}$, {n_conv_feas_sweep}/{len(swf)} angles converged under both indirect shooting and 180-node collocation.\n"
         f"- **Unperturbed Control (`srp_scale = 0` at $t_f = {pf.tf_days:.1f}\\text{{ days}}$):** "
         f"Removing SRP changes propellant consumption by "
         f"`{shf['fuel_kg'] - unpert['eval']['Indirect shooting']['fuel_kg']:+.4f} kg` (Indirect shooting), "
@@ -230,6 +230,34 @@ def generate_report_markdown(data: dict) -> str:
         f"Propellant consumption varies smoothly from `{psweep[0]['sh_fuel_kg']:.4f} kg` at 0× SRP to "
         f"`{psweep[-1]['sh_fuel_kg']:.4f} kg` at 1000× SRP.\n",
     ]
+
+    p1 = data.get("phase1")
+    if p1 is not None:
+        scan = p1["scan"]
+        local_ans = "Yes" if scan["earlier_was_local_minimum"] else "No"
+        n_fixed_conv = sum(1 for r in scan["fixed_rows"] if r["n_converged"] > 0)
+        n_free_conv = sum(1 for r in scan["free_multistart"] if r["success"])
+        lines.extend([
+            "## 4. Phase 1: Global Feasibility Scan & Multi-$t_f$ 20-Run Protocol\n",
+            f"- **Global Feasibility Scan ($\\theta_f \\in [60^\\circ, 300^\\circ]$, step $10^\\circ$, 4 guesses/angle + {len(scan['free_multistart'])} free-$\\theta_f$ multi-starts):** "
+            f"{n_fixed_conv}/{len(scan['fixed_rows'])} fixed arrival longitudes had at least one converged solve and "
+            f"{n_free_conv}/{len(scan['free_multistart'])} free-$\\theta_f$ 180-node starts converged. "
+            f"The shortest transfer time found across all tested starts is **$t_{{\\min}} = {scan['global_t_min_days']:.4f}\\text{{ days}}$** at "
+            f"**$\\theta_f^* = {scan['global_theta_f_deg']:.3f}^\\circ$**. "
+            f"**Was the earlier {scan['earlier_t_min_days']:.2f} d result a local minimum?** **{local_ans}** — no tested longitude or initial guess "
+            f"(including low-angle 0-rev and 1-rev spiral guesses) produced a feasible transfer below {scan['global_t_min_days']:.2f} days.\n",
+        ])
+        if data.get("phase1_scan_md"):
+            lines.append(data["phase1_scan_md"])
+        if data.get("phase1_multi_tf_md"):
+            lines.append(data["phase1_multi_tf_md"])
+
+    p2 = data.get("phase2")
+    if p2 is not None:
+        lines.append("## 5. Phase 2: 100-Seed Random-Initialization Basin Study & Hybrid X-TFC $\\to$ Shooting Test\n")
+        if data.get("phase2_md"):
+            lines.append(data["phase2_md"])
+
     return "\n".join(lines) + "\n"
 
 
@@ -238,6 +266,20 @@ def generate_assumptions_markdown(data: dict) -> str:
     pf = data["rep_feas"]["problem"]
     mt = data["min_time"]
     e1_ref = data["e1_cases"][2]
+    p1 = data.get("phase1")
+    p2 = data.get("phase2")
+
+    scan_note = (
+        f"Across the Phase 1.1 global feasibility scan ($\\theta_f \\in [60^\\circ, 300^\\circ]$ in $10^\\circ$ steps with 4 initial guesses per angle "
+        f"plus {len(p1['scan']['free_multistart'])} free-$\\theta_f$ 180-node multi-start solves), the shortest feasible transfer time found under "
+        f"$T \\le {T_MAX:.2f}\\text{{ N}}$ is $t_{{\\min}} = {p1['scan']['global_t_min_days']:.4f}\\text{{ days}}$ at "
+        f"$\\theta_f^* = {p1['scan']['global_theta_f_deg']:.3f}^\\circ$; no tested longitude or initialization converged below "
+        f"{p1['scan']['global_t_min_days']:.2f} days (so the earlier 260.83 d result was "
+        f"{'a local minimum' if p1['scan']['earlier_was_local_minimum'] else 'not a local minimum within the tested 0-rev and 1-rev trajectory families'})."
+        if p1 is not None
+        else f"Solving the 180-node LGL minimum-time problem with free $t_f$ and free $\\theta_f$ gives $t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$ "
+             f"at $\\theta_f^* = {np.degrees(mt['theta_f_rad']):.4f}^\\circ$."
+    )
 
     lines = [
         "# Mathematical, Physical, and Numerical Assumptions (`ASSUMPTIONS.md`)\n",
@@ -255,38 +297,46 @@ def generate_assumptions_markdown(data: dict) -> str:
         f"circular orbit of radius $r_M = 1.524\\text{{ AU}}$ with circular speed $v_M = \\sqrt{{\\mu_S / r_M}}$.\n"
         f"3. **Common Target State Across All Three Methods:** All three solvers receive the exact same `HelioProblem` instance "
         f"(same $t_f$, same target arrival longitude $\\theta_f$, same $T_{{\\max}} = {T_MAX:.2f}\\text{{ N}}$, same 14-state 3-D dynamics).\n",
-        "## 2. Selection of Mars Arrival Longitude and Feasibility Dual Protocol\n",
-        f"1. **Minimum-Time Feasibility Problem:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. "
-        f"To determine the physical feasibility boundary without assuming any arbitrary angle, we solve the 180-node LGL minimum-time problem "
-        f"with free $t_f$ and free arrival longitude $\\theta_f$ subject to $0 \\le T \\le {T_MAX:.2f}\\text{{ N}}$. "
-        f"The resulting global minimum transfer time is **$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$** at optimal arrival longitude "
-        f"**$\\theta_f^* = {np.degrees(mt['theta_f_rad']):.4f}^\\circ$** ({mt['theta_f_rad']:.6f} rad).\n"
-        f"2. **Dual Benchmark Protocol:** Because the paper's nominal duration $t_f = {p248.tf_days:.1f}\\text{{ days}}$ is shorter than "
-        f"$t_{{\\min}} = {mt['tf_days']:.2f}\\text{{ days}}$, circular rendezvous at $T \\le {T_MAX:.2f}\\text{{ N}}$ is physically infeasible at "
-        f"$t_f = {p248.tf_days:.1f}\\text{{ days}}$ for every arrival longitude $\\theta_f \\in [0, 2\\pi)$. "
-        f"Following Requirement E, we run and report the full benchmark protocol on two scenarios at the optimal arrival longitude "
-        f"$\\theta_f = {np.degrees(p248.theta_f):.4f}^\\circ$:\n"
-        f"   - **Paper Nominal Scenario:** $t_f = {p248.tf_days:.1f}\\text{{ days}}$ (all three solvers run without relaxation and report non-convergence).\n"
-        f"   - **Shortest All-Method Converged Scenario:** $t_f = {pf.tf_days:.1f}\\text{{ days}}$ (all three solvers run on the identical feasible problem).\n",
-        "## 3. Pontryagin Optimality System and Throttle Smoothing\n",
+        "## 2. Selection of Mars Arrival Longitude and Feasibility Scan Protocol\n",
+        f"1. **Global Minimum-Time Feasibility Scan:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. "
+        f"{scan_note}\n"
+        f"2. **Benchmark Scenarios:**\n"
+        f"   - **Paper Nominal Scenario:** $t_f = {p248.tf_days:.1f}\\text{{ days}}$ at $\\theta_f = {np.degrees(p248.theta_f):.4f}^\\circ$ "
+        f"(all solvers run without constraint relaxation and report non-convergence).\n"
+        f"   - **Shortest All-Method Converged Scenario:** $t_f = {pf.tf_days:.1f}\\text{{ days}}$ at $\\theta_f = {np.degrees(pf.theta_f):.4f}^\\circ$.\n"
+        f"   - **Multi-$t_f$ Protocol (Phase 1.2–1.4):** $t_f \\in \\{{247.9, 280.0, 300.0, 330.0, 360.0\\}}\\text{{ days}}$ at the "
+        f"computed fuel-minimal arrival longitude $\\theta_f^*(t_f)$ for each duration (20 seeds `1000..1019`, including X-TFC with both "
+        f"`warm_start_from_eps1=True` and `warm_start_from_eps1=False`).\n",
+        "## 3. Pontryagin Optimality System, Throttle Smoothing, and Switching Metrics\n",
         "1. **Hamiltonian and Switching Function:** With cost $J = \\int_0^{t_f} (T/c)\\,dt = m_0 - m(t_f)$, "
         "$H = T/c + \\boldsymbol{\\lambda}_r \\cdot \\mathbf{v} + \\boldsymbol{\\lambda}_v \\cdot (\\mathbf{g} + \\mathbf{a}_{\\text{SRP}} + (T/m)\\mathbf{u}) - \\lambda_m T/c$, "
         "yielding $\\mathbf{u}^* = -\\boldsymbol{\\lambda}_v / \\|\\boldsymbol{\\lambda}_v\\|$ and switching function "
         "$S = (1 - \\lambda_m)/c - \\|\\boldsymbol{\\lambda}_v\\|/m$.\n"
         "2. **Smoothed Throttle Homotopy:** Both Indirect shooting and X-TFC PoNN use the logistic throttle smoothing "
         "$T(S; \\varepsilon) = \\frac{T_{\\max}}{2}(1 - \\tanh(S / (2\\varepsilon)))$ along the 10-step homotopy schedule "
-        "$\\varepsilon \\in (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)$.\n",
-        "## 4. Seeded Initial Guess Procedures\n",
+        "$\\varepsilon \\in (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)$.\n"
+        "3. **Throttle Switches & Coast Duration:** Throttle switches are counted using hysteresis transitions between "
+        "$T \\ge 0.75\\,T_{\\max}$ (ON) and $T \\le 0.25\\,T_{\\max}$ (OFF); coast-arc duration is the integrated time with $T < 0.5\\,T_{\\max}$. "
+        "Re-propagated arrival error $\\varepsilon_M$ is always computed by forward `DOP853` integration of each solver's control profile.\n",
+        "## 4. Seeded Initial Guess Procedures & Phase 2 Hybrid Protocol\n",
         "1. **Indirect Shooting:** For each seed $s$, the 7 initial costates are drawn from "
         "$\\boldsymbol{\\lambda}_{r0} \\sim U(-1, 1)^3$, $\\boldsymbol{\\lambda}_{v0} \\sim U(-1, 1)^3$, and $\\lambda_{m0} \\sim U(0, 1)$.\n"
         "2. **X-TFC PoNN:** For each seed $s$, hidden-layer centers $c_l \\sim U(-1, 1)$ and slopes $w_l = \\pm U(1, w_{\\max})$ "
-        "($b_l = -w_l c_l$) are drawn randomly and held fixed. When `warm_start_from_eps1 = True`, the smooth $\\varepsilon = 1.0$ "
-        "trajectory is projected onto the random basis to initialize $\\boldsymbol{\\beta}$ at $\\varepsilon = 1.0$, and this warm start is "
-        "explicitly disclosed in `warm_start`.\n"
+        "($b_l = -w_l c_l$) are drawn randomly and held fixed. Both `warm_start_from_eps1 = True` (projecting the $\\varepsilon = 1.0$ "
+        "smoothed shooting extremal onto the random basis) and `warm_start_from_eps1 = False` (deterministic polar/tangential guess only) "
+        "are run and reported separately.\n"
         "3. **Pseudospectral Collocation (180 LGL Nodes):** For each seed $s$, the initial trajectory guess is generated by polar radius/angle "
         "interpolation with seed-random shape exponent $p \\sim U(0.6, 1.6)$, radial perturbation amplitude $A \\sim U(-0.08, 0.08)\\text{ AU}$, "
         "thrust fraction $U(0.3, 0.9) T_{\\max}$, and in-plane pointing offset $U(-0.6, 0.6)\\text{ rad}$.\n",
     ]
+    if p2 is not None:
+        lines.append(
+            f"4. **Phase 2 Basin & Hybrid Study ({p2['n_seeds']} seeds `2000..{p2['base_seed'] + p2['n_seeds'] - 1}` at "
+            f"$t_f = {p2['tf_days']:.1f}\\text{{ d}}, \\theta_f^* = {p2['theta_f_deg']:.2f}^\\circ$):** "
+            f"Compares cold-start X-TFC, random-costate indirect shooting, random-guess 180-node collocation, and a hybrid scheme "
+            f"that passes the cold-start X-TFC initial costate vector $\\boldsymbol{{\\lambda}}(t_0)$ (converged or best-effort) directly "
+            f"as `lam0_guess` into indirect shooting on the exact same seeds. Binomial proportions report 95% Wilson score confidence intervals.\n"
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -297,6 +347,35 @@ def generate_deviations_markdown(data: dict) -> str:
     evf = data["rep_feas"]["eval"]
     rawf_xt = data["rep_feas"]["raw"]["X-TFC PoNN"]
     mt = data["min_time"]
+    p1 = data.get("phase1")
+    p2 = data.get("phase2")
+
+    p1_fuel_note = ""
+    p1_cold_note = ""
+    if p1 is not None and "multi_tf_robustness" in p1:
+        mtf = p1["multi_tf_robustness"]
+        sh_fuels = [
+            (float(k), v["methods"]["Indirect shooting"]["conv_fuel_kg"]["mean"])
+            for k, v in mtf.items()
+            if v["methods"]["Indirect shooting"]["n_converged"] > 0
+        ]
+        if sh_fuels:
+            sh_fuels.sort()
+            tf_lo, f_lo = sh_fuels[0]
+            tf_hi, f_hi = sh_fuels[-1]
+            p1_fuel_note = (
+                f" At longer durations with interior coast arcs ($t_f = {tf_lo:.0f}\\text{{--}}{tf_hi:.0f}\\text{{ days}}$ in Phase 1.2–1.4), "
+                f"indirect shooting and 180-node collocation reach lower propellant consumption "
+                f"({f_lo:.2f} kg at {tf_lo:.0f} d down to {f_hi:.2f} kg at {tf_hi:.0f} d), whereas X-TFC PoNN (160 $\\tanh$ neurons) "
+                f"converged on {sum(v['methods']['X-TFC PoNN (warm)']['n_converged'] for v in mtf.values())}/{sum(v['methods']['X-TFC PoNN (warm)']['n_runs'] for v in mtf.values())} "
+                f"warm-start runs across those five durations."
+            )
+        tot_cold_conv = sum(v["methods"]["X-TFC PoNN (no warm start)"]["n_converged"] for v in mtf.values())
+        tot_cold_runs = sum(v["methods"]["X-TFC PoNN (no warm start)"]["n_runs"] for v in mtf.values())
+        p1_cold_note = (
+            f" Without $\\varepsilon = 1.0$ shooting warm-starting (`warm_start_from_eps1 = False`), "
+            f"X-TFC PoNN converged on {tot_cold_conv}/{tot_cold_runs} runs across the five Phase 1 durations."
+        )
 
     lines = [
         "# Documented Software and Numerical Deviations from the Manuscript (`DEVIATIONS.md`)\n",
@@ -305,11 +384,11 @@ def generate_deviations_markdown(data: dict) -> str:
         "1. **Direct Pseudospectral Collocation (`CasADi + IPOPT` in place of `Dymos + IPOPT`):** "
         "The manuscript states that pseudospectral collocation was implemented in Dymos with IPOPT. "
         "Because Dymos requires `pyOptSparse` compiled against IPOPT headers (not available as a prebuilt wheel in this Linux environment), "
-        "we implement the exact same 180-node Legendre-Gauss-Lobatto (LGL) differentiation-matrix defect transcription "
+        "we implement the same 180-node Legendre-Gauss-Lobatto (LGL) differentiation-matrix defect transcription "
         "$(D\\mathbf{X})_k = (t_f/2)\\mathbf{f}(\\mathbf{X}_k, \\mathbf{u}_k, T_k)$ directly in `CasADi 3.8.2` solved with `IPOPT` (MUMPS linear solver). "
-        "All 180 LGL nodes are used in every single run, including all 20 robustness runs.\n"
+        "All 180 LGL nodes are used in every fuel-optimal run, including all robustness and basin runs (fixed-angle minimum-time scan in Phase 1.1 uses $N=80$ LGL nodes with $N=180$ for the free-$\\theta_f$ multi-start solves).\n"
         "2. **Indirect Shooting Root-Finder (`scipy.optimize.fsolve` with `least_squares(method='lm')` Fallback):** "
-        "Each homotopy level $\\varepsilon$ is solved first with `scipy.optimize.fsolve` (MINPACK `hybrd`), exactly as stated in the paper. "
+        "Each homotopy level $\\varepsilon$ is solved first with `scipy.optimize.fsolve` (MINPACK `hybrd`), as stated in the paper. "
         "At the initial coarse level $\\varepsilon = 1.0$, random costate guesses frequently lie outside the local Newton basin of `fsolve`; "
         "when `fsolve` fails to reach the level tolerance ($10^{-9}$), the solver automatically falls back to `scipy.optimize.least_squares(method='lm')` "
         "(MINPACK `lmdif`) from the same starting point, and logs which algorithm closed each level.\n"
@@ -318,22 +397,24 @@ def generate_deviations_markdown(data: dict) -> str:
         "$\\mathbf{r}(0), \\mathbf{r}(t_f), \\mathbf{v}(0), \\mathbf{v}(t_f), m(0), \\lambda_m(t_f)=0$, JAX forward-mode automatic differentiation "
         "for the 14-state ODE Jacobian, and Levenberg-Marquardt training.\n"
         "4. **Removal of Table E2:** Section 3 and Section 5 of the paper state that the escape phase is a prescribed tangential-thrust propagation "
-        "rather than an optimal control solve. In accordance with Requirement F, Table E1 is retained and the redundant Table E2 has been deleted.\n",
+        "rather than an optimal control solve. Table E1 is retained and the redundant Table E2 has been removed.\n",
         "## 2. Physical and Numerical Discrepancies Between Paper Claims and Computed Results\n",
         f"1. **Minimum Transfer Time vs Paper Nominal Duration ($t_f = {p248.tf_days:.1f}\\text{{ days}}$):** "
-        f"The 180-node minimum-time NLP proves that the shortest physically possible circular Mars rendezvous duration under $T \\le 0.50\\text{{ N}}$ "
-        f"with $m_0 = 1,218.0\\text{{ kg}}$ and $I_{{\\text{{sp}}}} = 3,100\\text{{ s}}$ is **$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$**. "
-        f"Consequently, at $t_f = {p248.tf_days:.1f}\\text{{ days}}$, all three solvers fail to converge (`converged = False`), and the 180-node "
-        f"collocation solver can only return a soft-slack continuation fallback with terminal slack norm `{ev248['Pseudospectral collocation']['slack_norm']:.3e}`.\n"
-        f"2. **Propellant Consumption at Feasible Duration ($t_f = {pf.tf_days:.1f}\\text{{ days}}$):** "
-        f"At the shortest duration where all three methods converge ($t_f = {pf.tf_days:.1f}\\text{{ days}}$), the computed xenon consumption is "
+        f"Across the 180-node multi-start minimum-time solves and the Phase 1.1 global scan ($\\theta_f \\in [60^\\circ, 300^\\circ]$), "
+        f"the shortest converged circular Mars rendezvous duration under $T \\le 0.50\\text{{ N}}$ "
+        f"with $m_0 = 1,218.0\\text{{ kg}}$ and $I_{{\\text{{sp}}}} = 3,100\\text{{ s}}$ is **$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$** "
+        f"(at $\\theta_f^* = {np.degrees(mt['theta_f_rad']):.3f}^\\circ$). "
+        f"At $t_f = {p248.tf_days:.1f}\\text{{ days}}$, all three solvers fail to converge (`converged = False`), and the 180-node "
+        f"collocation solver only returns a soft-slack continuation fallback with terminal slack norm `{ev248['Pseudospectral collocation']['slack_norm']:.3e}`.\n"
+        f"2. **Propellant Consumption Across Durations:** "
+        f"At the shortest all-method converged duration ($t_f = {pf.tf_days:.1f}\\text{{ days}}$), computed xenon consumption is "
         f"**{evf['Indirect shooting']['fuel_kg']:.2f} kg** (Indirect shooting), "
         f"**{evf['Pseudospectral collocation']['fuel_kg']:.2f} kg** (Pseudospectral collocation), and "
-        f"**{evf['X-TFC PoNN']['fuel_kg']:.2f} kg** (X-TFC PoNN), compared to the paper's claimed 274.8–276.1 kg.\n"
-        f"3. **X-TFC Iteration Count and Final Physics Loss:** "
+        f"**{evf['X-TFC PoNN']['fuel_kg']:.2f} kg** (X-TFC PoNN), compared to the paper's claimed 274.8–276.1 kg.{p1_fuel_note}\n"
+        f"3. **X-TFC Iteration Count, Final Physics Loss, and Cold-Start Behavior:** "
         f"Instead of 4,300 epochs decaying from $1.2 \\times 10^{{-1}}$ to $2.8 \\times 10^{{-8}}$, Levenberg-Marquardt training across the "
         f"10-step $\\varepsilon$-homotopy at $t_f = {pf.tf_days:.1f}\\text{{ days}}$ takes **{rawf_xt.iterations} LM iterations**, with mean-squared "
-        f"14-ODE residual loss moving from `{rawf_xt.loss_history[0]:.2e}` to `{rawf_xt.loss_history[-1]:.2e}` (RMS residual `{evf['X-TFC PoNN']['ode14_rms']:.2e}`).\n"
+        f"14-ODE residual loss moving from `{rawf_xt.loss_history[0]:.2e}` to `{rawf_xt.loss_history[-1]:.2e}` (RMS residual `{evf['X-TFC PoNN']['ode14_rms']:.2e}`).{p1_cold_note}\n"
         f"4. **Wall-Clock Runtimes:** "
         f"Measured wall-clock runtimes with `time.perf_counter()` at $t_f = {pf.tf_days:.1f}\\text{{ days}}$ are "
         f"**{evf['X-TFC PoNN']['runtime_s']:.2f} s** ({evf['X-TFC PoNN']['runtime_min']:.3f} min) for X-TFC PoNN, "
@@ -341,6 +422,15 @@ def generate_deviations_markdown(data: dict) -> str:
         f"**{evf['Pseudospectral collocation']['runtime_s']:.2f} s** ({evf['Pseudospectral collocation']['runtime_min']:.3f} min) for 180-node Pseudospectral collocation, "
         f"rather than the paper's 18.6, 24.0, and 12.2 minutes.\n",
     ]
+    if p2 is not None:
+        pc = p2["paired_hybrid_vs_random"]
+        lines.append(
+            f"5. **Phase 2 Basin & Hybrid Findings ({p2['n_seeds']} seeds at $t_f = {p2['tf_days']:.1f}\\text{{ d}}$):** "
+            f"Cold-start X-TFC converged on {p2['methods']['X-TFC PoNN (no warm start)']['n_converged']}/{pc['n_seeds']} seeds, "
+            f"random-costate shooting on {pc['sh_conv']}/{pc['n_seeds']}, 180-node collocation on "
+            f"{p2['methods']['Pseudospectral collocation (random guess)']['n_converged']}/{pc['n_seeds']}, and "
+            f"the hybrid X-TFC $\\to$ shooting pipeline on {pc['hy_conv']}/{pc['n_seeds']} seeds.\n"
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -354,6 +444,40 @@ def generate_readme_markdown(data: dict) -> str:
     mt = data["min_time"]
     p248 = data["rep_248"]["problem"]
     pf = data["rep_feas"]["problem"]
+    p1 = data.get("phase1")
+    p2 = data.get("phase2")
+
+    p1_summary_bullet = ""
+    if p1 is not None:
+        scan = p1["scan"]
+        local_txt = "a local minimum" if scan["earlier_was_local_minimum"] else "not a local minimum within the tested 0-rev and 1-rev trajectory families"
+        p1_summary_bullet = (
+            f"- **Global Feasibility Scan (Phase 1.1, $\\theta_f \\in [60^\\circ, 300^\\circ]$):** Across 25 fixed longitudes (4 guesses/angle, "
+            f"including low-angle spirals) and {len(scan['free_multistart'])} free-$\\theta_f$ 180-node starts, the shortest transfer time found is "
+            f"**$t_{{\\min}} = {scan['global_t_min_days']:.4f}\\text{{ days}}$** at **$\\theta_f^* = {scan['global_theta_f_deg']:.3f}^\\circ$** "
+            f"(the earlier 260.83 d result was {local_txt})."
+        )
+    else:
+        p1_summary_bullet = (
+            f"- **Minimum Feasible Heliocentric Flight Time at $T_{{\\max}} = 0.50\\text{{ N}}$:** Solving the 180-node LGL minimum-time problem with "
+            f"free $t_f$ and free Mars arrival longitude $\\theta_f$ gives **$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$** at "
+            f"**$\\theta_f = {np.degrees(mt['theta_f_rad']):.4f}^\\circ$** ({mt['theta_f_rad']:.6f} rad), consuming **{mt['fuel_canon']*1218.0:.2f} kg** of xenon."
+        )
+
+    p2_summary_bullet = ""
+    if p2 is not None:
+        pc = p2["paired_hybrid_vs_random"]
+        m_xt = p2["methods"]["X-TFC PoNN (no warm start)"]
+        m_sh = p2["methods"]["Indirect shooting (random costates)"]
+        m_ps = p2["methods"]["Pseudospectral collocation (random guess)"]
+        m_hy = p2["methods"]["Hybrid (X-TFC -> Indirect shooting)"]
+        p2_summary_bullet = (
+            f"- **Phase 2 100-Seed Basin & Hybrid Study ($t_f = {p2['tf_days']:.1f}\\text{{ d}}, \\theta_f^* = {p2['theta_f_deg']:.2f}^\\circ$):** "
+            f"Convergence rates (95% Wilson CI): X-TFC cold-start **{m_xt['n_converged']}/{pc['n_seeds']}** ([{m_xt['ci95_low']:.2f}, {m_xt['ci95_high']:.2f}]), "
+            f"Indirect shooting (random) **{m_sh['n_converged']}/{pc['n_seeds']}** ([{m_sh['ci95_low']:.2f}, {m_sh['ci95_high']:.2f}]), "
+            f"180-node Collocation **{m_ps['n_converged']}/{pc['n_seeds']}** ([{m_ps['ci95_low']:.2f}, {m_ps['ci95_high']:.2f}]), "
+            f"Hybrid X-TFC $\\to$ Shooting **{m_hy['n_converged']}/{pc['n_seeds']}** ([{m_hy['ci95_low']:.2f}, {m_hy['ci95_high']:.2f}])."
+        )
 
     lines = [
         "# Earth–Mars Low-Thrust Trajectory Optimization\n",
@@ -364,18 +488,31 @@ def generate_readme_markdown(data: dict) -> str:
         "Phase 2: 3-D heliocentric rendezvous with radial Solar Radiation Pressure):\n",
         "1. **X-TFC Pontryagin Neural Network (`XTFCPoNNSolver`)** — single-hidden-layer $\\tanh$ Extreme Learning Machine with exact Theory of Functional Connections (TFC) boundary expressions, JAX automatic differentiation, and Levenberg-Marquardt training on all 14 state/costate ODE residuals.",
         "2. **Indirect Shooting (`IndirectShootingSolver`)** — 14-state Pontryagin Maximum Principle two-point boundary-value problem integrated with `solve_ivp(DOP853)` and solved via `scipy.optimize.fsolve` (with documented `least_squares(method='lm')` fallback) across a 10-step logistic throttle smoothing homotopy.",
-        "3. **Direct Pseudospectral Collocation (`CollocationSolver`)** — 180 Legendre-Gauss-Lobatto (LGL) nodes in all runs, spectral differentiation-matrix defect constraints, explicit mass state, hard terminal constraints (with last-resort slack continuation recorded when infeasible), solved via CasADi + IPOPT.\n",
-        "All tables, figures, and audit reports in this repository are generated programmatically from live solver executions (`python run_all.py`).\n",
+        "3. **Direct Pseudospectral Collocation (`CollocationSolver`)** — 180 Legendre-Gauss-Lobatto (LGL) nodes in all fuel-optimal runs, spectral differentiation-matrix defect constraints, explicit mass state, hard terminal constraints (with last-resort slack continuation recorded when infeasible), solved via CasADi + IPOPT.\n",
+        "All tables, figures, and audit reports in this repository are generated programmatically from stored solver outputs.\n",
         "---\n",
         "## Summary of Key Numerical Findings\n",
-        f"- **Minimum Feasible Heliocentric Flight Time at $T_{{\\max}} = 0.50\\text{{ N}}$:** Solving the 180-node LGL minimum-time problem with free $t_f$ and free Mars arrival longitude $\\theta_f$ gives **$t_{{\\min}} = {mt['tf_days']:.4f}\\text{{ days}}$** at **$\\theta_f = {np.degrees(mt['theta_f_rad']):.4f}^\\circ$** ({mt['theta_f_rad']:.6f} rad), consuming **{mt['fuel_canon']*1218.0:.2f} kg** of xenon.",
-        f"- **Paper Nominal Duration ($t_f = {p248.tf_days:.1f}\\text{{ days}}$):** Because ${p248.tf_days:.1f}\\text{{ days}} < t_{{\\min}} = {mt['tf_days']:.2f}\\text{{ days}}$, no trajectory with $T \\le 0.50\\text{{ N}}$ can achieve circular Mars rendezvous in {p248.tf_days:.1f} days at any arrival angle. All three solvers report non-convergence.",
-        f"- **Shortest All-Method Converged Duration ($t_f = {pf.tf_days:.1f}\\text{{ days}}, \\theta_f = {np.degrees(pf.theta_f):.2f}^\\circ$):** All three solvers converge on the identical 14-state problem under $T \\le 0.50\\text{{ N}}$ and cross-validate against a high-precision indirect shooting reference (`rtol = 1e-13, atol = 1e-14`).\n",
+        p1_summary_bullet,
+        f"- **Paper Nominal Duration ($t_f = {p248.tf_days:.1f}\\text{{ days}}$):** Because ${p248.tf_days:.1f}\\text{{ days}}$ lies below the shortest transfer time found in the global scan ($t_{{\\min}} = {mt['tf_days']:.2f}\\text{{ days}}$), none of the tested solvers or initializations converged at $t_f = {p248.tf_days:.1f}\\text{{ days}}$ under $T \\le 0.50\\text{{ N}}$.",
+        f"- **Shortest All-Method Converged Duration ($t_f = {pf.tf_days:.1f}\\text{{ days}}, \\theta_f = {np.degrees(pf.theta_f):.2f}^\\circ$):** All three solvers converge on the identical 14-state problem under $T \\le 0.50\\text{{ N}}$ and cross-validate against a high-precision indirect shooting reference (`rtol = 1e-13, atol = 1e-14`).",
+    ]
+    if p2_summary_bullet:
+        lines.append(p2_summary_bullet)
+    lines.extend([
+        "",
         "---\n",
         t1_md,
         "---\n",
         sw_md,
         "---\n",
+    ])
+    if data.get("phase1_scan_md"):
+        lines.extend([data["phase1_scan_md"], "---\n"])
+    if data.get("phase1_multi_tf_md"):
+        lines.extend([data["phase1_multi_tf_md"], "---\n"])
+    if data.get("phase2_md"):
+        lines.extend([data["phase2_md"], "---\n"])
+    lines.extend([
         t2_md,
         "---\n",
         t3_md,
@@ -386,12 +523,22 @@ def generate_readme_markdown(data: dict) -> str:
         "---\n",
         "## Reproducing All Results and Running Tests\n",
         "```bash",
-        "# Run the complete verification and benchmark pipeline",
+        "# Run the core verification and benchmark pipeline",
+        ".venv/bin/python run_all.py",
+        "",
+        "# Run Phase 1 (Global feasibility scan + multi-tf 20-run protocol)",
+        ".venv/bin/python scripts/run_phase1.py",
+        "",
+        "# Run Phase 2 (100-seed random-initialization basin study + hybrid test)",
+        ".venv/bin/python scripts/run_phase2.py",
+        "",
+        "# Regenerate all tables, figures, REPORT/README/ASSUMPTIONS/DEVIATIONS from stored data",
         ".venv/bin/python run_all.py",
         "",
         "# Run the unit test suite",
         ".venv/bin/pytest tests/ -v",
         "```\n",
         "See [`REPORT.md`](REPORT.md) for the claim-by-claim audit, [`ASSUMPTIONS.md`](ASSUMPTIONS.md) for all mathematical and modeling assumptions, and [`DEVIATIONS.md`](DEVIATIONS.md) for all software and numerical deviations.\n",
-    ]
+    ])
     return "\n".join(lines) + "\n"
+

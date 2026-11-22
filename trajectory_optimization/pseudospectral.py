@@ -388,6 +388,234 @@ def solve_min_time(prob: HelioProblem, n_nodes: int = 180, seed: int = 1000,
 
 
 # ---------------------------------------------------------------------------
+# Fixed-arrival-longitude minimum-time solver (for global feasibility scan)
+# ---------------------------------------------------------------------------
+def _fixed_theta_initial_guess(
+    prob: HelioProblem,
+    tau: np.ndarray,
+    theta_f_rad: float,
+    mode: str = "direct",
+):
+    """Build deterministic initial guesses for fixed-theta_f minimum-time NLP.
+
+    Modes:
+      - direct        : 0-rev cubic-blend transfer (tf_guess = 260 d)
+      - spiral_0rev   : 0-rev smooth tangential outward spiral (tf_guess = 240 d)
+      - spiral_inward : 0-rev inward-dipping (Oberth-like) spiral (tf_guess = 270 d)
+      - spiral_1rev   : 1-revolution low-thrust outward spiral (th_total = theta_f + 2*pi, tf_guess = 450 d)
+    """
+    s = (tau + 1.0) / 2.0
+    th_mod = float(theta_f_rad % (2.0 * np.pi))
+    if th_mod < 1e-3:
+        th_mod += 2.0 * np.pi
+    R0 = float(np.linalg.norm(prob.r0))
+    Rf = MARS_R_CIRC_AU
+
+    if mode == "direct":
+        th_tot = th_mod
+        tf_days = max(210.0, 260.0 * th_tot / np.pi)
+        amp = 0.0
+        p = 1.0
+    elif mode == "spiral_0rev":
+        th_tot = th_mod
+        tf_days = max(180.0, 230.0 * th_tot / np.pi)
+        amp = 0.06
+        p = 0.85
+    elif mode == "spiral_inward":
+        th_tot = th_mod
+        tf_days = max(200.0, 270.0 * th_tot / np.pi)
+        amp = -0.14
+        p = 1.25
+    elif mode == "spiral_1rev":
+        th_tot = th_mod + 2.0 * np.pi
+        tf_days = max(380.0, 420.0 + 40.0 * th_mod / np.pi)
+        amp = 0.0
+        p = 1.0
+    else:
+        raise ValueError(f"Unknown guess mode: {mode}")
+
+    tf_tu = tu_from_days(tf_days)
+
+    def pos(ss):
+        b = (3.0 * ss ** 2 - 2.0 * ss ** 3) ** p
+        rr = R0 + (Rf - R0) * b + amp * np.sin(np.pi * ss)
+        ang = th_tot * ss
+        return np.stack([rr * np.cos(ang), rr * np.sin(ang), np.zeros_like(ss)], axis=1)
+
+    ds = 1e-6
+    r = pos(s)
+    v = (pos(np.clip(s + ds, 0.0, 1.0)) - pos(np.clip(s - ds, 0.0, 1.0))) / (
+        (np.clip(s + ds, 0.0, 1.0) - np.clip(s - ds, 0.0, 1.0))[:, None] * tf_tu
+    )
+    vm = np.sqrt(prob.mu / Rf)
+    r[0], v[0] = prob.r0, prob.v0
+    r[-1] = np.array([Rf * np.cos(th_mod), Rf * np.sin(th_mod), 0.0])
+    v[-1] = np.array([-vm * np.sin(th_mod), vm * np.cos(th_mod), 0.0])
+
+    T = np.full(len(tau), prob.t_max)
+    m = np.maximum(0.25, 1.0 - (prob.t_max / prob.c) * tf_tu * s)
+    vnorm = np.maximum(np.linalg.norm(v, axis=1), 1e-8)
+    U = v / vnorm[:, None]
+    X = np.hstack([r, v, m[:, None]])
+    return X, T, U, tf_tu
+
+
+def solve_min_time_fixed_theta(
+    prob: HelioProblem,
+    theta_f_rad: float,
+    n_nodes: int = 80,
+    guess_mode: str = "direct",
+    max_iter: int = 250,
+) -> dict:
+    """Minimise tf at T <= Tmax for a FIXED Mars arrival longitude theta_f_rad (circular Mars)."""
+    t0 = time.perf_counter()
+    tau, _ = lgl_nodes_and_weights(n_nodes)
+    D = lgl_differentiation_matrix(tau)
+    N = n_nodes
+
+    opti = ca.Opti()
+    X = opti.variable(N, 7)
+    T = opti.variable(N, 1)
+    U = opti.variable(N, 3)
+    tf = opti.variable()
+
+    F = _dyn(X, T, U, prob.mu, prob.k_srp, prob.c)
+    opti.subject_to(ca.vec(ca.mtimes(D, X) - (tf / 2.0) * F) == 0)
+
+    x0 = np.concatenate([prob.r0, prob.v0, [prob.m0]])
+    opti.subject_to(X[0, :].T == x0)
+
+    R = MARS_R_CIRC_AU
+    vm = np.sqrt(prob.mu / R)
+    rf = np.array([R * np.cos(theta_f_rad), R * np.sin(theta_f_rad), 0.0])
+    vf = np.array([-vm * np.sin(theta_f_rad), vm * np.cos(theta_f_rad), 0.0])
+    opti.subject_to(X[N - 1, 0:6].T == np.concatenate([rf, vf]))
+
+    opti.subject_to(opti.bounded(0.0, T, prob.t_max))
+    opti.subject_to(ca.sum2(U ** 2) == 1.0)
+    opti.subject_to(X[:, 6] >= 0.05)
+    opti.subject_to(ca.sum2(X[:, 0:3] ** 2) >= 0.09)
+    opti.subject_to(opti.bounded(tu_from_days(30.0), tf, tu_from_days(1500.0)))
+    opti.minimize(tf)
+
+    Xg, Tg, Ug, tfg = _fixed_theta_initial_guess(prob, tau, theta_f_rad, mode=guess_mode)
+    opti.set_initial(X, Xg)
+    opti.set_initial(T, Tg)
+    opti.set_initial(U, Ug)
+    opti.set_initial(tf, tfg)
+
+    opti.solver("ipopt", _ipopt_opts(max_iter))
+    try:
+        sol = opti.solve()
+        ok = True
+    except RuntimeError:
+        sol = opti.debug
+        ok = False
+
+    st = sol.stats()
+    Xv = np.array(sol.value(X))
+    Tv = np.array(sol.value(T)).ravel()
+    Uv = np.array(sol.value(U))
+    tf_val = float(sol.value(tf))
+    # Verify physical feasibility via DOP853 re-propagation check
+    reprop_err = float("nan")
+    if ok:
+        p_check = prob.with_(tf_days=days_from_tu(tf_val), theta_f=float(theta_f_rad))
+        t_nodes = (tau + 1.0) * tf_val / 2.0
+        sol_p = propagate_nodal_control(p_check, t_nodes, Tv, Uv, tf=tf_val)
+        if sol_p.status == 0:
+            xf_p = sol_p.y[:, -1]
+            reprop_err = arrival_residual(p_check, xf_p[0:3], xf_p[3:6])
+            if reprop_err > 5e-2:
+                ok = False
+
+    return {
+        "success": bool(ok),
+        "status": st.get("return_status", ""),
+        "guess_mode": guess_mode,
+        "theta_f_deg": float(np.degrees(theta_f_rad)),
+        "theta_f_rad": float(theta_f_rad),
+        "tf_TU": tf_val,
+        "tf_days": days_from_tu(tf_val),
+        "fuel_canon": float(prob.m0 - Xv[-1, 6]),
+        "fuel_kg": float((prob.m0 - Xv[-1, 6]) * prob.m0_kg),
+        "reprop_arrival_residual": reprop_err,
+        "iterations": int(st.get("iter_count", 0)),
+        "runtime_s": time.perf_counter() - t0,
+        "n_nodes": n_nodes,
+    }
+
+
+def solve_min_fuel_free_theta(
+    prob: HelioProblem,
+    n_nodes: int = 80,
+    theta_guess_deg: float = 250.0,
+    seed: int = 1000,
+    max_iter: int = 200,
+) -> dict:
+    """Minimise fuel (m0 - m_N) for fixed tf_days with FREE Mars arrival longitude theta_f."""
+    t0 = time.perf_counter()
+    tau, _ = lgl_nodes_and_weights(n_nodes)
+    D = lgl_differentiation_matrix(tau)
+    N = n_nodes
+
+    opti = ca.Opti()
+    X = opti.variable(N, 7)
+    T = opti.variable(N, 1)
+    U = opti.variable(N, 3)
+    th = opti.variable()
+
+    F = _dyn(X, T, U, prob.mu, prob.k_srp, prob.c)
+    opti.subject_to(ca.vec(ca.mtimes(D, X) - (prob.tf / 2.0) * F) == 0)
+
+    x0 = np.concatenate([prob.r0, prob.v0, [prob.m0]])
+    opti.subject_to(X[0, :].T == x0)
+
+    R = MARS_R_CIRC_AU
+    vm = np.sqrt(prob.mu / R)
+    opti.subject_to(X[N - 1, 0] == R * ca.cos(th))
+    opti.subject_to(X[N - 1, 1] == R * ca.sin(th))
+    opti.subject_to(X[N - 1, 2] == 0)
+    opti.subject_to(X[N - 1, 3] == -vm * ca.sin(th))
+    opti.subject_to(X[N - 1, 4] == vm * ca.cos(th))
+    opti.subject_to(X[N - 1, 5] == 0)
+
+    opti.subject_to(opti.bounded(0.0, T, prob.t_max))
+    opti.subject_to(ca.sum2(U ** 2) == 1.0)
+    opti.subject_to(X[:, 6] >= 0.05)
+    opti.subject_to(ca.sum2(X[:, 0:3] ** 2) >= 0.09)
+    opti.minimize(prob.m0 - X[N - 1, 6])
+
+    th_g = float(np.radians(theta_guess_deg))
+    gprob = prob.with_(theta_f=th_g)
+    Xg, Tg, Ug = seeded_initial_guess(gprob, tau, seed)
+    opti.set_initial(X, Xg)
+    opti.set_initial(T, Tg)
+    opti.set_initial(U, Ug)
+    opti.set_initial(th, th_g)
+
+    opti.solver("ipopt", _ipopt_opts(max_iter))
+    try:
+        sol = opti.solve()
+        ok = True
+    except RuntimeError:
+        sol = opti.debug
+        ok = False
+    st = sol.stats()
+    Xv = np.array(sol.value(X))
+    th_val = float(sol.value(th)) % (2.0 * np.pi)
+    return {
+        "success": bool(ok),
+        "status": st.get("return_status", ""),
+        "theta_f_rad": th_val,
+        "theta_f_deg": float(np.degrees(th_val)),
+        "fuel_kg": float((prob.m0 - Xv[-1, 6]) * prob.m0_kg),
+        "iterations": int(st.get("iter_count", 0)),
+        "runtime_s": time.perf_counter() - t0,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Re-propagation of a nodal control history (cross-check)
 # ---------------------------------------------------------------------------
 def propagate_nodal_control(prob: HelioProblem, t_nodes: np.ndarray, T: np.ndarray, U: np.ndarray,

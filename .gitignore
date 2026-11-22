@@ -24,4 +24,7 @@ Thumbs.db
 # Generated figures (keep local)
 results/figures/
 results/.pipeline_cache.pkl
+results/.phase1_cache.pkl
+results/.phase2_cache.pkl
+
 

@@ -9,7 +9,7 @@
 | Optimal arrival longitude `θ_f(t_min)` | **192.5175°** (3.360065 rad) |
 | Propellant consumed at `t_min` | **370.65 kg** |
 | IPOPT iterations (`N = 180`) | 8 |
-| Wall-clock runtime | 5.24 s |
+| Wall-clock runtime | 5.08 s |
 
 ## 2. Bounded-Thrust Angle Sweep at Paper Nominal Duration (tf = 247.9 days)
 

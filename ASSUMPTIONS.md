@@ -8,21 +8,25 @@ This document records every modeling assumption and initialization rule used in 
 2. **Phase 2 (Heliocentric Rendezvous):** Starts at $r_0 = [1, 0, 0]\text{ AU}$ with $v_0 = [0, 1, 0] V_E$ ($v_\infty = 0$) and $m(0) = 1218.0\text{ kg}$. Unless the optional 3-D Keplerian ephemeris is selected, Mars is modeled on a coplanar circular orbit of radius $r_M = 1.524\text{ AU}$ with circular speed $v_M = \sqrt{\mu_S / r_M}$.
 3. **Common Target State Across All Three Methods:** All three solvers receive the exact same `HelioProblem` instance (same $t_f$, same target arrival longitude $\theta_f$, same $T_{\max} = 0.50\text{ N}$, same 14-state 3-D dynamics).
 
-## 2. Selection of Mars Arrival Longitude and Feasibility Dual Protocol
+## 2. Selection of Mars Arrival Longitude and Feasibility Scan Protocol
 
-1. **Minimum-Time Feasibility Problem:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. To determine the physical feasibility boundary without assuming any arbitrary angle, we solve the 180-node LGL minimum-time problem with free $t_f$ and free arrival longitude $\theta_f$ subject to $0 \le T \le 0.50\text{ N}$. The resulting global minimum transfer time is **$t_{\min} = 260.8333\text{ days}$** at optimal arrival longitude **$\theta_f^* = 192.5175^\circ$** (3.360065 rad).
-2. **Dual Benchmark Protocol:** Because the paper's nominal duration $t_f = 247.9\text{ days}$ is shorter than $t_{\min} = 260.83\text{ days}$, circular rendezvous at $T \le 0.50\text{ N}$ is physically infeasible at $t_f = 247.9\text{ days}$ for every arrival longitude $\theta_f \in [0, 2\pi)$. Following Requirement E, we run and report the full benchmark protocol on two scenarios at the optimal arrival longitude $\theta_f = 192.5175^\circ$:
-   - **Paper Nominal Scenario:** $t_f = 247.9\text{ days}$ (all three solvers run without relaxation and report non-convergence).
-   - **Shortest All-Method Converged Scenario:** $t_f = 261.0\text{ days}$ (all three solvers run on the identical feasible problem).
+1. **Global Minimum-Time Feasibility Scan:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. Across the Phase 1.1 global feasibility scan ($\theta_f \in [60^\circ, 300^\circ]$ in $10^\circ$ steps with 4 initial guesses per angle plus 5 free-$\theta_f$ 180-node multi-start solves), the shortest feasible transfer time found under $T \le 0.50\text{ N}$ is $t_{\min} = 260.8333\text{ days}$ at $\theta_f^* = 192.518^\circ$; no tested longitude or initialization converged below 260.83 days (so the earlier 260.83 d result was not a local minimum within the tested 0-rev and 1-rev trajectory families).
+2. **Benchmark Scenarios:**
+   - **Paper Nominal Scenario:** $t_f = 247.9\text{ days}$ at $\theta_f = 192.5175^\circ$ (all solvers run without constraint relaxation and report non-convergence).
+   - **Shortest All-Method Converged Scenario:** $t_f = 261.0\text{ days}$ at $\theta_f = 192.5175^\circ$.
+   - **Multi-$t_f$ Protocol (Phase 1.2–1.4):** $t_f \in \{247.9, 280.0, 300.0, 330.0, 360.0\}\text{ days}$ at the computed fuel-minimal arrival longitude $\theta_f^*(t_f)$ for each duration (20 seeds `1000..1019`, including X-TFC with both `warm_start_from_eps1=True` and `warm_start_from_eps1=False`).
 
-## 3. Pontryagin Optimality System and Throttle Smoothing
+## 3. Pontryagin Optimality System, Throttle Smoothing, and Switching Metrics
 
 1. **Hamiltonian and Switching Function:** With cost $J = \int_0^{t_f} (T/c)\,dt = m_0 - m(t_f)$, $H = T/c + \boldsymbol{\lambda}_r \cdot \mathbf{v} + \boldsymbol{\lambda}_v \cdot (\mathbf{g} + \mathbf{a}_{\text{SRP}} + (T/m)\mathbf{u}) - \lambda_m T/c$, yielding $\mathbf{u}^* = -\boldsymbol{\lambda}_v / \|\boldsymbol{\lambda}_v\|$ and switching function $S = (1 - \lambda_m)/c - \|\boldsymbol{\lambda}_v\|/m$.
 2. **Smoothed Throttle Homotopy:** Both Indirect shooting and X-TFC PoNN use the logistic throttle smoothing $T(S; \varepsilon) = \frac{T_{\max}}{2}(1 - \tanh(S / (2\varepsilon)))$ along the 10-step homotopy schedule $\varepsilon \in (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)$.
+3. **Throttle Switches & Coast Duration:** Throttle switches are counted using hysteresis transitions between $T \ge 0.75\,T_{\max}$ (ON) and $T \le 0.25\,T_{\max}$ (OFF); coast-arc duration is the integrated time with $T < 0.5\,T_{\max}$. Re-propagated arrival error $\varepsilon_M$ is always computed by forward `DOP853` integration of each solver's control profile.
 
-## 4. Seeded Initial Guess Procedures
+## 4. Seeded Initial Guess Procedures & Phase 2 Hybrid Protocol
 
 1. **Indirect Shooting:** For each seed $s$, the 7 initial costates are drawn from $\boldsymbol{\lambda}_{r0} \sim U(-1, 1)^3$, $\boldsymbol{\lambda}_{v0} \sim U(-1, 1)^3$, and $\lambda_{m0} \sim U(0, 1)$.
-2. **X-TFC PoNN:** For each seed $s$, hidden-layer centers $c_l \sim U(-1, 1)$ and slopes $w_l = \pm U(1, w_{\max})$ ($b_l = -w_l c_l$) are drawn randomly and held fixed. When `warm_start_from_eps1 = True`, the smooth $\varepsilon = 1.0$ trajectory is projected onto the random basis to initialize $\boldsymbol{\beta}$ at $\varepsilon = 1.0$, and this warm start is explicitly disclosed in `warm_start`.
+2. **X-TFC PoNN:** For each seed $s$, hidden-layer centers $c_l \sim U(-1, 1)$ and slopes $w_l = \pm U(1, w_{\max})$ ($b_l = -w_l c_l$) are drawn randomly and held fixed. Both `warm_start_from_eps1 = True` (projecting the $\varepsilon = 1.0$ smoothed shooting extremal onto the random basis) and `warm_start_from_eps1 = False` (deterministic polar/tangential guess only) are run and reported separately.
 3. **Pseudospectral Collocation (180 LGL Nodes):** For each seed $s$, the initial trajectory guess is generated by polar radius/angle interpolation with seed-random shape exponent $p \sim U(0.6, 1.6)$, radial perturbation amplitude $A \sim U(-0.08, 0.08)\text{ AU}$, thrust fraction $U(0.3, 0.9) T_{\max}$, and in-plane pointing offset $U(-0.6, 0.6)\text{ rad}$.
+
+4. **Phase 2 Basin & Hybrid Study (100 seeds `2000..2099` at $t_f = 280.0\text{ d}, \theta_f^* = 205.00^\circ$):** Compares cold-start X-TFC, random-costate indirect shooting, random-guess 180-node collocation, and a hybrid scheme that passes the cold-start X-TFC initial costate vector $\boldsymbol{\lambda}(t_0)$ (converged or best-effort) directly as `lam0_guess` into indirect shooting on the exact same seeds. Binomial proportions report 95% Wilson score confidence intervals.
 

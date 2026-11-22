@@ -28,15 +28,15 @@
 
 | Method | Converged? | Propellant Δm_Xe (kg) | Final Mass m_f (kg) | Flight Time t_f (days) | Solver Terminal ε_M | DOP853 Re-prop ε_M | 14-ODE RMS | 180-LGL Defect RMS | Energy Error ε_E | Max Thrust (N) | Iterations | Func / Jac Evals | Runtime (s) | Runtime (min) | Warm Start / Continuation |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
-| X-TFC PoNN | False | 295.54 | 922.46 | 247.90 | 0.00e+00 | 6.50e-01 | 1.71e-01 | 1.15e+00 | 1.95e-01 | 0.4998 | 15 (L0=3.08e-01→Lf=2.91e-02) | 23 / 15 | 22.79 | 0.380 | deterministic polar/tangential guess (eps=1 shooting did not converge) |
-| Indirect shooting | False | 352.27 | 865.73 | 247.90 | 3.48e-02 | 3.48e-02 | 1.85e-02 | 2.00e-03 | 5.80e-05 | 0.5000 | 2118 | 1,426,644 / 1 | 13.73 | 0.229 | none (random costate draw) |
-| Pseudospectral collocation | False | 340.84 | 877.16 | 247.90 | 3.17e-02 | 3.22e-02 | 2.65e+04 | 9.24e-04 | 2.55e-03 | 0.5000 | 170 | 542 / 344 | 58.92 | 0.982 | none (seeded polar interpolation) (slack=3.17e-02) |
+| X-TFC PoNN | False | 295.54 | 922.46 | 247.90 | 0.00e+00 | 6.50e-01 | 1.71e-01 | 1.15e+00 | 1.95e-01 | 0.4998 | 15 (L0=3.08e-01→Lf=2.91e-02) | 23 / 15 | 18.32 | 0.305 | deterministic polar/tangential guess (eps=1 shooting did not converge) |
+| Indirect shooting | False | 352.27 | 865.73 | 247.90 | 3.48e-02 | 3.48e-02 | 1.85e-02 | 2.00e-03 | 5.80e-05 | 0.5000 | 2118 | 1,426,644 / 1 | 10.49 | 0.175 | none (random costate draw) |
+| Pseudospectral collocation | False | 307.19 | 910.81 | 247.90 | 3.69e-02 | 3.69e-02 | 2.15e+05 | 4.09e-04 | 1.28e-03 | 0.5000 | 100 | 402 / 204 | 33.47 | 0.558 | none (seeded polar interpolation) (slack=3.69e-02) |
 
 ### 2. Shortest All-Method Converged Scenario (tf = 261.0 days, θ_f = 192.52°, T_max = 0.50 N)
 
 | Method | Converged? | Propellant Δm_Xe (kg) | Final Mass m_f (kg) | Flight Time t_f (days) | Solver Terminal ε_M | DOP853 Re-prop ε_M | 14-ODE RMS | 180-LGL Defect RMS | Energy Error ε_E | Max Thrust (N) | Iterations | Func / Jac Evals | Runtime (s) | Runtime (min) | Warm Start / Continuation |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
-| X-TFC PoNN | True | 370.65 | 847.35 | 261.00 | 0.00e+00 | 6.44e-04 | 7.75e-05 | 7.20e-04 | 7.80e-04 | 0.5000 | 129 (L0=4.10e-09→Lf=6.00e-09) | 151 / 129 | 63.98 | 1.066 | projected from eps=1 smoothed shooting extremal |
-| Indirect shooting | True | 368.28 | 849.72 | 261.00 | 2.82e-11 | 5.61e-04 | 1.16e-03 | 3.58e-03 | 3.31e-04 | 0.5000 | 1105 | 516,950 / 10 | 5.07 | 0.084 | none (random costate draw) |
-| Pseudospectral collocation | True | 368.35 | 849.65 | 261.00 | 0.00e+00 | 4.81e-05 | 2.76e+01 | 3.31e-11 | 7.88e-05 | 0.5000 | 48 | 160 / 98 | 12.09 | 0.202 | none (seeded polar interpolation) |
+| X-TFC PoNN | True | 370.65 | 847.35 | 261.00 | 0.00e+00 | 6.44e-04 | 7.75e-05 | 7.20e-04 | 7.80e-04 | 0.5000 | 129 (L0=4.10e-09→Lf=6.00e-09) | 151 / 129 | 51.88 | 0.865 | projected from eps=1 smoothed shooting extremal |
+| Indirect shooting | True | 368.28 | 849.72 | 261.00 | 2.82e-11 | 5.61e-04 | 1.16e-03 | 3.58e-03 | 3.31e-04 | 0.5000 | 1105 | 516,950 / 10 | 3.86 | 0.064 | none (random costate draw) |
+| Pseudospectral collocation | True | 368.35 | 849.65 | 261.00 | 0.00e+00 | 4.81e-05 | 2.76e+01 | 3.31e-11 | 7.88e-05 | 0.5000 | 48 | 160 / 98 | 11.39 | 0.190 | none (seeded polar interpolation) |
 
