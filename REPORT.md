@@ -1,169 +1,168 @@
-# Scientific Verification and Claim-by-Claim Audit Report
+# Scientific Reproduction & Benchmark Report: Pontryagin Neural Networks for Fuel-Optimal Earth–Mars Transfers
 
-This report is generated programmatically from the stored numerical outputs of the solver suite. Every claim in the manuscript is compared directly against the values computed by the code, and each status label (`SUPPORTED`, `PARTIAL`, or `CONTRADICTED`) is assigned numerically from the data.
+**Primary Reference:** Andrea D'Ambrosio and Roberto Furfaro, *"Learning Fuel-Optimal Trajectories for Space Applications via Pontryagin Neural Networks"*, *Aerospace* **2024**, 11(3), 228 (`doi:10.3390/aerospace11030228`), Sections 3.1, 3.3, and 4.1.
 
-## 1. Executive Summary of Findings
+All numerical results in this report are generated programmatically from stored JSON experiment outputs (`results/scenario_a_phase_*.json`, `results/scenario_b_phase_d.json`, `results/phase1_results.json`, `results/phase2_results.json`). Paper values (`396.06 kg` shooting, `396.85 kg` refined PoNN, ~47/66/148/292 d switches) were used exclusively as post-hoc independent checks and never as loss terms, clipping values, or tuning targets.
 
-1. **Escape Phase with $J_2$ (Table E1) and Perturbation Scaling (Table 2):** 3-D Cartesian DOP853 propagation (`rtol = 1e-10, atol = 1e-11`) from a 500 km parking orbit at $i = 28.5^\circ$ with $T = 0.50\text{ N}$ and $m_0 = 1,538.6\text{ kg}$ reaches parabolic escape energy ($E = 0$) in **225.58 days**, consuming **320.56 kg** of xenon and arriving at **1218.04 kg** (paper: 225.6 days, 320.6 kg, 1,218.0 kg → **SUPPORTED**). Table 2 perturbation ratios ($J_2 / a_T = 36.2$ at 500 km; $a_{\text{SRP}} = 1.09e-07\text{ m/s}^2$ at 1 AU) match the paper's analytical formulas (**SUPPORTED**).
-2. **Minimum-Time Heliocentric Feasibility Scan at $T_{\max} = 0.50\text{ N}$:** Solving the 180-node LGL minimum-time rendezvous problem with free transfer duration $t_f$ and free Mars arrival longitude $\theta_f$ (with $m_0 = 1,218.0\text{ kg}, I_{\text{sp}} = 3,100\text{ s}, T \le 0.50\text{ N}$) yields a minimum transfer time of **$t_{\min} = 260.8333\text{ days}$** at arrival longitude **$\theta_f = 192.5175^\circ$** (3.360065 rad), consuming **370.65 kg** of xenon.
-3. **Non-Convergence at the Paper's Nominal $t_f = 247.9\text{ days}$ Duration Under $T \le 0.50\text{ N}$:** Because $t_f = 247.9\text{ days}$ lies below the shortest transfer time found in our global scan ($t_{\min} = 260.83\text{ days}$), no tested solver or initialization achieved a converged circular Mars rendezvous at $t_f = 247.9\text{ days}$ under $T \le 0.50\text{ N}$. Across the bounded-thrust angle sweep at $t_f = 247.9\text{ days}$, **0 of 9** tested arrival angles converged (minimum slack norm `3.102e-02` at $\theta_f = 185.0^\circ$). In the 20-run robustness protocol at $t_f = 247.9\text{ days}$, convergence rates are **0/20** (X-TFC PoNN), **0/20** (Indirect shooting), and **0/20** (Pseudospectral collocation) (**CONTRADICTED** vs paper's 19/20, 14/20, 20/20).
-4. **Shortest All-Method Converged Duration ($t_f = 261.0\text{ days}, \theta_f = 192.52^\circ$):** At $t_f = 261.0\text{ days}$ (just above $t_{\min} = 260.83\text{ days}$), all three solvers solve the identical 14-state fuel-optimal problem under $T \le 0.50\text{ N}$: Indirect shooting consumes **368.28 kg** ($\varepsilon_M = 2.82e-11$), 180-node Pseudospectral collocation consumes **368.35 kg** (terminal $\varepsilon_M = 0.00e+00$, DOP853 re-propagated $\varepsilon_M = 4.81e-05$, zero slack), and X-TFC PoNN consumes **370.65 kg** (14-ODE RMS residual `7.75e-05`, DOP853 re-propagated $\varepsilon_M = 6.44e-04$). Near $t_{\min}$, the spacecraft must thrust near full throttle for almost the entire transfer, burning $\approx 368.3\text{--}370.6\text{ kg}$ of xenon (exceeding the paper's 300 kg nominal xenon budget and 274.8–276.1 kg claim).
+---
 
-## 2. Claim-by-Claim Numerical Audit Table
+## 1. Paper Claim Audit (Numeric Evaluation Rules)
 
-| Section / Table | Paper Claim | Computed Result (Paper Scenario tf=247.9 d) | Computed Result (Feasible Scenario tf=261.0 d) | Status (247.9 d / 261.0 d) |
-| --- | --- | --- | --- | :---: |
-| Table E1 (i=28.5°) | t_esc = 225.6 d, Δm = 320.6 kg, m_f = 1,218.0 kg | 225.58 d, 320.56 kg, 1218.04 kg | (Phase 1 identical) | **SUPPORTED / SUPPORTED** |
-| Table 2 (J2 500 km) | a_J2 = 1.18e-2 m/s², a_J2/a_T = 36.2 | 1.18e-02 m/s², ratio = 36.2 | (Identical) | **SUPPORTED** |
-| Table 2 (SRP 1 AU) | a_SRP = 1.09e-7 m/s², K/μ_S = 1.85e-5 | 1.09e-07 m/s², K/μ_S = 1.85e-05 | (Identical) | **SUPPORTED** |
-| Table 1 Heliocentric Convergence | All 3 methods converge at tf ≈ 248 d, T ≤ 0.50 N | Conv: XT=False, SH=False, PS=False (t_min=260.83 d) | Conv: XT=True, SH=True, PS=True | **CONTRADICTED / SUPPORTED** |
-| Table 1 Fuel: X-TFC PoNN | 274.8 kg | 295.54 kg (unconverged, ODE RMS=1.71e-01) | 370.65 kg | **CONTRADICTED / CONTRADICTED** |
-| Table 1 Fuel: Indirect shooting | 276.1 kg | 352.27 kg (unconverged, ε_M=3.48e-02) | 368.28 kg | **CONTRADICTED / CONTRADICTED** |
-| Table 1 Fuel: Collocation (N=180) | 275.3 kg | 307.19 kg (unconverged, slack=3.69e-02) | 368.35 kg | **CONTRADICTED / CONTRADICTED** |
-| Table 1 Terminal ε_M: X-TFC | 3.2e-7 | Exact BCs: 0.00e+00 (re-prop: 6.50e-01) | Exact BCs: 0.00e+00 (re-prop: 6.44e-04) | **CONTRADICTED / CONTRADICTED** |
-| Table 1 Terminal ε_M: Shooting | 6.5e-7 | 3.48e-02 | 2.82e-11 | **CONTRADICTED / SUPPORTED** |
-| Table 1 Terminal ε_M: Collocation | 4.0e-7 | 3.69e-02 (re-prop: 3.69e-02) | 0.00e+00 (re-prop: 4.81e-05) | **CONTRADICTED / SUPPORTED** |
-| Table 1 Energy Error ε_E | XT: 8e-7, SH: 1.2e-6, PS: 6e-7 | XT: 1.95e-01, SH: 5.80e-05, PS: 1.28e-03 | XT: 7.80e-04, SH: 3.31e-04, PS: 7.88e-05 | **CONTRADICTED / CONTRADICTED** |
-| Table 1 X-TFC Loss & Epochs | 4,300 epochs, L0=1.2e-1 → Lf=2.8e-8 | 15 LM iters, L0=3.08e-01 → Lf=2.91e-02 | 129 LM iters, L0=4.10e-09 → Lf=6.00e-09 | **CONTRADICTED / SUPPORTED** |
-| Table 1 & 3 Runtime (min) | XT: 18.6, SH: 24.0, PS: 12.2 min | XT: 0.305, SH: 0.175, PS: 0.558 min | XT: 0.865, SH: 0.064, PS: 0.190 min | **CONTRADICTED / CONTRADICTED / CONTRADICTED** |
-| Table 3 Convergence (20 runs) | XT: 19/20, SH: 14/20, PS: 20/20 | XT: 0/20, SH: 0/20, PS: 0/20 | XT: 10/20, SH: 20/20, PS: 13/20 | **CONTRADICTED / PARTIAL** |
+| Paper Claim (D'Ambrosio & Furfaro 2024) | Numeric Evaluation Rule | Observed Data (Stored JSONs) | Verdict |
+| --- | --- | --- | :---: |
+| 1. Scenario A fuel-optimal solution is ~396.06 kg (shooting) with 4 switches ON-OFF-ON-OFF-ON (~47, 66, 148, 292 d) | PASS if |fuel_shoot - 396.06| < 0.2 kg and exact 4 switches ON-OFF-ON-OFF-ON | Shooting: 396.0598 kg (diff 0.0002 kg), 4 switches [46.58, 68.02, 142.72, 290.25] (`ON-OFF-ON-OFF-ON`); LGL-180: 396.1793 kg | **SUPPORTED** |
+| 2. PoNN autonomously finds 4 switches ON-OFF-ON-OFF-ON and ~396.85 kg after refinement without prior switch count | PASS if PoNN finds exact 4 switches ON-OFF-ON-OFF-ON with |fuel - 396.85| < 1.0 kg and reprop < 5e-2 | PoNN Refined (L=80, n=540 uniform): 396.5215 kg (diff 0.3285 kg vs paper, +0.46 kg vs shooting), 4 switches [49.83, 68.59, 141.72, 290.55], reprop=3.63e-02 (requires CGL coarse grid & dense refined grid) | **SUPPORTED** (with grid qualification) |
+| 3. Evenly spaced n=140 discretization is stable for L=70 Chebyshev NN (Sec. 2.2) | PASS if uniform n=140 converges with reprop < 5e-2 on >= 50% of seeds | A4(d): `uniform_140_lm_svd` achieved 0/5 (0%) with cond(Phi_r)=1.67e8, grid RMS=6.6e-6 vs dense RMS=1.94 and reprop=1.49 (Runge aliasing); CGL n=140 eliminates aliasing (cond=6.23e3) and uniform n=540 recovers stability (4/5) | **CONTRADICTED** |
+| 4. PoNN converges reliably from standard uniform random weights beta ~ U(0,1) (Sec. 4.1) | PASS if exact U(0,1) converges on >= 80% of 100 seeds; PARTIAL/CONTRADICTED if < 80% | 100 seeds exact U(0,1): 49/100 (49.0%, 95% CI [39.4%, 58.7%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU. Scaled U(0,1) achieves 92/100 (92.0%, CI [85.0%, 95.9%]) | **CONTRADICTED** for raw U(0,1) (49%); **SUPPORTED** for scaled U(0,1) (92%) |
+| 5. PoNN rivals shooting and collocation in accuracy and convergence (Abstract & Sec. 4.1) | Compare 100-seed convergence rate, fuel, and DOP853 re-propagation error across all 3 methods | Convergence (<5e-2): PoNN scaled 92% > Shooting 68% > LGL-180 55% > PoNN raw U(0,1) 49%. Accuracy (reprop): Shooting 3.46e-04 << LGL-180 2.48e-02 < PoNN 3.63e-02 (0/100 PoNN < 1e-2 vs 68/100 Shooting) | **CONTRADICTED** on open-loop accuracy (<1e-2); **SUPPORTED** on basin width (scaled PoNN 92%) |
+| 6. Exact MATLAB R2023b lsqnonlin runtime & landing case (Sec. 4.2, GPOPS-II comparison) | Requires MATLAB R2023b and GPOPS-II licenses + Sec. 4.2 landing benchmark | Environment uses Python/JAX/SciPy + CasADi/IPOPT and scopes strictly to Sec. 3.1, 3.3, 4.1 Earth–Mars interplanetary case | **CANNOT TEST** |
 
-## 3. Summary of Angle-Sweep, Unperturbed Control, and Perturbation Sensitivity
+---
 
-- **Bounded-Thrust Angle Sweep:** At $t_f = 247.9\text{ days}$, 0/9 angles converged. At $t_f = 261.0\text{ days}$, 2/5 angles converged under both indirect shooting and 180-node collocation.
-- **Unperturbed Control (`srp_scale = 0` at $t_f = 261.0\text{ days}$):** Removing SRP changes propellant consumption by `-0.0473 kg` (Indirect shooting), `-0.0458 kg` (Collocation), and `+0.0039 kg` (X-TFC PoNN), consistent with the analytical ratio $K_{\text{SRP}} / \mu_S = 1.8455e-05$.
-- **Perturbation-Strength Sweep (`srp_scale` from 0× to 1000×):** Propellant consumption varies smoothly from `368.3319 kg` at 0× SRP to `370.8869 kg` at 1000× SRP.
+## 2. Phase 0 & A1: Dynamics Verification and Reference Indirect Shooting (Scenario A)
 
-## 4. Phase 1: Global Feasibility Scan & Multi-$t_f$ 20-Run Protocol
+The full mathematical specification, Table 1 constants, Eqs. 28–45 PMP dynamics, Eqs. 54–65 constrained expressions, Appendix A Tables A1/A6 switching functions, and eight paper ambiguities are documented in [`docs/PAPER_SPEC.md`](docs/PAPER_SPEC.md) and [`ASSUMPTIONS.md`](ASSUMPTIONS.md).
 
-- **Global Feasibility Scan ($\theta_f \in [60^\circ, 300^\circ]$, step $10^\circ$, 4 guesses/angle + 5 free-$\theta_f$ multi-starts):** 25/25 fixed arrival longitudes had at least one converged solve and 5/5 free-$\theta_f$ 180-node starts converged. The shortest transfer time found across all tested starts is **$t_{\min} = 260.8333\text{ days}$** at **$\theta_f^* = 192.518^\circ$**. **Was the earlier 260.83 d result a local minimum?** **No** — no tested longitude or initial guess (including low-angle 0-rev and 1-rev spiral guesses) produced a feasible transfer below 260.83 days.
+- **Finite-difference verification (`tests/test_scenario_a.py`):** Central finite differences verified all Hamiltonian costate partials (`none`, `radial`, and `attitude_flat_plate` SRP modes) to `< 1e-8`, analytical SRP Jacobians $\partial \mathbf{a}_p / \partial \mathbf{r}$ to `< 1e-9`, all constrained-expression boundary conditions to `< 1e-12`, and the full $8n \times 8L$ JAX analytical PoNN Jacobian to `< 1e-7`.
+- **Phase A1 independent shooting reproduction:** Using 7-D initial costates with hyperbolic-tangent throttle smoothing and log-spaced $\rho$ continuation (`stop_at_rho=1e-5`), indirect shooting reproduced **`396.0598 kg`** propellant consumption (paper check: `396.06 kg`, difference `0.0002 kg`) with exactly **4 switches (`ON-OFF-ON-OFF-ON`)** at **`[46.58, 68.02, 142.72, 290.25]` days**, arrival residual `3.73e-11`, DOP853 re-propagated arrival error `3.46e-04`, and energy balance error `9.90e-05`.
+- **Phase A2 shooting-solution projection test:** Projecting the smooth Phase A1 shooting solution onto the $L=70$ shifted Chebyshev constrained basis yielded an 8-equation ODE RMS residual `< 1e-4` (`tests/test_scenario_a.py`), confirming exact consistency between the 8-residual TFC formulation and the 14-state PMP dynamics.
 
-# Phase 1.1: Global Minimum-Time Feasibility Scan at $T_{\max} = 0.50\text{ N}$
+---
 
-Fixed-longitude minimum-time NLP solves ($N = 80$ LGL nodes, 4 initial guesses per angle: `direct`, `spiral_0rev`, `spiral_inward`, `spiral_1rev`) across $\theta_f \in [60^\circ, 300^\circ]$ (step $10^\circ$), supplemented by 5 multi-start free-$\theta_f$ $N = 180$ LGL minimum-time solves.
+## 3. Phase A2 & A3: PoNN Reproduction, Refinement, and 100-Seed Basin Study (Scenario A)
 
-## 1. Fixed-Longitude Minimum-Time Scan ($\theta_f \in [60^\circ, 300^\circ]$)
+### 3.1 Single-Seed Comparison (`seed = 1000`)
 
-| $\theta_f$ (deg) | Converged Starts | $t_{\min}(\theta_f)$ (days) | Propellant at $t_{\min}$ (kg) | Best Guess Mode | DOP853 Re-prop $\varepsilon_M$ |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| 60.0° | 1 / 4 | 390.944 | 555.54 | `spiral_1rev` | 3.33e-03 |
-| 70.0° | 1 / 4 | 394.456 | 560.53 | `spiral_1rev` | 3.79e-03 |
-| 80.0° | 1 / 4 | 398.029 | 565.61 | `spiral_1rev` | 4.17e-03 |
-| 90.0° | 1 / 4 | 401.736 | 570.88 | `spiral_1rev` | 4.47e-03 |
-| 100.0° | 1 / 4 | 405.670 | 576.47 | `spiral_1rev` | 4.69e-03 |
-| 110.0° | 1 / 4 | 409.949 | 582.55 | `spiral_1rev` | 4.87e-03 |
-| 120.0° | 1 / 4 | 414.705 | 589.31 | `spiral_1rev` | 5.08e-03 |
-| 130.0° | 1 / 4 | 420.064 | 596.92 | `spiral_1rev` | 5.37e-03 |
-| 140.0° | 1 / 4 | 426.112 | 605.51 | `spiral_1rev` | 5.78e-03 |
-| 150.0° | 1 / 4 | 432.831 | 615.06 | `spiral_1rev` | 6.30e-03 |
-| 160.0° | 1 / 4 | 440.039 | 625.31 | `spiral_1rev` | 6.70e-03 |
-| 170.0° | 1 / 4 | 447.399 | 635.76 | `spiral_1rev` | 6.81e-03 |
-| 180.0° | 1 / 4 | 454.650 | 646.07 | `spiral_1rev` | 6.80e-03 |
-| 190.0° | 1 / 4 | 480.218 | 630.33 | `spiral_1rev` | 1.14e-02 |
-| 200.0° | 4 / 4 | 265.024 | 376.61 | `direct` | 4.56e-04 |
-| 210.0° | 4 / 4 | 272.881 | 387.77 | `spiral_0rev` | 5.80e-04 |
-| 220.0° | 4 / 4 | 281.026 | 399.34 | `direct` | 1.64e-03 |
-| 230.0° | 4 / 4 | 289.095 | 410.81 | `spiral_inward` | 6.81e-04 |
-| 240.0° | 4 / 4 | 296.996 | 422.04 | `spiral_0rev` | 5.05e-04 |
-| 250.0° | 4 / 4 | 304.633 | 432.89 | `spiral_0rev` | 8.19e-04 |
-| 260.0° | 4 / 4 | 312.009 | 443.37 | `spiral_0rev` | 4.62e-04 |
-| 270.0° | 4 / 4 | 319.052 | 453.38 | `direct` | 6.02e-04 |
-| 280.0° | 3 / 4 | 325.799 | 462.97 | `direct` | 5.24e-04 |
-| 290.0° | 3 / 4 | 332.242 | 472.12 | `spiral_0rev` | 2.09e-03 |
-| 300.0° | 4 / 4 | 338.287 | 480.71 | `spiral_0rev` | 5.12e-04 |
+| Configuration | Fuel (kg) | Delta vs Shoot (kg) | Switches (days) | Sequence | ODE RMS | DOP853 Reprop | Energy Err | Runtime (s) |
+| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: |
+| Paper check (Shooting, Ref. [31]) | 396.0600 | — | [47, 66, 148, 292] (Fig. 5) | ON-OFF-ON-OFF-ON | — | — | — | — |
+| Paper check (PoNN Refined, Sec. 4.1) | 396.8500 | +0.7900 | [47, 66, 148, 292] (Fig. 5) | ON-OFF-ON-OFF-ON | — | — | — | — |
+| Phase A1 Indirect Shooting (this repo) | 396.0598 | +0.0000 | [46.58, 68.02, 142.72, 290.25] | ON-OFF-ON-OFF-ON | 3.73e-11 | 3.46e-04 | 9.90e-05 | 5.99 |
+| 180-Node LGL Collocation (smooth init) | 396.1793 | +0.1195 | [46.79, 67.89, 142.64, 290.24] | ON-OFF-ON-OFF-ON | 0.00e+00 | 5.12e-04 | 8.22e-04 | 30.88 |
+| PoNN Coarse (L=70, n=140 CGL) | 400.6966 | +4.6368 | [46.30, 66.54, 144.98, 291.29] | ON-OFF-ON-OFF-ON | 2.06e-03 | 8.64e-02 | 1.61e-02 | 3.58 |
+| PoNN Refined (L=80, n=540 uniform) | 396.5215 | +0.4617 | [49.83, 68.59, 141.72, 290.55] | ON-OFF-ON-OFF-ON | 4.80e-03 | 3.63e-02 | 8.24e-03 | 13.87 |
+| PoNN Refined (L=80, n=540 CGL) | 397.5304 | +1.4705 | [50.54, 68.87, 141.56, 290.13] | ON-OFF-ON-OFF-ON | 4.04e-03 | 3.87e-02 | 7.53e-03 | 11.35 |
+| PoNN Refined (L=80, switch bracket) | 400.6341 | +4.5743 | [51.78, 72.85, 144.98, 291.29] | ON-OFF-ON-OFF-ON | 2.76e-03 | 1.07e-01 | 1.92e-02 | 26.52 |
+| PoNN Literal (L=70, n=140 uni, T0..T69, U(0,1)) | 419.0212 | +22.9614 | 7 switches | ON-OFF-ON-OFF-ON-OFF-ON-OFF | 7.42e-05 | 1.36e+00 | 7.71e-01 | 18.04 |
 
-## 2. Multi-Start Free-$\theta_f$ Minimum-Time Solves ($N = 180$ LGL Nodes)
+Key numerical findings from single-seed verification:
+1. **Runge aliasing on evenly spaced $n=140$ nodes:** For a degree-70 Chebyshev basis with Table A6 Hermite CEs, evaluating on $n=140$ evenly spaced points produces $\kappa(\Phi_r) = 1.67\times 10^8$ (well below the Platte–Trefethen–Kuijlaars oversampling threshold $n \gtrsim L^2/\pi^2 \approx 500$). The solver achieves small collocation-node residual (`7.42e-5`) while oscillating severely between nodes (DOP853 re-propagated error `1.36`, 7 spurious switches). Switching the coarse grid to $n=140$ Chebyshev–Gauss–Lobatto (CGL) nodes reduces $\kappa(\Phi_r)$ by four orders of magnitude to `6.23e3` and recovers the physical 4-switch solution (`400.70 kg`, switches `[46.30, 66.54, 144.98, 291.29]` d).
+2. **Switch-dodging under unweighted bracket clustering vs. dense refinement:** Adding 400 unweighted points strictly inside the four narrow coarse switch brackets (`switch_bracket`) allows the degree-80 global polynomial to lower its unweighted residual (`2.76e-3`) by shifting the first two switches (`[51.78, 72.85]` d) *outside* the dense brackets, yielding `400.63 kg` (`reprop = 1.07e-1`). Distributing the exact same refined node budget ($n = 140 + 4\times 100 = 540$, $L = 80$) uniformly across $[-1, 1]$ (`uniform_dense`, $\kappa(\Phi_r) = 2.78\times 10^4$) or on CGL-540 (`cgl_dense`) prevents switch-dodging and reduces propellant to **`396.5215 kg`** (`uniform_dense`, within `0.33 kg` of paper's `396.85 kg` and `+0.46 kg` above shooting) and **`397.5304 kg`** (`cgl_dense`), cutting DOP853 re-propagation error by more than $2\times$ (`8.64e-2` → `3.63e-02`).
 
-| Initial Guess $(t_f, \theta_f)$ | Converged? | $t_{\min}$ (days) | $\theta_f^*$ (deg) | Fuel (kg) | IPOPT Iters | Runtime (s) | Status |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
-| (180 d, 100.0°) | True | 260.8333 | 192.518° | 370.65 | 7 | 5.85 | `Solve_Succeeded` |
-| (210 d, 120.0°) | True | 260.8333 | 192.518° | 370.65 | 8 | 6.00 | `Solve_Succeeded` |
-| (230 d, 150.0°) | True | 260.8333 | 192.518° | 370.65 | 7 | 4.72 | `Solve_Succeeded` |
-| (255 d, 192.5°) | True | 260.8333 | 192.518° | 370.65 | 8 | 6.35 | `Solve_Succeeded` |
-| (300 d, 240.0°) | True | 260.8825 | 192.580° | 370.72 | 142 | 85.85 | `Solve_Succeeded` |
+![Coarse PoNN vs Shooting](results/figures/scenario_a_fig2_coarse_vs_shooting.png)
 
-## 3. Global Scan Assessment
+![3D Trajectory and Thrust Direction](results/figures/scenario_a_fig3_trajectory_3d.png)
 
-- **Shortest transfer time found across all tested starts:** **260.8333 days** at $\theta_f^* = 192.518^\circ$ (source: `free_theta_180`).
-- **Was the earlier 260.83 d result a local minimum?** **no** — within the tested 0-rev direct/spiral and 1-rev spiral trajectory families across $\theta_f \in [60^\circ, 300^\circ]$ and all 5 free-$\theta_f$ multi-start solves, no tested longitude or initialization achieved a feasible transfer below 260.83 days. Low-angle targets ($60^\circ\text{--}180^\circ$) that converged required $t_{\min} \in [390.9, 454.7]\text{ d}$, while targets in $[200^\circ, 300^\circ]$ achieved $t_{\min} \ge 265.0\text{ d}$ on the $10^\circ$ grid, with the free-$\theta_f$ optimum at $\theta_f^* = 192.518^\circ$, $t_{\min} = 260.8333\text{ d}$.
+![Refined PoNN vs Shooting and Collocation](results/figures/scenario_a_fig5_refined_solution.png)
 
+### 3.2 100-Seed Random Initialization Study (`seeds = 1000..1099`)
 
-# Phase 1.2–1.4: Multi-$t_f$ 20-Run Robustness Protocol (Fuel-Minimal $\theta_f^*(t_f)$, All Methods + Cold-Start X-TFC)
+| Init Suite (100 seeds) | Conv (reprop<5e-2) | 95% Wilson CI | Conv (reprop<1e-2) | Conv (RMS<1.5e-2) | Fuel Mean ± SD (kg) | Reprop Med | Energy Err Med | Runtime Med (s) | Switch Dist |
+| --- | :---: | :---: | :---: | :---: | :---: | ---: | ---: | ---: | --- |
+| Exact paper U(0,1) — Refined | 49/100 (49.0%) | [39.4%, 58.7%] | 0/100 (0.0%) | 50/100 (50.0%) | 396.5215 ± 4.9e-11 | 3.63e-02 | 8.24e-03 | 16.67 | 0sw:33, 2sw:18, 4sw:49 |
+| Exact paper U(0,1) — Coarse | 0/100 (0.0%) | [0.0%, 3.7%] | 0/100 (0.0%) | 49/100 (49.0%) | — | — | — | 14.00 | 0sw:32, 2sw:19, 4sw:49 |
+| Scaled U(0,1) — Refined | 92/100 (92.0%) | [85.0%, 95.9%] | 0/100 (0.0%) | 99/100 (99.0%) | 396.5215 ± 1.3e-13 | 3.63e-02 | 8.24e-03 | 11.78 | 0sw:7, 4sw:92, 16sw:1 |
+| Scaled U(0,1) — Coarse | 0/100 (0.0%) | [0.0%, 3.7%] | 0/100 (0.0%) | 92/100 (92.0%) | — | — | — | 2.64 | 2sw:7, 4sw:92, 7sw:1 |
 
-All four solver configurations are evaluated on the identical 3-D 14-state `HelioProblem` at each transfer duration $t_f \in \{247.9, 280.0, 300.0, 330.0, 360.0\}\text{ days}$ over 20 seeds (`1000..1019`). Re-propagated arrival error $\varepsilon_M$ is computed by integrating each solver's control profile forward with `DOP853` (never reporting the TFC boundary-embedded 0 as arrival accuracy).
+- **Exact paper $\beta \sim U(0, 1)$ initialization:** Because $|T_k'(\pm 1)| = k^2$ (up to $73^2 = 5329$), unscaled $\beta_{1..3} \sim U(0, 1)$ in the Table A6 Hermite CE places the initial trajectory at $\|\mathbf{r}\| \approx 25{,}000\text{ AU}$ ($\|\mathbf{L}_0\| \approx 1.4\times 10^7$). Even from that extreme initial state, unscaled SVD/Cholesky Levenberg–Marquardt recovers the exact optimal branch on **`49/100` (`49.0%`, 95% Wilson CI `[39.4%, 58.7%]`)** of seeds, with every converged seed landing identically at `396.521532 ± 4.9e-11 kg`.
+- **Scaled $\beta_{1..3} \sim 10^{-3} U(0,1), \beta_{\lambda_v} \sim 10^{-2} U(0,1)$ initialization:** Keeping the random initial trajectory near $\sim 1\text{ AU}$ raises convergence to **`92/100` (`92.0%`, 95% Wilson CI `[85.0%, 95.9%]`)** with median total runtime `11.78 s`.
+- **Open-loop accuracy ceiling of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `3.63e-02`), reflecting the Gibbs approximation floor of representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion.
 
-## $t_f = 247.9$ days, Fuel-Minimal $\theta_f^* = 192.52^\circ$ ($T_{\max} = 0.50\text{ N}$)
+---
 
-| Method | Converged (95% Wilson CI) | Fuel (kg) | Throttle Switches | Coast Arc (days) | Re-prop $\varepsilon_M$ | Energy Err $\varepsilon_E$ | Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (warm) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 11.70 ± 1.16 (all) | 20 / 15 (all) |
-| X-TFC PoNN (no warm start) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 11.05 ± 0.77 (all) | 20 / 15 (all) |
-| Indirect shooting | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 3.56 ± 2.45 (all) | 381,856 / 1 (all) |
-| Pseudospectral collocation | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 39.01 ± 3.65 (all) | 640 / 203 (all) |
+## 4. Phase A4: Architectural & Algorithmic Ablations (Scenario A)
 
-## $t_f = 280.0$ days, Fuel-Minimal $\theta_f^* = 205.00^\circ$ ($T_{\max} = 0.50\text{ N}$)
+| Ablation Group | Variant | Seeds | Conv (<5e-2) | Median Fuel (kg) | Median ODE RMS | Median Reprop | Median Runtime (s) |
+| --- | --- | :---: | :---: | ---: | ---: | ---: | ---: |
+| A4(a) Formulation | 8-res CE (Refined L=80) | 10 | 10/10 (100%) | 396.52 | 4.80e-03 | 3.63e-02 | 12.40 |
+| A4(a) Formulation | 8-res CE (Coarse L=70) | 10 | 0/10 (0%) | 400.70 | 2.06e-03 | 8.64e-02 | 3.07 |
+| A4(a) Formulation | 14-res Unreduced (L=50) | 10 | 1/10 (10%) | 965.96 | 2.20e-02 | 1.10e+00 | 30.11 |
+| A4(b) Basis | Chebyshev Shifted (CGL) | 10 | 10/10 (100%) | 396.52 | 4.80e-03 | 3.63e-02 | 12.24 |
+| A4(b) Basis | Chebyshev Literal T0..T69 (CGL) | 10 | 9/10 (90%) | 399.45 | 4.86e-03 | 4.39e-02 | 10.51 |
+| A4(b) Basis | Random tanh ELM (CGL) | 10 | 0/10 (0%) | 437.00 | 1.42e-02 | 1.03e-01 | 41.11 |
+| A4(b) Basis | Random tanh ELM (Uniform) | 10 | 0/10 (0%) | 432.79 | 1.41e-02 | 1.02e-01 | 45.82 |
+| A4(c) Schedule | n5_to_1e-10 | 5 | 0/5 (0%) | 524.79 | 4.10e-03 | 6.36e-01 | 9.70 |
+| A4(c) Schedule | n10_to_1e-10 | 5 | 0/5 (0%) | 392.65 | 4.89e-03 | 8.01e-02 | 7.50 |
+| A4(c) Schedule | n20_to_1e-10 | 5 | 5/5 (100%) | 396.52 | 4.80e-03 | 3.63e-02 | 10.14 |
+| A4(c) Schedule | n40_to_1e-10 | 5 | 0/5 (0%) | 398.34 | 4.81e-03 | 1.25e-01 | 23.52 |
+| A4(c) Schedule | n20_to_1e-3 | 5 | 0/5 (0%) | 398.81 | 4.64e-03 | 7.74e-02 | 25.77 |
+| A4(c) Schedule | n20_to_1e-6 | 5 | 0/5 (0%) | 397.21 | 4.79e-03 | 1.06e-01 | 18.27 |
+| A4(d) Grid/Opt | uniform_140_lm_svd | 5 | 0/5 (0%) | -0.46 | 6.71e-06 | 1.49e+00 | 1.51 |
+| A4(d) Grid/Opt | cgl_140_lm_svd | 5 | 0/5 (0%) | 400.70 | 2.06e-03 | 8.64e-02 | 3.02 |
+| A4(d) Grid/Opt | cgl_140_scipy_lm | 5 | 0/5 (0%) | 400.70 | 2.06e-03 | 8.64e-02 | 20.01 |
+| A4(d) Grid/Opt | cgl_140_scipy_trf | 5 | 0/5 (0%) | 518.73 | 1.65e-02 | 1.83e+00 | 28.61 |
+| A4(d) Grid/Opt | uniform_540_lm_svd | 5 | 4/5 (80%) | 396.52 | 4.80e-03 | 3.63e-02 | 11.22 |
 
-| Method | Converged (95% Wilson CI) | Fuel (kg) | Throttle Switches | Coast Arc (days) | Re-prop $\varepsilon_M$ | Energy Err $\varepsilon_E$ | Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (warm) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.81 ± 3.30 (all) | 16 / 14 (all) |
-| X-TFC PoNN (no warm start) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 8.45 ± 2.82 (all) | 19 / 15 (all) |
-| Indirect shooting | 20/20 ([0.84, 1.00]) | 261.78 ± 0.00 | 2.0 ± 0.0 | 95.8 ± 0.0 | 1.39e-03 | 2.40e-04 | 3.69 ± 0.96 | 377,710 / 10 |
-| Pseudospectral collocation | 14/20 ([0.48, 0.85]) | 263.11 ± 3.34 | 2.6 ± 1.6 | 94.8 ± 2.6 | 1.20e-04 | 7.49e-04 | 12.74 ± 4.02 | 79 / 66 |
+![Phase A4 Ablations](results/figures/scenario_a_phase_a4_ablations.png)
 
-## $t_f = 300.0$ days, Fuel-Minimal $\theta_f^* = 217.50^\circ$ ($T_{\max} = 0.50\text{ N}$)
+1. **8-residual CE vs. 14-residual unreduced (`A4(a)`):** Eliminating $\mathbf{v} = \dot{\mathbf{r}}$ via Table A6 Hermite CEs and $\boldsymbol{\lambda}_r = -\dot{\boldsymbol{\lambda}}_v$ increases convergence from `1/10 (10%)` to `10/10 (100%)` and cuts runtime by more than $2\times$.
+2. **Chebyshev NN vs. random-weight $\tanh$ ELM (`A4(b)`):** Deterministic orthogonal Chebyshev polynomials (`chebyshev_shifted`: `10/10`, `396.52 kg`; `chebyshev_literal`: `9/10`, `399.45 kg`) decisively outperform random-weight $\tanh$ ELM features (`0/10` on both CGL and uniform grids, stalling at `425–451 kg`, `reprop ~ 0.10`, 6 switches).
+3. **Continuation $\rho$ schedule (`A4(c)`):** Too few steps (`5` steps) jump to a 2-switch suboptimal branch (`524.79 kg`, `reprop = 0.636`); `10` steps undershoot (`392.65 kg`, `reprop = 0.080`). The paper's 20-step log-spaced schedule from $1$ to $10^{-10}$ achieves the best balance (`5/5`, `396.52 kg`, `reprop = 3.63e-2`).
+4. **Grid & optimizer (`A4(d)`):** `lm_svd` (Cholesky with QR+SVD fallback), SciPy MINPACK `'lm'`, and SciPy `'trf'` all converge to the identical coarse solution (`400.70 kg`, `rms = 2.06e-3`, `reprop = 8.64e-2`) on CGL-140, with `lm_svd` running ~7–10x faster (~3 s vs 20–30 s). Uniform-540 directly from random init converges `4/5 (80%)` to `396.52 kg`, confirming that uniform-grid failure at $n=140$ is purely a Runge oversampling effect.
 
-| Method | Converged (95% Wilson CI) | Fuel (kg) | Throttle Switches | Coast Arc (days) | Re-prop $\varepsilon_M$ | Energy Err $\varepsilon_E$ | Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (warm) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 41.95 ± 5.04 (all) | 100 / 91 (all) |
-| X-TFC PoNN (no warm start) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.26 ± 0.38 (all) | 18 / 15 (all) |
-| Indirect shooting | 20/20 ([0.84, 1.00]) | 221.95 ± 0.00 | 2.0 ± 0.0 | 143.4 ± 0.0 | 7.30e-04 | 2.76e-04 | 3.22 ± 0.82 | 340,095 / 10 |
-| Pseudospectral collocation | 20/20 ([0.84, 1.00]) | 221.97 ± 0.00 | 2.0 ± 0.0 | 143.4 ± 0.0 | 1.08e-04 | 2.06e-04 | 17.01 ± 12.94 | 111 / 93 |
+---
 
-## $t_f = 330.0$ days, Fuel-Minimal $\theta_f^* = 235.00^\circ$ ($T_{\max} = 0.50\text{ N}$)
+## 5. Phase B: 100-Seed Three-Method Benchmark on Scenario A
 
-| Method | Converged (95% Wilson CI) | Fuel (kg) | Throttle Switches | Coast Arc (days) | Re-prop $\varepsilon_M$ | Energy Err $\varepsilon_E$ | Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (warm) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.49 ± 0.53 (all) | 18 / 14 (all) |
-| X-TFC PoNN (no warm start) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.10 ± 0.52 (all) | 18 / 14 (all) |
-| Indirect shooting | 18/20 ([0.70, 0.97]) | 205.13 ± 0.00 | 2.0 ± 0.0 | 185.5 ± 0.0 | 2.17e-05 | 2.49e-05 | 2.20 ± 0.75 | 232,023 / 10 |
-| Pseudospectral collocation | 16/20 ([0.58, 0.92]) | 205.13 ± 0.00 | 2.0 ± 0.0 | 185.5 ± 0.0 | 7.98e-05 | 1.66e-04 | 24.99 ± 17.97 | 142 / 126 |
+All three solvers were evaluated on the identical `ScenarioAProblem` (Table 1, Sun gravity only) across 100 random seeds (`1000..1099`) using frozen Phase A2 PoNN settings:
 
-## $t_f = 360.0$ days, Fuel-Minimal $\theta_f^* = 262.50^\circ$ ($T_{\max} = 0.50\text{ N}$)
+| Method (100 random seeds) | Conv (<5e-2) [95% CI] | Conv (<1e-2) [95% CI] | Fuel Med [Min, Max] (kg) | Reprop Med | Energy Err Med | Runtime Med (s) | nfev / njev Med |
+| --- | :---: | :---: | :---: | ---: | ---: | ---: | :---: |
+| PoNN (frozen, scaled U(0,1)) | 92/100 (92.0%) [85.0%, 95.9%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 11.78 | 243 / 227 |
+| PoNN (frozen, exact paper U(0,1)) | 49/100 (49.0%) [39.4%, 58.7%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 16.67 | 692 / 365 |
+| Indirect Shooting (7-D costates) | 68/100 (68.0%) [58.3%, 76.3%] | 68/100 (68.0%) [58.3%, 76.3%] | 396.06 [396.06, 396.06] | 3.46e-04 | 9.90e-05 | 6.70 | 456 / 10 |
+| 180-Node LGL Collocation (IPOPT) | 55/100 (55.0%) [45.2%, 64.4%] | 18/100 (18.0%) [11.7%, 26.7%] | 397.10 [396.09, 410.00] | 2.48e-02 | 9.04e-04 | 32.14 | 262 / 126 |
 
-| Method | Converged (95% Wilson CI) | Fuel (kg) | Throttle Switches | Coast Arc (days) | Re-prop $\varepsilon_M$ | Energy Err $\varepsilon_E$ | Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (warm) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.45 ± 0.69 (all) | 18 / 15 (all) |
-| X-TFC PoNN (no warm start) | 0/20 ([0.00, 0.16]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.03 ± 0.62 (all) | 18 / 15 (all) |
-| Indirect shooting | 16/20 ([0.58, 0.92]) | 205.06 ± 0.00 | 3.0 ± 0.0 | 212.8 ± 0.0 | 2.75e-05 | 7.51e-06 | 2.57 ± 0.38 | 276,410 / 10 |
-| Pseudospectral collocation | 15/20 ([0.53, 0.89]) | 205.53 ± 1.28 | 4.9 ± 1.6 | 215.3 ± 1.4 | 4.38e-04 | 7.10e-04 | 39.24 ± 19.21 | 243 / 210 |
+![Phase B 100-Seed Benchmark](results/figures/scenario_a_phase_b_benchmark.png)
 
+- **Convergence basin width (`reprop < 5e-2`):** Scaled-init PoNN leads at **`92.0%`**, followed by Indirect Shooting (**`68.0%`**), 180-Node LGL Collocation from random trajectories (**`55.0%`**), and unscaled paper-init PoNN (**`49.0%`**).
+- **Open-loop physical accuracy (`reprop < 1e-2`):** Indirect Shooting leads decisively (**`68.0%`** at median `reprop = 3.46e-04`, `fuel = 396.06 kg`, `energy_err = 9.90e-5`), followed by 180-Node LGL Collocation (**`18.0%`** at `< 1e-2`, best `396.09 kg` with `reprop = 1.74e-4`, though random noisy throttle initializations often induce multi-switch chattering), while unsegmented global PoNN sits at `0.0%` below `1e-2` (`median reprop = 3.63e-02`).
+- **Wall-clock speed:** Indirect Shooting has the lowest median runtime (`6.70 s` overall; `6.02 s` when converged), followed by scaled PoNN (`11.78 s`), unscaled PoNN (`16.67 s`), and 180-node LGL Collocation (`32.14 s`).
 
-## 5. Phase 2: 100-Seed Random-Initialization Basin Study & Hybrid X-TFC $\to$ Shooting Test
+---
 
-# Phase 2: 100-Seed Random-Initialization Basin Study & Hybrid X-TFC $\to$ Shooting Test ($t_f = 280.0$ d, $\theta_f^* = 205.00^\circ$)
+## 6. Phase C: Solar Radiation Pressure Perturbation Study (Scenario A)
 
-Evaluated on 100 independent seeds (`2000..2099`) on the identical 3-D 14-state `HelioProblem` ($T_{\max} = 0.50\text{ N}$, $I_{\text{sp}} = 3,100\text{ s}$, SRP enabled).
+Radial cannonball SRP ($P_0 = 4.56\times 10^{-6}\text{ N/m}^2, C_R = 1.2$, $\mathbf{a}_p = P_0 C_R (A/m_0)(1\text{ AU}/r)^2\hat{\mathbf{r}}$) and attitude-dependent flat-plate SRP ($\mathbf{a}_p = k_{\text{SRP}}\big[0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2\big]\mathbf{r}/r^3$) were added consistently to all three methods with analytical costate gradient $-(\partial \mathbf{a}_p/\partial \mathbf{r})^T\boldsymbol{\lambda}_v$ verified by finite differences (`tests/test_scenario_a.py`).
 
-## Phase 2A: Convergence Rates (95% Wilson CI) & Final Fuel Distribution
+| Case | SRP Mode | $A/m_0$ (m²/kg) | $k_{\text{SRP}}$ (nd) | Shooting Fuel (kg) [conv] | PoNN Ref Fuel (kg) [conv] | LGL-180 Fuel (kg) [s=0 / conv] | Shoot Switches (days) |
+| --- | --- | ---: | ---: | :---: | :---: | :---: | --- |
+| `none_0.00` | none | 0.00 | 0.00e+00 | 396.060 (+0.000) [4/5] | 396.522 [4/5] | 396.179 (ok, 3/5) | [46.58, 68.02, 142.72, 290.25] |
+| `radial_0.02` | radial | 0.02 | 1.85e-05 | 396.089 (+0.029) [4/5] | 396.530 [4/5] | 396.130 (ok, 3/5) | [46.59, 68.03, 142.72, 290.25] |
+| `radial_0.10` | radial | 0.10 | 9.23e-05 | 396.205 (+0.145) [4/5] | 396.565 [4/5] | 396.323 (ok, 1/3) | [46.64, 68.04, 142.71, 290.23] |
+| `radial_0.25` | radial | 0.25 | 2.31e-04 | 396.422 (+0.362) [3/5] | 396.630 [4/5] | 396.540 (ok, 2/3) | [46.73, 68.06, 142.70, 290.19] |
+| `radial_0.50` | radial | 0.50 | 4.61e-04 | 396.785 (+0.725) [4/5] | 396.739 [4/5] | 396.900 (ok, 2/3) | [46.88, 68.10, 142.69, 290.13] |
+| `radial_1.00` | radial | 1.00 | 9.23e-04 | 397.511 (+1.451) [3/5] | 398.146 [4/5] | 397.626 (ok, 2/3) | [47.19, 68.17, 142.67, 290.00] |
+| `attitude_0.10` | attitude_flat_plate | 0.10 | 9.23e-05 | 396.177 (+0.117) [4/5] | 396.557 [4/5] | 396.200 (max_it, 0/1) | [46.63, 68.03, 142.71, 290.24] |
+| `attitude_0.50` | attitude_flat_plate | 0.50 | 4.61e-04 | 396.647 (+0.587) [3/5] | 396.699 [4/5] | 396.662 (max_it, 0/1) | [46.82, 68.05, 142.69, 290.17] |
+| `attitude_1.00` | attitude_flat_plate | 1.00 | 9.23e-04 | 397.236 (+1.176) [4/5] | 398.066 [4/5] | 397.077 (max_it, 0/1) | [47.06, 68.07, 142.66, 290.09] |
 
-| Method | Converged (95% Wilson CI) | Fuel Mean ± SD (kg) | Fuel Median [Q25, Q75] (kg) | Fuel [Min, Max] (kg) | Re-prop $\varepsilon_M$ | Mean Iters | Mean Runtime (s) | Mean Func / Jac Evals |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| X-TFC PoNN (no warm start) | 0/100 ([0.00, 0.04]) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | N/A (0 conv) | 7.27 (all) | 18 / 15 (all) |
-| Indirect shooting (random costates) | 97/100 ([0.92, 0.99]) | 261.78 ± 0.00 | 261.78 [261.78, 261.78] | [261.78, 261.78] | 1.39e-03 | 700.4 | 3.80 | 425,067 / 10 |
-| Pseudospectral collocation (random guess) | 79/100 ([0.70, 0.86]) | 261.96 ± 0.58 | 261.81 [261.81, 261.81] | [261.81, 265.71] | 1.16e-04 | 37.5 | 14.48 | 106 / 77 |
-| Hybrid (X-TFC -> Indirect shooting) | 100/100 ([0.96, 1.00]) | 261.78 ± 0.00 | 261.78 [261.78, 261.78] | [261.78, 261.78] | 1.39e-03 | 455.3 | 2.89 | 322,518 / 10 |
+![Phase C SRP Sweep](results/figures/scenario_a_phase_c_srp_sweep.png)
 
-## Phase 2B: Paired Comparison — Hybrid (Cold-Start X-TFC $\to$ Shooting) vs Random-Costate Shooting
+- **Consistent physical trend across all three solvers:** Outward radial SRP lowers effective solar gravity ($\mu_{\text{eff}} = \mu - k_{\text{SRP}}$), slightly reducing heliocentric angular rate on the fixed-$t_f$ Earth–Mars rendezvous and increasing optimal propellant consumption monotonically from `396.060 kg` ($A/m=0$) to `397.511 kg` ($A/m=1.0\text{ m}^2/\text{kg}$, `+1.451 kg`) in shooting, closely tracked by LGL-180 (`396.179 → 397.626 kg`, `+1.447 kg`) and refined PoNN (`396.522 → 398.146 kg`, `+1.624 kg`).
+- **Attitude-dependent flat-plate SRP:** Because $\phi = 0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2 \in [0.5, 1.0]$, attitude-dependent SRP produces a strictly intermediate fuel penalty (`+1.176 kg` at $A/m = 1.0$ in shooting vs. `+1.451 kg` for full radial SRP). Coupling $\boldsymbol{\alpha}$ into $\mathbf{a}_p$ during coast arcs makes direct LGL collocation roughly $4\times$ slower (`~110–128 s`), whereas PoNN runtime remains virtually unchanged (`~11–12 s`) and maintains `4/5 (80%)` convergence across every perturbation level.
 
-| Metric (Same 100 Seeds) | Random-Costate Shooting | Hybrid (X-TFC $\to$ Shooting) |
-| --- | :---: | :---: |
-| Converged runs (95% Wilson CI) | 97/100 ([0.92, 0.99]) | 100/100 ([0.96, 1.00]) |
-| Seed-by-seed contingency | Both conv: 97 | Hybrid-only conv: 3, Random-only conv: 0, Both fail: 0 |
-| Mean shooting propagations (on 97 jointly converged seeds) | 700.4 | 456.4 |
-| Mean DOP853 RHS evaluations (jointly converged seeds) | 425,067 | 323,310 |
-| Mean shooting-stage wall-clock runtime (s) | 3.80 | 2.89 |
-| Mean end-to-end wall-clock runtime incl. X-TFC pre-solve (s) | 3.80 | 10.14 |
+---
 
-**Assessment:** Initializing indirect shooting with the cold-start X-TFC initial costate vector improved convergence from 97/100 to 100/100 (recovering 3 seeds where random costates failed, with 0 regressions). On the 97 jointly converged seeds, shooting propagations dropped from 700.4 to 456.4 (shooting stage runtime 3.80 s vs 2.89 s), though total end-to-end runtime including the X-TFC pre-solve was 10.14 s.
+## 7. Phase D: Secondary Scenario B (`1218 kg`, `0.5 N`, `Isp = 3100 s`, SRP)
 
+All prior Scenario B results are preserved in `results/phase1_results.json` and `results/phase2_results.json` (global feasibility scan confirming minimum time $t_{\min} = 260.833\text{ d}$ at $\theta_f = 192.518^\circ$ across all 5 multi-start free-$\theta_f$ 180-node solves and 25 fixed-angle scans in $[60^\circ, 300^\circ]$, establishing that $t_f = 247.9\text{ d}$ is infeasible at $T_{\max} = 0.5\text{ N}$ for this 1218 kg spacecraft; plus 20-run multi-$t_f$ robustness across $t_f \in \{247.9, 280, 300, 330, 360\}\text{ d}$ and 100-seed basin/hybrid studies).
 
+In addition, we applied the **frozen Phase A2 PoNN (zero retuning)** directly to Scenario B at $t_f = 300\text{ d}, \theta_f = 225^\circ$, alongside random indirect shooting and hybrid PoNN→Shooting warm-starting across 20 seeds:
+
+| Method on Scenario B ($t_f=300$ d, $\theta_f=225^\circ$, $1218$ kg, $I_{\text{sp}}=3100$ s) | Conv Rate [95% Wilson CI] | Fuel Mean ± SD (kg) | Median Runtime (s) | Notes |
+| --- | :---: | :---: | ---: | --- |
+| 180-Node LGL Collocation (smooth init) | 1/1 | 244.080 | 47.75 | reprop=4.11e-04, 3 switches |
+| Frozen Phase A2 PoNN (ZERO retuning, 20 seeds) | 0/20 (0.0%) [0.0%, 16.1%] | — | 13.52 | 8-res Chebyshev CE, L=70->80 |
+| Indirect Shooting (random 7-D costates, 20 seeds) | 17/20 (85.0%) [64.0%, 94.8%] | 243.826 ± 0.000 | 7.71 | 20-step rho continuation |
+| Hybrid: Shooting warm-started from Frozen PoNN | 20/20 (100.0%) [83.9%, 100.0%] | 243.826 ± 0.000 | 4.73 | lam0 extracted from PoNN |
+
+- Standalone frozen PoNN (zero retuning) lands reproducibly at `237.73 kg` (`reprop = 2.51e-1`, `0/20` under strict `< 5e-2`), whereas extracting its initial costates $\boldsymbol{\lambda}(t_0)$ to warm-start indirect shooting achieves **`20/20 (100.0%, 95% CI [83.9%, 100.0%])`** convergence to the exact `243.826 kg` optimal transfer in `4.73 s` mean runtime (versus `17/20 = 85.0%` in `7.71 s` for random costates), rescuing all 3 failed random-costate seeds.
+
+---
+
+## 8. Reproducibility & Test Verification
+
+- Unit test suite: `.venv/bin/pytest tests/ -v` (verifies Scenario A Hamiltonian & SRP FD checks, Phase A1 shooting reproduction, Phase A2 CE exactness, analytical Jacobian FD checks, shooting projection residual, plus all 19 Scenario B tests).
+- Regenerate all tables, figures, and markdown reports from stored JSONs:
+  `PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py`

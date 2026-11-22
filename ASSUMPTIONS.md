@@ -1,32 +1,43 @@
-# Mathematical, Physical, and Numerical Assumptions (`ASSUMPTIONS.md`)
+# Assumptions & Paper Ambiguity Log
 
-This document records every modeling assumption and initialization rule used in the codebase.
+This document records every modeling assumption made where D'Ambrosio & Furfaro (*Aerospace* **2024**, 11(3), 228) are silent or ambiguous, plus secondary Scenario B modeling assumptions. No assumption was tuned toward paper result numbers.
 
-## 1. Two-Phase Mission Architecture and Boundary Conditions
+## Scenario A (D'Ambrosio & Furfaro 2024) — Explicit Resolution of 8 Paper Ambiguities
 
-1. **Phase 1 (Earth Escape Spiral):** Starts from a circular parking orbit at altitude $h_p = 500.0\text{ km}$ ($r_p = 6878.137\text{ km}$) with initial mass $m_{\text{park}} = 1538.6\text{ kg}$ and continuous tangential thrust $T = 0.50\text{ N}$ ($I_{\text{sp}} = 3100.0\text{ s}, g_0 = 9.80665\text{ m/s}^2$). Integrated in 3-D Cartesian coordinates with Earth's $J_2$ acceleration using `solve_ivp(DOP853, rtol=1e-10, atol=1e-11)` until two-body specific mechanical energy reaches $E = v^2/2 - \mu_E/r = 0$. At the reference inclination $i = 28.5^\circ$, escape occurs at $t_{\text{esc}} = 225.58\text{ days}$ with final mass $m_0 = 1218.04\text{ kg}$.
-2. **Phase 2 (Heliocentric Rendezvous):** Starts at $r_0 = [1, 0, 0]\text{ AU}$ with $v_0 = [0, 1, 0] V_E$ ($v_\infty = 0$) and $m(0) = 1218.0\text{ kg}$. Unless the optional 3-D Keplerian ephemeris is selected, Mars is modeled on a coplanar circular orbit of radius $r_M = 1.524\text{ AU}$ with circular speed $v_M = \sqrt{\mu_S / r_M}$.
-3. **Common Target State Across All Three Methods:** All three solvers receive the exact same `HelioProblem` instance (same $t_f$, same target arrival longitude $\theta_f$, same $T_{\max} = 0.50\text{ N}$, same 14-state 3-D dynamics).
+1. **Chebyshev basis indexing ($\sigma_q = T_{q-1}$ vs. $T_q$) and TFC support-polynomial linear dependence:**
+   - Paper Table 2 specifies $\sigma_q(z) = T_{q-1}(w_q z + b_q)$ with $w_q = 1, b_q = 0$ for $q = 1, \dots, L$.
+   - Substituting $T_0, T_1, T_2, T_3$ into the Table A6 4-constraint Hermite CE for $r_i(z)$ yields four identically zero columns ($\Phi_r T_k \equiv 0$ for $k=0..3$), and substituting $T_0$ into the Table A1 1-constraint CEs for $m(z)$ and $\lambda_m(z)$ yields identically zero columns ($\Phi_m T_0 = \Phi_{\lambda_m} T_0 \equiv 0$).
+   - **Assumption & ablation:** Standard TFC theory requires the free function to be linearly independent of the support polynomials. Our primary validated mode (`chebyshev_shifted`) shifts the free basis to $T_4 \dots T_{L+3}$ for $r_i$, $T_1 \dots T_L$ for $m, \lambda_m$, and $T_0 \dots T_{L-1}$ for $\lambda_v$. We also retain and benchmark the literal $T_0 \dots T_{L-1}$ indexing (`chebyshev`) in Phase A4(b) (`10/10` at `396.52 kg` shifted vs. `9/10` at `399.45 kg` literal).
 
-## 2. Selection of Mars Arrival Longitude and Feasibility Scan Protocol
+2. **Solver tolerances:**
+   - The paper specifies Eq. (27) $\|\mathbf{L}\|_2 < \varepsilon$ without printing numerical values for `FunctionTolerance`, `StepTolerance`, or `OptimalityTolerance`.
+   - **Assumption:** We set `ftol = 1e-9`, `xtol = 1e-9`, `gtol = 1e-9` uniformly across all PoNN continuation levels and solvers (`lm_svd`, SciPy `'lm'`, SciPy `'trf'`), and `rtol = 1e-10, atol = 1e-12, level_tol = 1e-8` for indirect shooting, `ipopt.tol = 1e-7` for 180-node LGL collocation.
 
-1. **Global Minimum-Time Feasibility Scan:** The manuscript does not specify the initial Earth–Mars phase angle at heliocentric departure. Across the Phase 1.1 global feasibility scan ($\theta_f \in [60^\circ, 300^\circ]$ in $10^\circ$ steps with 4 initial guesses per angle plus 5 free-$\theta_f$ 180-node multi-start solves), the shortest feasible transfer time found under $T \le 0.50\text{ N}$ is $t_{\min} = 260.8333\text{ days}$ at $\theta_f^* = 192.518^\circ$; no tested longitude or initialization converged below 260.83 days (so the earlier 260.83 d result was not a local minimum within the tested 0-rev and 1-rev trajectory families).
-2. **Benchmark Scenarios:**
-   - **Paper Nominal Scenario:** $t_f = 247.9\text{ days}$ at $\theta_f = 192.5175^\circ$ (all solvers run without constraint relaxation and report non-convergence).
-   - **Shortest All-Method Converged Scenario:** $t_f = 261.0\text{ days}$ at $\theta_f = 192.5175^\circ$.
-   - **Multi-$t_f$ Protocol (Phase 1.2–1.4):** $t_f \in \{247.9, 280.0, 300.0, 330.0, 360.0\}\text{ days}$ at the computed fuel-minimal arrival longitude $\theta_f^*(t_f)$ for each duration (20 seeds `1000..1019`, including X-TFC with both `warm_start_from_eps1=True` and `warm_start_from_eps1=False`).
+3. **Maximum iterations per $\rho$ continuation level:**
+   - The paper does not report per-level `MaxIterations` or `MaxFunctionEvaluations` for MATLAB `lsqnonlin`.
+   - **Assumption:** We allow `max_iter_first = 250` (for unscaled `paper_u01`, matching MATLAB's default iteration order of magnitude) or `100` (for `scaled_u01`) at $\rho = 1.0$, and `max_iter_cont = 25` on subsequent warm-started continuation levels ($k \ge 1$), reducing to `5` iterations if the prior level remained diverged (`rms > 0.03` and $\min m < 0.08$).
 
-## 3. Pontryagin Optimality System, Throttle Smoothing, and Switching Metrics
+4. **Refinement pass ($L = 80$) initialization:**
+   - Sec. 4.1 states that after identifying switch intervals, 100 points per switch interval are added, $L$ is increased to $80$, and X-TFC is run again, without specifying how the $L=80$ weights are initialized.
+   - **Assumption:** We warm-start the $L=80$ refined basis by zero-padding the smooth coarse $L=70$ Chebyshev coefficients captured at $\rho \approx 0.0886$ (before coarse-grid switch aliasing develops) and running the remaining continuation levels down to $\rho = 10^{-10}$. For `tanh_elm` (where basis functions change with $L$), the smooth coarse trajectory is projected onto the $L=80$ ELM basis via least squares.
 
-1. **Hamiltonian and Switching Function:** With cost $J = \int_0^{t_f} (T/c)\,dt = m_0 - m(t_f)$, $H = T/c + \boldsymbol{\lambda}_r \cdot \mathbf{v} + \boldsymbol{\lambda}_v \cdot (\mathbf{g} + \mathbf{a}_{\text{SRP}} + (T/m)\mathbf{u}) - \lambda_m T/c$, yielding $\mathbf{u}^* = -\boldsymbol{\lambda}_v / \|\boldsymbol{\lambda}_v\|$ and switching function $S = (1 - \lambda_m)/c - \|\boldsymbol{\lambda}_v\|/m$.
-2. **Smoothed Throttle Homotopy:** Both Indirect shooting and X-TFC PoNN use the logistic throttle smoothing $T(S; \varepsilon) = \frac{T_{\max}}{2}(1 - \tanh(S / (2\varepsilon)))$ along the 10-step homotopy schedule $\varepsilon \in (1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01, 0.005, 0.0025, 0.001)$.
-3. **Throttle Switches & Coast Duration:** Throttle switches are counted using hysteresis transitions between $T \ge 0.75\,T_{\max}$ (ON) and $T \le 0.25\,T_{\max}$ (OFF); coast-arc duration is the integrated time with $T < 0.5\,T_{\max}$. Re-propagated arrival error $\varepsilon_M$ is always computed by forward `DOP853` integration of each solver's control profile.
+5. **Placement of the 100 extra discretization points per switch interval:**
+   - The paper does not specify the bracket width or distribution of the 100 points per switch interval.
+   - **Assumption & ablation:** We tested both literal unweighted bracket clustering (`switch_bracket`: 100 points inside each sign-change bracket $[z_k, z_{k+1}]$) and global redistribution of the same total refined node count $n_{\text{ref}} = n + 100\,n_{\text{sw}} = 540$ uniformly (`uniform_dense`) and on CGL nodes (`cgl_dense`). Because unweighted narrow-bracket clustering causes the optimizer to dodge the dense brackets (`400.63 kg`, `reprop = 1.07e-1`), we adopt `uniform_dense` ($n=540$, `396.52 kg`, `reprop = 3.63e-2`) as our primary refined discretization and report all three modes in Phase A3.
 
-## 4. Seeded Initial Guess Procedures & Phase 2 Hybrid Protocol
+6. **Switch detection rule:**
+   - The paper plots switches visually from $S(t)$ without stating an explicit numerical zero-crossing or debouncing algorithm.
+   - **Assumption:** For indirect methods (Shooting and PoNN), switches are detected by linear interpolation of every sign change of $S(t)$ evaluated on a dense 2001-point uniform grid. For direct LGL-180 collocation (which has no costate $S$), switches are detected from crossings of $\delta(t) = 0.5$, excluding 1-day endpoint quadrature artifacts ($t < 1\text{ d}$ or $t > t_f - 1\text{ d}$).
 
-1. **Indirect Shooting:** For each seed $s$, the 7 initial costates are drawn from $\boldsymbol{\lambda}_{r0} \sim U(-1, 1)^3$, $\boldsymbol{\lambda}_{v0} \sim U(-1, 1)^3$, and $\lambda_{m0} \sim U(0, 1)$.
-2. **X-TFC PoNN:** For each seed $s$, hidden-layer centers $c_l \sim U(-1, 1)$ and slopes $w_l = \pm U(1, w_{\max})$ ($b_l = -w_l c_l$) are drawn randomly and held fixed. Both `warm_start_from_eps1 = True` (projecting the $\varepsilon = 1.0$ smoothed shooting extremal onto the random basis) and `warm_start_from_eps1 = False` (deterministic polar/tangential guess only) are run and reported separately.
-3. **Pseudospectral Collocation (180 LGL Nodes):** For each seed $s$, the initial trajectory guess is generated by polar radius/angle interpolation with seed-random shape exponent $p \sim U(0.6, 1.6)$, radial perturbation amplitude $A \sim U(-0.08, 0.08)\text{ AU}$, thrust fraction $U(0.3, 0.9) T_{\max}$, and in-plane pointing offset $U(-0.6, 0.6)\text{ rad}$.
+7. **Nondimensional costate units & Table 1 canonical scaling:**
+   - Table 1 gives $R_{\text{ref}} = 149.59787\times 10^6\text{ km}$, $t_{\text{ref}} = 58.132\text{ d}$, $m_{\text{ref}} = 1000\text{ kg}$, and $\mu_\odot = 1.32712440018\times 10^{11}\text{ km}^3/\text{s}^2$, yielding $\mu_{\text{nd}} = 0.9999848462$ and $t_{f,\text{nd}} = 6.0000516067$.
+   - **Assumption:** We use the exact dimensional Table 1 constants normalized by $(R_{\text{ref}}, t_{\text{ref}}, m_{\text{ref}})$. With $J = \int (T_{\max}\delta / c)\,dt$ in canonical units, $\lambda_m$ is dimensionless ($\in [0, 1]$), $\boldsymbol{\lambda}_v$ has units $m_{\text{ref}}/V_{\text{ref}}$, and $\boldsymbol{\lambda}_r$ has units $m_{\text{ref}}/R_{\text{ref}}$. Initial $\boldsymbol{\beta}_{\lambda_m}$ is fit to $\lambda_m \approx 1$ on interior nodes ($z < 1 - 10^{-12}$) with truncated SVD (`rcond = 1e-4`) so $\lambda_m(z_f)=0$ remains exact without an initial boundary spike.
 
-4. **Phase 2 Basin & Hybrid Study (100 seeds `2000..2099` at $t_f = 280.0\text{ d}, \theta_f^* = 205.00^\circ$):** Compares cold-start X-TFC, random-costate indirect shooting, random-guess 180-node collocation, and a hybrid scheme that passes the cold-start X-TFC initial costate vector $\boldsymbol{\lambda}(t_0)$ (converged or best-effort) directly as `lam0_guess` into indirect shooting on the exact same seeds. Binomial proportions report 95% Wilson score confidence intervals.
+8. **SciPy `'lm'`/`'trf'` and QR/Cholesky SVD-LM vs. MATLAB R2023b `lsqnonlin`:**
+   - The paper uses MATLAB R2023b `lsqnonlin` (`'levenberg-marquardt'` in Sec. 4.1, `'trust-region-reflective'` in Sec. 4.2) with analytical/AD Jacobians.
+   - **Assumption:** We compute the exact analytical $8n \times 8L$ Jacobian via JAX automatic differentiation and benchmark SciPy MINPACK `'lm'`, SciPy `'trf'` (`x_scale='jac'`), and an OpenBLAS Cholesky-with-QR+SVD-fallback Levenberg–Marquardt solver (`lm_svd`) implementing MATLAB `lsqnonlin`'s default `ScaleProblem='none'` on step 0 and Jacobian column scaling on continuation steps. Phase A4(d) verifies that all three optimizers converge to identical coarse trajectories (`400.70 kg`, `rms = 2.06e-3`), while `lm_svd` is ~7–10x faster.
 
+## Additional Modeling Assumptions (Phase C & Scenario B)
+
+- **Phase C attitude-dependent SRP (`attitude_flat_plate`):** Modeled as a flat absorbing/reflecting plate whose surface normal aligns with the optimal thrust unit vector $\boldsymbol{\alpha} = -\boldsymbol{\lambda}_v/\|\boldsymbol{\lambda}_v\|$, yielding projected area factor $\phi(\mathbf{r}, \boldsymbol{\alpha}) = 0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$ and radial SRP acceleration $\mathbf{a}_p = k_{\text{SRP}}\phi\,\mathbf{r}/r^3$. Since $\boldsymbol{\alpha}$ depends only on $\boldsymbol{\lambda}_v$, the position Jacobian $\partial \mathbf{a}_p/\partial \mathbf{r}$ is exact and verified by central FD (`< 1e-9`).
+- **Scenario B (secondary):** Retained unchanged from earlier workspace work ($m_0 = 1218\text{ kg}$, $T_{\max} = 0.5\text{ N}$, $I_{\text{sp}} = 3100\text{ s}$, circular coplanar Earth/Mars orbits at $1.0$ and $1.524\text{ AU}$, radial SRP). In Phase D, the frozen Phase A2 PoNN is evaluated on Scenario B with zero retuning.

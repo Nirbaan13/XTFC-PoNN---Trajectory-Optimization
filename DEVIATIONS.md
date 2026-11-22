@@ -1,20 +1,27 @@
-# Documented Software and Numerical Deviations from the Manuscript (`DEVIATIONS.md`)
+# Deviations from D'Ambrosio & Furfaro (Aerospace 2024, 11, 228)
 
-This file documents every difference between the manuscript's description/claims and the actual implementation and computed results.
+Every intentional or environment-forced deviation from D'Ambrosio & Furfaro (2024) is logged transparently below:
 
-## 1. Software Framework Substitutions
+1. **Software stack (Python/JAX/SciPy/CasADi/IPOPT vs. MATLAB R2023b/GPOPS-II):**
+   - MATLAB R2023b and GPOPS-II are proprietary and unavailable in this Linux environment.
+   - We implemented the exact mathematical formulation in Python using JAX (64-bit exact analytical Jacobians), SciPy (`DOP853`, `fsolve`, `least_squares`), custom OpenBLAS Cholesky/QR-SVD Levenberg–Marquardt (`lm_svd`), and CasADi + IPOPT (180-node LGL pseudospectral direct collocation).
 
-1. **Direct Pseudospectral Collocation (`CasADi + IPOPT` in place of `Dymos + IPOPT`):** The manuscript states that pseudospectral collocation was implemented in Dymos with IPOPT. Because Dymos requires `pyOptSparse` compiled against IPOPT headers (not available as a prebuilt wheel in this Linux environment), we implement the same 180-node Legendre-Gauss-Lobatto (LGL) differentiation-matrix defect transcription $(D\mathbf{X})_k = (t_f/2)\mathbf{f}(\mathbf{X}_k, \mathbf{u}_k, T_k)$ directly in `CasADi 3.8.2` solved with `IPOPT` (MUMPS linear solver). All 180 LGL nodes are used in every fuel-optimal run, including all robustness and basin runs (fixed-angle minimum-time scan in Phase 1.1 uses $N=80$ LGL nodes with $N=180$ for the free-$\theta_f$ multi-start solves).
-2. **Indirect Shooting Root-Finder (`scipy.optimize.fsolve` with `least_squares(method='lm')` Fallback):** Each homotopy level $\varepsilon$ is solved first with `scipy.optimize.fsolve` (MINPACK `hybrd`), as stated in the paper. At the initial coarse level $\varepsilon = 1.0$, random costate guesses frequently lie outside the local Newton basin of `fsolve`; when `fsolve` fails to reach the level tolerance ($10^{-9}$), the solver automatically falls back to `scipy.optimize.least_squares(method='lm')` (MINPACK `lmdif`) from the same starting point, and logs which algorithm closed each level.
-3. **X-TFC PoNN Implementation (`JAX` + `NumPy` ELM with Analytical TFC Constrained Expressions):** Implemented as a single-hidden-layer $\tanh$ Extreme Learning Machine with exact TFC boundary-constrained expressions for $\mathbf{r}(0), \mathbf{r}(t_f), \mathbf{v}(0), \mathbf{v}(t_f), m(0), \lambda_m(t_f)=0$, JAX forward-mode automatic differentiation for the 14-state ODE Jacobian, and Levenberg-Marquardt training.
-4. **Removal of Table E2:** Section 3 and Section 5 of the paper state that the escape phase is a prescribed tangential-thrust propagation rather than an optimal control solve. Table E1 is retained and the redundant Table E2 has been removed.
+2. **Coarse collocation grid (CGL $n=140$ vs. evenly spaced $n=140$):**
+   - Sec. 2.2 states evenly spaced discretization points ($n=140, L=70$).
+   - Direct testing (Phase A3 & A4(d)) revealed severe Runge aliasing on uniform $n=140$ ($\kappa(\Phi_r)=1.67\times 10^8$, node RMS `6.6e-6` vs. dense RMS `1.94`, DOP853 re-propagation error `1.36`, `0/5` convergence).
+   - We adopt $n=140$ Chebyshev–Gauss–Lobatto (CGL) nodes for the coarse stage (explicitly noted by the paper as an admissible alternative quadrature scheme), which lowers $\kappa(\Phi_r)$ to `6.23e3` and restores physical convergence, while retaining and reporting literal `uniform_140` results honestly.
 
-## 2. Physical and Numerical Discrepancies Between Paper Claims and Computed Results
+3. **Refined grid placement (`uniform_dense` $n=540$ vs. literal narrow switch-bracket clustering):**
+   - Sec. 4.1 adds 100 points per switch interval ($n=540$ for 4 switches) and sets $L=80$.
+   - Literal unweighted narrow-bracket clustering (`switch_bracket`) caused the solver to shift switches out of the clusters (`400.63 kg`, `reprop = 1.07e-1`).
+   - Our primary refined discretization distributes the exact same refined node budget ($n=540$) uniformly (`uniform_dense`, `396.52 kg`, `reprop = 3.63e-2`), and we report `cgl_dense` (`397.53 kg`) and literal `switch_bracket` (`400.63 kg`) side by side.
 
-1. **Minimum Transfer Time vs Paper Nominal Duration ($t_f = 247.9\text{ days}$):** Across the 180-node multi-start minimum-time solves and the Phase 1.1 global scan ($\theta_f \in [60^\circ, 300^\circ]$), the shortest converged circular Mars rendezvous duration under $T \le 0.50\text{ N}$ with $m_0 = 1,218.0\text{ kg}$ and $I_{\text{sp}} = 3,100\text{ s}$ is **$t_{\min} = 260.8333\text{ days}$** (at $\theta_f^* = 192.518^\circ$). At $t_f = 247.9\text{ days}$, all three solvers fail to converge (`converged = False`), and the 180-node collocation solver only returns a soft-slack continuation fallback with terminal slack norm `3.690e-02`.
-2. **Propellant Consumption Across Durations:** At the shortest all-method converged duration ($t_f = 261.0\text{ days}$), computed xenon consumption is **368.28 kg** (Indirect shooting), **368.35 kg** (Pseudospectral collocation), and **370.65 kg** (X-TFC PoNN), compared to the paper's claimed 274.8–276.1 kg. At longer durations with interior coast arcs ($t_f = 280\text{--}360\text{ days}$ in Phase 1.2–1.4), indirect shooting and 180-node collocation reach lower propellant consumption (261.78 kg at 280 d down to 205.06 kg at 360 d), whereas X-TFC PoNN (160 $\tanh$ neurons) converged on 0/100 warm-start runs across those five durations.
-3. **X-TFC Iteration Count, Final Physics Loss, and Cold-Start Behavior:** Instead of 4,300 epochs decaying from $1.2 \times 10^{-1}$ to $2.8 \times 10^{-8}$, Levenberg-Marquardt training across the 10-step $\varepsilon$-homotopy at $t_f = 261.0\text{ days}$ takes **129 LM iterations**, with mean-squared 14-ODE residual loss moving from `4.10e-09` to `6.00e-09` (RMS residual `7.75e-05`). Without $\varepsilon = 1.0$ shooting warm-starting (`warm_start_from_eps1 = False`), X-TFC PoNN converged on 0/100 runs across the five Phase 1 durations.
-4. **Wall-Clock Runtimes:** Measured wall-clock runtimes with `time.perf_counter()` at $t_f = 261.0\text{ days}$ are **51.88 s** (0.865 min) for X-TFC PoNN, **3.86 s** (0.064 min) for Indirect shooting, and **11.39 s** (0.190 min) for 180-node Pseudospectral collocation, rather than the paper's 18.6, 24.0, and 12.2 minutes.
+4. **Random weight initialization scaling (`paper_u01` vs. `scaled_u01`):**
+   - Sec. 4.1 draws $\beta_{1..3}, \beta_{\lambda_v 1..3} \sim U(0, 1)$, which yields initial positions at $\sim 25{,}000\text{ AU}$ due to $|T_k'(\pm 1)| = k^2$.
+   - Rather than silently changing initialization, we benchmarked **both** exact unscaled `paper_u01` (`49/100` converged) and `scaled_u01` (`1e-3 * U(0,1)` for position, `1e-2 * U(0,1)` for velocity costate; `92/100` converged) over 100 full seeds each.
 
-5. **Phase 2 Basin & Hybrid Findings (100 seeds at $t_f = 280.0\text{ d}$):** Cold-start X-TFC converged on 0/100 seeds, random-costate shooting on 97/100, 180-node collocation on 79/100, and the hybrid X-TFC $\to$ shooting pipeline on 100/100 seeds.
+5. **Scope restriction (Sec. 4.1 Earth–Mars interplanetary only; Sec. 4.2 Mars landing out of scope):**
+   - Per project specification, reproduction and benchmarking cover Sections 3.1, 3.3, and 4.1 (Earth–Mars interplanetary transfer), extended with Phase C SRP perturbations and secondary Scenario B transfer tests.
 
+6. **Independent DOP853 re-propagation validation (not reported in paper):**
+   - Because TFC constrained expressions satisfy boundary conditions analytically even when interior ODE residuals are nonzero, we re-propagate every solver's open-loop control $(\delta(t), \boldsymbol{\alpha}(t))$ with `DOP853` (`rtol=1e-11, atol=1e-13`) and report actual terminal arrival error alongside energy balance error.

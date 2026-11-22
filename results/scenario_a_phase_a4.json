@@ -1,0 +1,4461 @@
+{
+  "ablation_a_14res_vs_8res": {
+    "8res_coarse_L70": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909446,
+        "residual_rms": 0.002055750899775939,
+        "reprop_arrival_residual": 0.08640623882401803,
+        "energy_error": 0.016072399848884898,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493410916474,
+          66.544947991202,
+          144.97662458475443,
+          291.287319929795
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 108,
+        "total_njev": 101,
+        "runtime_s": 3.2860134100001233,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909445,
+        "residual_rms": 0.002055750899916319,
+        "reprop_arrival_residual": 0.0864062424823141,
+        "energy_error": 0.01607239984888362,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091656,
+          66.54494799120222,
+          144.97662458475443,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 578,
+        "total_njev": 335,
+        "runtime_s": 12.853229114999976,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1002": {
+        "seed": 1002,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.69662579094484,
+        "residual_rms": 0.002055750892768516,
+        "reprop_arrival_residual": 0.08640624416483506,
+        "energy_error": 0.01607239984888301,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091649,
+          66.54494799120204,
+          144.97662458475443,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 115,
+        "total_njev": 104,
+        "runtime_s": 2.6624187919996984,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909446,
+        "residual_rms": 0.002055750892764026,
+        "reprop_arrival_residual": 0.08640623857890137,
+        "energy_error": 0.016072399848883232,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091652,
+          66.54494799120205,
+          144.97662458475446,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 164,
+        "total_njev": 128,
+        "runtime_s": 3.8149780039998404,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909447,
+        "residual_rms": 0.0020557508997267678,
+        "reprop_arrival_residual": 0.08640629203563321,
+        "energy_error": 0.01607239984888501,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091646,
+          66.544947991202,
+          144.97662458475446,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 105,
+        "total_njev": 99,
+        "runtime_s": 2.559982611000123,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1005": {
+        "seed": 1005,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909444,
+        "residual_rms": 0.0020557508927709334,
+        "reprop_arrival_residual": 0.08640624851247668,
+        "energy_error": 0.01607239984888129,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091652,
+          66.54494799120204,
+          144.97662458475446,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 258,
+        "total_njev": 175,
+        "runtime_s": 4.939750249000099,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1006": {
+        "seed": 1006,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909447,
+        "residual_rms": 0.002055750899807528,
+        "reprop_arrival_residual": 0.08640625726905365,
+        "energy_error": 0.016072399848882955,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493410916495,
+          66.54494799120194,
+          144.97662458475443,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 106,
+        "total_njev": 101,
+        "runtime_s": 2.0298291409999365,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1007": {
+        "seed": 1007,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909444,
+        "residual_rms": 0.0020557508998383634,
+        "reprop_arrival_residual": 0.08640624725806803,
+        "energy_error": 0.016072399848883454,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091652,
+          66.54494799120201,
+          144.9766245847545,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 214,
+        "total_njev": 153,
+        "runtime_s": 4.983678696999959,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1008": {
+        "seed": 1008,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909444,
+        "residual_rms": 0.0020557508997425472,
+        "reprop_arrival_residual": 0.08640624389215698,
+        "energy_error": 0.016072399848883066,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493410916495,
+          66.54494799120204,
+          144.97662458475443,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 105,
+        "total_njev": 99,
+        "runtime_s": 2.3882507099997383,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1009": {
+        "seed": 1009,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909447,
+        "residual_rms": 0.0020557508927184476,
+        "reprop_arrival_residual": 0.08640623771804307,
+        "energy_error": 0.016072399848882233,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091652,
+          66.544947991202,
+          144.9766245847544,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 123,
+        "total_njev": 108,
+        "runtime_s": 2.8579950040002586,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      }
+    },
+    "8res_refined_L80": {
+      "1000": {
+        "seed": 1000,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.004800482557487278,
+        "reprop_arrival_residual": 0.0362974484672878,
+        "energy_error": 0.008243460298962823,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905818,
+          68.59397192098882,
+          141.7181210380852,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 240,
+        "total_njev": 226,
+        "runtime_s": 13.193659306999962,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1001": {
+        "seed": 1001,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634077,
+        "residual_rms": 0.004800482557382185,
+        "reprop_arrival_residual": 0.03629743964487029,
+        "energy_error": 0.008243460298963045,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058155,
+          68.59397192098882,
+          141.7181210380852,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 710,
+        "total_njev": 460,
+        "runtime_s": 21.88037463799992,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1002": {
+        "seed": 1002,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634054,
+        "residual_rms": 0.004800482557382186,
+        "reprop_arrival_residual": 0.03629744863671163,
+        "energy_error": 0.008243460298963433,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905824,
+          68.59397192098875,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 247,
+        "total_njev": 229,
+        "runtime_s": 11.74491898199949,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1003": {
+        "seed": 1003,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634065,
+        "residual_rms": 0.004800482557555513,
+        "reprop_arrival_residual": 0.03629744420485053,
+        "energy_error": 0.008243460298962934,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905818,
+          68.59397192098888,
+          141.71812103808523,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 296,
+        "total_njev": 253,
+        "runtime_s": 12.96501651599965,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1004": {
+        "seed": 1004,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163403,
+        "residual_rms": 0.004800482557385816,
+        "reprop_arrival_residual": 0.03629746039799867,
+        "energy_error": 0.008243460298963489,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905816,
+          68.59397192098871,
+          141.71812103808517,
+          290.55463918195676
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 237,
+        "total_njev": 224,
+        "runtime_s": 11.78325157800009,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1005": {
+        "seed": 1005,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.004800482557483085,
+        "reprop_arrival_residual": 0.03629744523858757,
+        "energy_error": 0.008243460298963045,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058126,
+          68.59397192098875,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 390,
+        "total_njev": 300,
+        "runtime_s": 13.094635608000317,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1006": {
+        "seed": 1006,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634065,
+        "residual_rms": 0.004800482557489689,
+        "reprop_arrival_residual": 0.03629743402833172,
+        "energy_error": 0.008243460298963489,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905826,
+          68.59397192098875,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 238,
+        "total_njev": 226,
+        "runtime_s": 10.10158733499975,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1007": {
+        "seed": 1007,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.0048004825574402285,
+        "reprop_arrival_residual": 0.036297442170799096,
+        "energy_error": 0.0082434602989636,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058204,
+          68.59397192098858,
+          141.7181210380852,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 346,
+        "total_njev": 278,
+        "runtime_s": 14.157643848999669,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1008": {
+        "seed": 1008,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.00480048255760506,
+        "reprop_arrival_residual": 0.036297442448903115,
+        "energy_error": 0.008243460298962656,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905824,
+          68.59397192098864,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 237,
+        "total_njev": 224,
+        "runtime_s": 10.955324955999913,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1009": {
+        "seed": 1009,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.004800482557487948,
+        "reprop_arrival_residual": 0.036297453537701294,
+        "energy_error": 0.008243460298962823,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058126,
+          68.59397192098875,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 255,
+        "total_njev": 233,
+        "runtime_s": 11.83405950100041,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      }
+    },
+    "14res_L50": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "fuel_kg": 979.9128552656642,
+        "residual_rms": 0.037624641832740904,
+        "reprop_arrival_residual": 2.5743525895023023,
+        "energy_error": 0.07360540197048851,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "ON",
+        "total_nfev": 942,
+        "total_njev": 480,
+        "runtime_s": 37.39898873200036,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "fuel_kg": 844.9519720662295,
+        "residual_rms": 0.03127228828996936,
+        "reprop_arrival_residual": 1.6664331497447682,
+        "energy_error": 0.43147642683766513,
+        "n_switches": 7,
+        "switch_times_days": [
+          222.12384387077694,
+          264.2425243573717,
+          268.16077944106746,
+          269.0628965578973,
+          335.304229192747,
+          337.0183400078515,
+          338.61834581469003
+        ],
+        "thrust_sequence": "OFF-ON-OFF-ON-OFF-ON-OFF-ON",
+        "total_nfev": 782,
+        "total_njev": 420,
+        "runtime_s": 31.424350805999893,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1002": {
+        "seed": 1002,
+        "success": true,
+        "fuel_kg": 395.2873770177339,
+        "residual_rms": 0.002376064075122382,
+        "reprop_arrival_residual": 0.02064119914580548,
+        "energy_error": 0.003524380647439237,
+        "n_switches": 4,
+        "switch_times_days": [
+          45.51620582723272,
+          69.29936955588805,
+          144.61756101637766,
+          290.1769028135935
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 288,
+        "total_njev": 190,
+        "runtime_s": 11.89585800299983,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "fuel_kg": 968.1813513877855,
+        "residual_rms": 0.01704279237875696,
+        "reprop_arrival_residual": 0.49294504515538456,
+        "energy_error": 0.11305118390006384,
+        "n_switches": 10,
+        "switch_times_days": [
+          273.5767995528972,
+          275.7826180074841,
+          290.17829162482536,
+          293.58035908943066,
+          296.8981432483836,
+          300.1322173845683,
+          303.27864678237853,
+          322.6760275493477,
+          325.0446643303615,
+          327.3084671891713
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON",
+        "total_nfev": 877,
+        "total_njev": 459,
+        "runtime_s": 35.94474229100024,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "fuel_kg": 979.7484158758301,
+        "residual_rms": 0.009577560941405668,
+        "reprop_arrival_residual": 0.48201120228290356,
+        "energy_error": 0.04609497224717015,
+        "n_switches": 2,
+        "switch_times_days": [
+          308.4674563560395,
+          309.29080942055623
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 753,
+        "total_njev": 345,
+        "runtime_s": 25.509941630999947,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1005": {
+        "seed": 1005,
+        "success": false,
+        "fuel_kg": 967.017885679165,
+        "residual_rms": 0.03924945380502096,
+        "reprop_arrival_residual": 2.987896312291382,
+        "energy_error": 0.12015630844921005,
+        "n_switches": 12,
+        "switch_times_days": [
+          314.94665191732054,
+          317.6235351239676,
+          320.1982610270795,
+          322.6732967866978,
+          325.0440264045687,
+          327.30963386810396,
+          329.46773189001794,
+          343.8994395057298,
+          344.92367772011903,
+          345.8253999236385,
+          346.6045282687066,
+          347.2603213683357
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON",
+        "total_nfev": 748,
+        "total_njev": 417,
+        "runtime_s": 26.620957664000343,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1006": {
+        "seed": 1006,
+        "success": false,
+        "fuel_kg": 977.8059963540526,
+        "residual_rms": 0.00964233891471585,
+        "reprop_arrival_residual": 0.46924101968594994,
+        "energy_error": 0.07075577726957752,
+        "n_switches": 2,
+        "switch_times_days": [
+          306.33857645503053,
+          308.85185073990925
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 744,
+        "total_njev": 339,
+        "runtime_s": 24.691714128000058,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1007": {
+        "seed": 1007,
+        "success": false,
+        "fuel_kg": 964.8960966840006,
+        "residual_rms": 0.04261108031511124,
+        "reprop_arrival_residual": 3.009509042317682,
+        "energy_error": 0.05789542415207042,
+        "n_switches": 4,
+        "switch_times_days": [
+          320.1987701861968,
+          322.67518905047876,
+          325.04494885251086,
+          327.30923928336597
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 779,
+        "total_njev": 408,
+        "runtime_s": 30.828334852999888,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1008": {
+        "seed": 1008,
+        "success": false,
+        "fuel_kg": 908.9948282641353,
+        "residual_rms": 0.013713494403673194,
+        "reprop_arrival_residual": 0.5342579797314859,
+        "energy_error": 0.10613683541987264,
+        "n_switches": 4,
+        "switch_times_days": [
+          117.8864784876376,
+          119.29041867314257,
+          247.98512048153913,
+          286.6938477977625
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 756,
+        "total_njev": 389,
+        "runtime_s": 29.381902985000124,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      },
+      "1009": {
+        "seed": 1009,
+        "success": false,
+        "fuel_kg": 914.07146058281,
+        "residual_rms": 0.02698100403329846,
+        "reprop_arrival_residual": 3.7130262587725795,
+        "energy_error": 0.7756567056545355,
+        "n_switches": 15,
+        "switch_times_days": [
+          239.5422385544578,
+          243.78682613069162,
+          247.98539388364114,
+          252.13403373144536,
+          256.22752594050735,
+          260.2643420077366,
+          264.2409017610478,
+          268.154818279383,
+          272.0038535705718,
+          275.7843774265818,
+          279.4945420537202,
+          283.13116569565744,
+          286.6931625047875,
+          290.17559515379236,
+          293.5743639320606
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF-ON-OFF",
+        "total_nfev": 840,
+        "total_njev": 453,
+        "runtime_s": 33.156802422000055,
+        "n_unknowns": 700,
+        "n_residuals": 1680
+      }
+    }
+  },
+  "ablation_b_basis": {
+    "chebyshev_shifted_cgl": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909446,
+          "residual_rms": 0.002055750899775939,
+          "reprop_arrival_residual": 0.08640623882401803,
+          "energy_error": 0.016072399848884898,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300493410916474,
+            66.544947991202,
+            144.97662458475443,
+            291.287319929795
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 108,
+          "total_njev": 101,
+          "runtime_s": 2.481784700999924,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.004800482557487278,
+          "reprop_arrival_residual": 0.0362974484672878,
+          "energy_error": 0.008243460298962823,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905818,
+            68.59397192098882,
+            141.7181210380852,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 240,
+          "total_njev": 226,
+          "runtime_s": 11.341163155999766,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909445,
+          "residual_rms": 0.002055750899916319,
+          "reprop_arrival_residual": 0.0864062424823141,
+          "energy_error": 0.01607239984888362,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091656,
+            66.54494799120222,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 578,
+          "total_njev": 335,
+          "runtime_s": 12.664821114999995,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634077,
+          "residual_rms": 0.004800482557382185,
+          "reprop_arrival_residual": 0.03629743964487029,
+          "energy_error": 0.008243460298963045,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.828239819058155,
+            68.59397192098882,
+            141.7181210380852,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 710,
+          "total_njev": 460,
+          "runtime_s": 21.573126993000187,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69662579094484,
+          "residual_rms": 0.002055750892768516,
+          "reprop_arrival_residual": 0.08640624416483506,
+          "energy_error": 0.01607239984888301,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091649,
+            66.54494799120204,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 115,
+          "total_njev": 104,
+          "runtime_s": 2.6828161030002775,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634054,
+          "residual_rms": 0.004800482557382186,
+          "reprop_arrival_residual": 0.03629744863671163,
+          "energy_error": 0.008243460298963433,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905824,
+            68.59397192098875,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 247,
+          "total_njev": 229,
+          "runtime_s": 11.27292013000033,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909446,
+          "residual_rms": 0.002055750892764026,
+          "reprop_arrival_residual": 0.08640623857890137,
+          "energy_error": 0.016072399848883232,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091652,
+            66.54494799120205,
+            144.97662458475446,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 164,
+          "total_njev": 128,
+          "runtime_s": 3.7576025749999644,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634065,
+          "residual_rms": 0.004800482557555513,
+          "reprop_arrival_residual": 0.03629744420485053,
+          "energy_error": 0.008243460298962934,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905818,
+            68.59397192098888,
+            141.71812103808523,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 296,
+          "total_njev": 253,
+          "runtime_s": 12.326937457999975,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909447,
+          "residual_rms": 0.0020557508997267678,
+          "reprop_arrival_residual": 0.08640629203563321,
+          "energy_error": 0.01607239984888501,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091646,
+            66.544947991202,
+            144.97662458475446,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 105,
+          "total_njev": 99,
+          "runtime_s": 3.121575910000047,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163403,
+          "residual_rms": 0.004800482557385816,
+          "reprop_arrival_residual": 0.03629746039799867,
+          "energy_error": 0.008243460298963489,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905816,
+            68.59397192098871,
+            141.71812103808517,
+            290.55463918195676
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 237,
+          "total_njev": 224,
+          "runtime_s": 13.033537693999733,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1005": {
+        "coarse": {
+          "seed": 1005,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909444,
+          "residual_rms": 0.0020557508927709334,
+          "reprop_arrival_residual": 0.08640624851247668,
+          "energy_error": 0.01607239984888129,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091652,
+            66.54494799120204,
+            144.97662458475446,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 258,
+          "total_njev": 175,
+          "runtime_s": 5.918195204999847,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1005,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.004800482557483085,
+          "reprop_arrival_residual": 0.03629744523858757,
+          "energy_error": 0.008243460298963045,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.828239819058126,
+            68.59397192098875,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 390,
+          "total_njev": 300,
+          "runtime_s": 15.002900622999732,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1006": {
+        "coarse": {
+          "seed": 1006,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909447,
+          "residual_rms": 0.002055750899807528,
+          "reprop_arrival_residual": 0.08640625726905365,
+          "energy_error": 0.016072399848882955,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300493410916495,
+            66.54494799120194,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 106,
+          "total_njev": 101,
+          "runtime_s": 2.4754149310001594,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1006,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634065,
+          "residual_rms": 0.004800482557489689,
+          "reprop_arrival_residual": 0.03629743402833172,
+          "energy_error": 0.008243460298963489,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905826,
+            68.59397192098875,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 238,
+          "total_njev": 226,
+          "runtime_s": 11.514414366000437,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1007": {
+        "coarse": {
+          "seed": 1007,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909444,
+          "residual_rms": 0.0020557508998383634,
+          "reprop_arrival_residual": 0.08640624725806803,
+          "energy_error": 0.016072399848883454,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091652,
+            66.54494799120201,
+            144.9766245847545,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 214,
+          "total_njev": 153,
+          "runtime_s": 4.9487205969999195,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1007,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.0048004825574402285,
+          "reprop_arrival_residual": 0.036297442170799096,
+          "energy_error": 0.0082434602989636,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.828239819058204,
+            68.59397192098858,
+            141.7181210380852,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 346,
+          "total_njev": 278,
+          "runtime_s": 13.973830892000024,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1008": {
+        "coarse": {
+          "seed": 1008,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909444,
+          "residual_rms": 0.0020557508997425472,
+          "reprop_arrival_residual": 0.08640624389215698,
+          "energy_error": 0.016072399848883066,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300493410916495,
+            66.54494799120204,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 105,
+          "total_njev": 99,
+          "runtime_s": 2.467518648999885,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1008,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.00480048255760506,
+          "reprop_arrival_residual": 0.036297442448903115,
+          "energy_error": 0.008243460298962656,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905824,
+            68.59397192098864,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 237,
+          "total_njev": 224,
+          "runtime_s": 11.464258077000068,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1009": {
+        "coarse": {
+          "seed": 1009,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909447,
+          "residual_rms": 0.0020557508927184476,
+          "reprop_arrival_residual": 0.08640623771804307,
+          "energy_error": 0.016072399848882233,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091652,
+            66.544947991202,
+            144.9766245847544,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 123,
+          "total_njev": 108,
+          "runtime_s": 2.8559667380000064,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1009,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.004800482557487948,
+          "reprop_arrival_residual": 0.036297453537701294,
+          "energy_error": 0.008243460298962823,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.828239819058126,
+            68.59397192098875,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 255,
+          "total_njev": 233,
+          "runtime_s": 12.157082183000057,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "chebyshev_literal_cgl": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650745,
+          "residual_rms": 0.0022568977470124,
+          "reprop_arrival_residual": 0.024109048301380772,
+          "energy_error": 0.004107407860145136,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300439253025296,
+            69.6697682454407,
+            144.9766232113131,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 104,
+          "total_njev": 97,
+          "runtime_s": 3.542603882999998,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.45238724472256,
+          "residual_rms": 0.004863128114178337,
+          "reprop_arrival_residual": 0.04390722715292228,
+          "energy_error": 0.006541664420392089,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296848,
+            69.2412769166584,
+            143.0124108919333,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 239,
+          "total_njev": 223,
+          "runtime_s": 12.859860693000002,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 627.812083513867,
+          "residual_rms": 0.016524728762151494,
+          "reprop_arrival_residual": 1.9977786313519033,
+          "energy_error": 0.38390842151159604,
+          "n_switches": 2,
+          "switch_times_days": [
+            266.1148830870418,
+            266.4193570373877
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 907,
+          "total_njev": 490,
+          "runtime_s": 17.910046939999987,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 627.812083513867,
+          "residual_rms": 0.016524728762151494,
+          "reprop_arrival_residual": 1.9977786313519033,
+          "energy_error": 0.38390842151159604,
+          "n_switches": 2,
+          "switch_times_days": [
+            266.1148830870418,
+            266.4193570373877
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 907,
+          "total_njev": 490,
+          "runtime_s": 17.910046939999987,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650813,
+          "residual_rms": 0.002256897727032268,
+          "reprop_arrival_residual": 0.02410904686400273,
+          "energy_error": 0.004107407860143054,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043925302527,
+            69.66976824544065,
+            144.97662321131304,
+            291.2873182050846
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 113,
+          "total_njev": 101,
+          "runtime_s": 2.304450498999998,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.4523872447222,
+          "residual_rms": 0.004863128114470655,
+          "reprop_arrival_residual": 0.04390723925187786,
+          "energy_error": 0.006541664420392478,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296852,
+            69.2412769166586,
+            143.0124108919334,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 248,
+          "total_njev": 227,
+          "runtime_s": 10.269664406999993,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650813,
+          "residual_rms": 0.0022568978474880475,
+          "reprop_arrival_residual": 0.024109054549582436,
+          "energy_error": 0.004107407860149348,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043925302521,
+            69.66976824544068,
+            144.9766232113131,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 124,
+          "total_njev": 106,
+          "runtime_s": 2.5450284130000114,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.45238724472244,
+          "residual_rms": 0.004863128114459007,
+          "reprop_arrival_residual": 0.043907233745180775,
+          "energy_error": 0.006541664420392311,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296847,
+            69.24127691665845,
+            143.01241089193337,
+            290.55463903712155
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 259,
+          "total_njev": 232,
+          "runtime_s": 10.506364948000027,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650745,
+          "residual_rms": 0.0022568977259307234,
+          "reprop_arrival_residual": 0.0241090414784524,
+          "energy_error": 0.004107407860153026,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300439253025225,
+            69.66976824544061,
+            144.9766232113131,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 101,
+          "total_njev": 96,
+          "runtime_s": 2.0291742169999907,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.45238724472244,
+          "residual_rms": 0.004863128114323267,
+          "reprop_arrival_residual": 0.043907227972420866,
+          "energy_error": 0.006541664420392304,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.4754338029685,
+            69.24127691665845,
+            143.01241089193337,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 236,
+          "total_njev": 222,
+          "runtime_s": 10.213475523,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1005": {
+        "coarse": {
+          "seed": 1005,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.1358718065079,
+          "residual_rms": 0.002256897756482966,
+          "reprop_arrival_residual": 0.0241090472399235,
+          "energy_error": 0.0041074078601528105,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043925302521,
+            69.66976824544061,
+            144.97662321131315,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 266,
+          "total_njev": 177,
+          "runtime_s": 5.501362435999994,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1005,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.45238724472244,
+          "residual_rms": 0.004863128114172184,
+          "reprop_arrival_residual": 0.04390720665387564,
+          "energy_error": 0.0065416644203928455,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296845,
+            69.2412769166586,
+            143.0124108919333,
+            290.55463903712155
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 401,
+          "total_njev": 303,
+          "runtime_s": 13.888658147000001,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1006": {
+        "coarse": {
+          "seed": 1006,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.1358718065078,
+          "residual_rms": 0.0022568978480282127,
+          "reprop_arrival_residual": 0.02410905799014562,
+          "energy_error": 0.004107407860149306,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043925302521,
+            69.66976824544065,
+            144.97662321131313,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 99,
+          "total_njev": 94,
+          "runtime_s": 2.0516610040000103,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1006,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.4523872447227,
+          "residual_rms": 0.004863128114406246,
+          "reprop_arrival_residual": 0.04390723923708482,
+          "energy_error": 0.006541664420392013,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296845,
+            69.24127691665845,
+            143.0124108919334,
+            290.55463903712155
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 234,
+          "total_njev": 220,
+          "runtime_s": 10.149722511000022,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1007": {
+        "coarse": {
+          "seed": 1007,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650813,
+          "residual_rms": 0.0022568977060884983,
+          "reprop_arrival_residual": 0.024109046697006045,
+          "energy_error": 0.004107407860148751,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300439253025196,
+            69.6697682454406,
+            144.9766232113131,
+            291.28731820508455
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 134,
+          "total_njev": 111,
+          "runtime_s": 2.674054374000008,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1007,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.4523872447222,
+          "residual_rms": 0.004863128114041479,
+          "reprop_arrival_residual": 0.043907208332872004,
+          "energy_error": 0.0065416644203911516,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.475433802968425,
+            69.2412769166585,
+            143.01241089193329,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 269,
+          "total_njev": 237,
+          "runtime_s": 10.558148066000001,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1008": {
+        "coarse": {
+          "seed": 1008,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.13587180650825,
+          "residual_rms": 0.002256897736540618,
+          "reprop_arrival_residual": 0.02410904933166335,
+          "energy_error": 0.004107407860146836,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300439253025196,
+            69.66976824544057,
+            144.9766232113131,
+            291.2873182050846
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 100,
+          "total_njev": 95,
+          "runtime_s": 2.018861055000002,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1008,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.45238724472244,
+          "residual_rms": 0.004863128114463722,
+          "reprop_arrival_residual": 0.04390723176665395,
+          "energy_error": 0.006541664420392457,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.47543380296847,
+            69.24127691665845,
+            143.0124108919334,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 235,
+          "total_njev": 221,
+          "runtime_s": 9.829814370999998,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1009": {
+        "coarse": {
+          "seed": 1009,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.1358718065079,
+          "residual_rms": 0.002256897797618431,
+          "reprop_arrival_residual": 0.02410905112067105,
+          "energy_error": 0.004107407860142923,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300439253025296,
+            69.66976824544074,
+            144.9766232113131,
+            291.2873182050846
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 112,
+          "total_njev": 101,
+          "runtime_s": 2.3353069540000035,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1009,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 399.4523872447222,
+          "residual_rms": 0.004863128114249735,
+          "reprop_arrival_residual": 0.043907236096823905,
+          "energy_error": 0.006541664420392353,
+          "n_switches": 4,
+          "switch_times_days": [
+            50.4754338029684,
+            69.2412769166586,
+            143.01241089193337,
+            290.5546390371215
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 247,
+          "total_njev": 227,
+          "runtime_s": 10.508262101000014,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "tanh_elm_cgl": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 433.9102229599803,
+          "residual_rms": 0.01125646214347955,
+          "reprop_arrival_residual": 0.16472884453944298,
+          "energy_error": 0.03588290805868737,
+          "n_switches": 4,
+          "switch_times_days": [
+            137.23981875528673,
+            141.0991271441463,
+            144.9739440610994,
+            291.2872649234889
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 793,
+          "total_njev": 617,
+          "runtime_s": 17.812779092,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 436.57802900634124,
+          "residual_rms": 0.014460392797580176,
+          "reprop_arrival_residual": 0.09853045520074791,
+          "energy_error": 0.030346703903359244,
+          "n_switches": 6,
+          "switch_times_days": [
+            125.60814596935451,
+            126.19253196663458,
+            134.0654105667693,
+            134.57718300664922,
+            139.1277383635396,
+            291.20167180390683
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1252,
+          "total_njev": 929,
+          "runtime_s": 41.998487608000005,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 437.98081551267387,
+          "residual_rms": 0.011331152714288242,
+          "reprop_arrival_residual": 0.16395458569141258,
+          "energy_error": 0.03439982229396693,
+          "n_switches": 6,
+          "switch_times_days": [
+            114.57627506871948,
+            114.58205959295053,
+            133.3982514051065,
+            137.23858221209005,
+            144.97495597676388,
+            291.2872630894363
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 742,
+          "total_njev": 586,
+          "runtime_s": 15.960301544000004,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 439.0253454075719,
+          "residual_rms": 0.014222514430311231,
+          "reprop_arrival_residual": 0.10798523020269869,
+          "energy_error": 0.03525590683475145,
+          "n_switches": 6,
+          "switch_times_days": [
+            124.50173336269663,
+            125.42817175638422,
+            133.76811600233418,
+            134.40958728631787,
+            138.89647259908259,
+            291.1768270486214
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1235,
+          "total_njev": 915,
+          "runtime_s": 35.980975876,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 431.55143230706017,
+          "residual_rms": 0.011213947288070696,
+          "reprop_arrival_residual": 0.1290854689807201,
+          "energy_error": 0.02199596253831311,
+          "n_switches": 6,
+          "switch_times_days": [
+            114.54623244785053,
+            118.26095570314637,
+            137.23989953758635,
+            140.28200856495684,
+            144.9740606382896,
+            291.28726565516104
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 859,
+          "total_njev": 658,
+          "runtime_s": 19.66940218100001,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 434.1079184841874,
+          "residual_rms": 0.013758470881180901,
+          "reprop_arrival_residual": 0.10118340379742113,
+          "energy_error": 0.02529445353586546,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.81126770251888,
+            128.57316041263564,
+            131.72430460525428,
+            132.72513279056287,
+            139.92661195061757,
+            291.176831295114
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1359,
+          "total_njev": 1002,
+          "runtime_s": 40.21385058300001,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 427.44536745794903,
+          "residual_rms": 0.0112940358634323,
+          "reprop_arrival_residual": 0.16580353057915373,
+          "energy_error": 0.03993267372271984,
+          "n_switches": 4,
+          "switch_times_days": [
+            86.0664139742813,
+            89.46076623733917,
+            141.09935660668435,
+            291.2872789085778
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 679,
+          "total_njev": 513,
+          "runtime_s": 15.401745700999982,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 432.1438247370679,
+          "residual_rms": 0.013907138229361576,
+          "reprop_arrival_residual": 0.09874879418794814,
+          "energy_error": 0.030971097118744653,
+          "n_switches": 6,
+          "switch_times_days": [
+            123.47053842005856,
+            124.46962575913922,
+            133.74540211369185,
+            134.74113068705927,
+            139.9269043173641,
+            291.17683111501543
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1171,
+          "total_njev": 843,
+          "runtime_s": 34.99462630300002,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 431.16228018379843,
+          "residual_rms": 0.011164617822336152,
+          "reprop_arrival_residual": 0.11485077435305659,
+          "energy_error": 0.01965865377026673,
+          "n_switches": 6,
+          "switch_times_days": [
+            118.26502534452199,
+            122.00385664207762,
+            133.39870418480564,
+            137.23851610322015,
+            144.9748810121483,
+            291.2872651936579
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 850,
+          "total_njev": 644,
+          "runtime_s": 19.167207219999966,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 437.41482343830285,
+          "residual_rms": 0.013989549036281784,
+          "reprop_arrival_residual": 0.09885381929078788,
+          "energy_error": 0.02630192737887677,
+          "n_switches": 4,
+          "switch_times_days": [
+            134.03612363049155,
+            134.61194051737132,
+            139.13093701737282,
+            290.55462430814765
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 1370,
+          "total_njev": 991,
+          "runtime_s": 47.58796625799994,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1005": {
+        "coarse": {
+          "seed": 1005,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 936.1425285286389,
+          "residual_rms": 0.02208628401134479,
+          "reprop_arrival_residual": 0.3561283683561638,
+          "energy_error": 0.16690441179091464,
+          "n_switches": 2,
+          "switch_times_days": [
+            279.130637778722,
+            282.0163081654157
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 881,
+          "total_njev": 409,
+          "runtime_s": 17.179414995000002,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1005,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 936.1425285286389,
+          "residual_rms": 0.02208628401134479,
+          "reprop_arrival_residual": 0.3561283683561638,
+          "energy_error": 0.16690441179091464,
+          "n_switches": 2,
+          "switch_times_days": [
+            279.130637778722,
+            282.0163081654157
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 881,
+          "total_njev": 409,
+          "runtime_s": 17.179414995000002,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        }
+      },
+      "1006": {
+        "coarse": {
+          "seed": 1006,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 442.6875592550914,
+          "residual_rms": 0.011767635606583487,
+          "reprop_arrival_residual": 0.14497916853246598,
+          "energy_error": 0.032116827298471914,
+          "n_switches": 6,
+          "switch_times_days": [
+            113.07105798479802,
+            114.54061961457526,
+            133.3981290505938,
+            137.23749234314386,
+            144.97499855055258,
+            291.2872601901468
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 889,
+          "total_njev": 651,
+          "runtime_s": 20.20075849699998,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1006,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 440.1240326842526,
+          "residual_rms": 0.014717246175101707,
+          "reprop_arrival_residual": 0.1130002184155357,
+          "energy_error": 0.03242954365603968,
+          "n_switches": 6,
+          "switch_times_days": [
+            125.0298675087678,
+            125.47400728856043,
+            130.66822065521356,
+            131.64275498034604,
+            140.95652812738123,
+            292.20571206506884
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1453,
+          "total_njev": 994,
+          "runtime_s": 42.121116298000004,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1007": {
+        "coarse": {
+          "seed": 1007,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 446.32744694366977,
+          "residual_rms": 0.012259467433018128,
+          "reprop_arrival_residual": 0.16632962480532135,
+          "energy_error": 0.03979389536087368,
+          "n_switches": 4,
+          "switch_times_days": [
+            133.3989586178717,
+            137.23853968051716,
+            144.9748789852317,
+            291.28725475982736
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 799,
+          "total_njev": 612,
+          "runtime_s": 18.28290974800001,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1007,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 451.2306208089285,
+          "residual_rms": 0.015249667317122507,
+          "reprop_arrival_residual": 0.12214865491518873,
+          "energy_error": 0.035084900112346065,
+          "n_switches": 6,
+          "switch_times_days": [
+            128.6843425774582,
+            128.90221181398732,
+            133.75670501512167,
+            134.0526302160168,
+            141.98491289565192,
+            291.1768138979249
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1269,
+          "total_njev": 925,
+          "runtime_s": 36.87091379399999,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1008": {
+        "coarse": {
+          "seed": 1008,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 424.6828110990464,
+          "residual_rms": 0.010473096908336173,
+          "reprop_arrival_residual": 0.10073433022636151,
+          "energy_error": 0.02816148204058779,
+          "n_switches": 6,
+          "switch_times_days": [
+            114.8007943002805,
+            118.26095851263808,
+            133.39842638067847,
+            137.23875156966466,
+            141.0985216919679,
+            291.287267676244
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 772,
+          "total_njev": 616,
+          "runtime_s": 19.976410902999987,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1008,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 430.23554109822726,
+          "residual_rms": 0.013828210109705766,
+          "reprop_arrival_residual": 0.09660033188414686,
+          "energy_error": 0.03154761681779505,
+          "n_switches": 2,
+          "switch_times_days": [
+            137.18021846071605,
+            291.2016734599244
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 1262,
+          "total_njev": 954,
+          "runtime_s": 50.01157582400003,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1009": {
+        "coarse": {
+          "seed": 1009,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 429.8519783073971,
+          "residual_rms": 0.011375162237487208,
+          "reprop_arrival_residual": 0.11051972584826865,
+          "energy_error": 0.019047382083096948,
+          "n_switches": 6,
+          "switch_times_days": [
+            118.26336612258598,
+            122.00669851311301,
+            133.3979984774915,
+            137.23847222249458,
+            144.97477544642095,
+            291.28726314628057
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 857,
+          "total_njev": 647,
+          "runtime_s": 23.89679051799999,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1009,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 436.0998937900149,
+          "residual_rms": 0.0141274480805961,
+          "reprop_arrival_residual": 0.10390889195177393,
+          "energy_error": 0.028408450364106417,
+          "n_switches": 6,
+          "switch_times_days": [
+            126.57477557950332,
+            127.47542996755242,
+            133.7894320143127,
+            134.4117414468015,
+            139.92707921154832,
+            292.2057167071591
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1376,
+          "total_njev": 988,
+          "runtime_s": 44.589783151000006,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      }
+    },
+    "tanh_elm_uniform": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 429.32201612460835,
+          "residual_rms": 0.01330152140606267,
+          "reprop_arrival_residual": 0.10017594829954252,
+          "energy_error": 0.022781712681235373,
+          "n_switches": 6,
+          "switch_times_days": [
+            120.51312802633313,
+            122.60807967085248,
+            132.9961313598838,
+            135.50442109664505,
+            143.0299307903033,
+            291.08069080161954
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 780,
+          "total_njev": 619,
+          "runtime_s": 18.804888826000024,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 433.9556086306402,
+          "residual_rms": 0.014199241735797941,
+          "reprop_arrival_residual": 0.28441095098581587,
+          "energy_error": 0.05329985486629237,
+          "n_switches": 2,
+          "switch_times_days": [
+            144.30677635474703,
+            291.8487609596169
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 1029,
+          "total_njev": 787,
+          "runtime_s": 32.54743191900002,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 435.3208870443268,
+          "residual_rms": 0.013735689357472417,
+          "reprop_arrival_residual": 0.10447237594349755,
+          "energy_error": 0.024428064612560547,
+          "n_switches": 6,
+          "switch_times_days": [
+            120.49866295407928,
+            121.32955833995169,
+            133.0365894973985,
+            135.4627370026526,
+            143.02984634086053,
+            291.08068965865664
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 763,
+          "total_njev": 604,
+          "runtime_s": 17.28278999700001,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 442.2326232306659,
+          "residual_rms": 0.013568009631975233,
+          "reprop_arrival_residual": 0.20149433781626064,
+          "energy_error": 0.037720378064779674,
+          "n_switches": 4,
+          "switch_times_days": [
+            141.9908517666434,
+            144.0448935109717,
+            146.0984294329278,
+            292.2057183865221
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 1131,
+          "total_njev": 858,
+          "runtime_s": 33.07129317099998,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 429.2408218360606,
+          "residual_rms": 0.01288760508913713,
+          "reprop_arrival_residual": 0.11873842195923033,
+          "energy_error": 0.023945992081084493,
+          "n_switches": 6,
+          "switch_times_days": [
+            121.28173156931663,
+            122.95633111231128,
+            132.99571736163213,
+            135.5025949880955,
+            143.02983180643872,
+            291.0806911347319
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 810,
+          "total_njev": 640,
+          "runtime_s": 21.228859046000025,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 428.1307050951,
+          "residual_rms": 0.013903151970948043,
+          "reprop_arrival_residual": 0.10196539905418726,
+          "energy_error": 0.028102164319503097,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.92446888589186,
+            128.28553759278088,
+            132.67751938078567,
+            132.91354717599603,
+            137.81521054065325,
+            291.2130770937786
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1309,
+          "total_njev": 979,
+          "runtime_s": 59.33285354700001,
+          "n_unknowns": 640,
+          "n_residuals": 5920
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 430.8446417671803,
+          "residual_rms": 0.013011226416223903,
+          "reprop_arrival_residual": 0.1095231336366969,
+          "energy_error": 0.02382633803968984,
+          "n_switches": 6,
+          "switch_times_days": [
+            120.56603032022579,
+            121.31848751590648,
+            132.99635475598973,
+            135.50310858421898,
+            143.02986209161486,
+            291.08069061214536
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 775,
+          "total_njev": 606,
+          "runtime_s": 19.723821509000004,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 425.1932910665346,
+          "residual_rms": 0.014096649461231776,
+          "reprop_arrival_residual": 0.09630822849087445,
+          "energy_error": 0.02824496784317413,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.75491120288343,
+            128.22733418637182,
+            130.96004220615265,
+            131.31053054509064,
+            138.48138392461885,
+            292.49592244336327
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1310,
+          "total_njev": 966,
+          "runtime_s": 53.36565309100001,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 429.5985476937858,
+          "residual_rms": 0.013032990293500135,
+          "reprop_arrival_residual": 0.12993028856222652,
+          "energy_error": 0.028146140292766207,
+          "n_switches": 4,
+          "switch_times_days": [
+            135.50364609521273,
+            138.0094935514351,
+            143.02949469157005,
+            291.0806906107525
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 826,
+          "total_njev": 650,
+          "runtime_s": 22.41798169900005,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 432.0621303650114,
+          "residual_rms": 0.013719049196242237,
+          "reprop_arrival_residual": 0.10243670638559621,
+          "energy_error": 0.026990382672455654,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.22723414124034,
+            127.51896441195359,
+            133.78224887605947,
+            134.7526968287586,
+            139.92512010891184,
+            291.17683117004157
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1311,
+          "total_njev": 979,
+          "runtime_s": 44.91133108500003,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1005": {
+        "coarse": {
+          "seed": 1005,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 437.7947453670714,
+          "residual_rms": 0.013740065663530115,
+          "reprop_arrival_residual": 0.1020913353064431,
+          "energy_error": 0.02534219696328027,
+          "n_switches": 6,
+          "switch_times_days": [
+            117.94185651222635,
+            120.44495422902143,
+            134.75068082489216,
+            135.5004143852502,
+            143.02975603881168,
+            291.08068943675147
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 840,
+          "total_njev": 639,
+          "runtime_s": 22.15636573000006,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1005,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 434.44899633504974,
+          "residual_rms": 0.014858321442246716,
+          "reprop_arrival_residual": 0.1034963423097441,
+          "energy_error": 0.031382438246598074,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.62337806619746,
+            128.56039987802765,
+            131.99902648029988,
+            132.6933753066118,
+            139.9265416772497,
+            293.2346113662912
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1363,
+          "total_njev": 973,
+          "runtime_s": 45.78931014400007,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1006": {
+        "coarse": {
+          "seed": 1006,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 438.115111483512,
+          "residual_rms": 0.013613343531469556,
+          "reprop_arrival_residual": 0.11664428320273422,
+          "energy_error": 0.0314481045976291,
+          "n_switches": 4,
+          "switch_times_days": [
+            135.50317437607572,
+            138.0097699778755,
+            143.0297074307335,
+            291.0806884804207
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 914,
+          "total_njev": 679,
+          "runtime_s": 23.024167635999902,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1006,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 433.5106183643802,
+          "residual_rms": 0.015296576766973817,
+          "reprop_arrival_residual": 0.10153599095102006,
+          "energy_error": 0.02879813924910253,
+          "n_switches": 6,
+          "switch_times_days": [
+            125.52231825769056,
+            126.53055944316807,
+            130.73923996932805,
+            131.1956906095214,
+            138.89724137753524,
+            292.2057137254531
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1480,
+          "total_njev": 1039,
+          "runtime_s": 48.427762691999874,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1007": {
+        "coarse": {
+          "seed": 1007,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 442.83492797967483,
+          "residual_rms": 0.014669868562960937,
+          "reprop_arrival_residual": 0.1350135763822837,
+          "energy_error": 0.032193699466466656,
+          "n_switches": 6,
+          "switch_times_days": [
+            120.45130346054518,
+            122.95505380428608,
+            135.12868570989636,
+            135.46644429684721,
+            145.53811701699934,
+            293.5899027214009
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 822,
+          "total_njev": 636,
+          "runtime_s": 21.069116413000074,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1007,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 446.26711386081297,
+          "residual_rms": 0.015149311847678827,
+          "reprop_arrival_residual": 0.1281935982559867,
+          "energy_error": 0.03650210048651231,
+          "n_switches": 4,
+          "switch_times_days": [
+            128.6283574336208,
+            128.91101930211306,
+            141.98572606324493,
+            292.20570513170355
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 1274,
+          "total_njev": 934,
+          "runtime_s": 41.373663144000034,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1008": {
+        "coarse": {
+          "seed": 1008,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 426.88214362351573,
+          "residual_rms": 0.012851268636211149,
+          "reprop_arrival_residual": 0.0988366036416235,
+          "energy_error": 0.02504782216442886,
+          "n_switches": 6,
+          "switch_times_days": [
+            120.60340216259033,
+            122.95673783527752,
+            133.00997153167464,
+            135.50346256781373,
+            143.02989159454688,
+            291.08069101556094
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 804,
+          "total_njev": 635,
+          "runtime_s": 21.84807404700007,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1008,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 424.9891608988037,
+          "residual_rms": 0.013720422234269256,
+          "reprop_arrival_residual": 0.095168247562322,
+          "energy_error": 0.03176499268812651,
+          "n_switches": 6,
+          "switch_times_days": [
+            126.57707470381689,
+            126.85208427312162,
+            133.06499629739238,
+            133.2655769211432,
+            136.86708513449128,
+            291.68501081708143
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1284,
+          "total_njev": 963,
+          "runtime_s": 58.06823094899994,
+          "n_unknowns": 640,
+          "n_residuals": 5920
+        }
+      },
+      "1009": {
+        "coarse": {
+          "seed": 1009,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 430.2430651487157,
+          "residual_rms": 0.01337552748705687,
+          "reprop_arrival_residual": 0.09833109653518735,
+          "energy_error": 0.02431066296813058,
+          "n_switches": 6,
+          "switch_times_days": [
+            122.95967275350174,
+            125.45174549073857,
+            132.99596601251167,
+            135.48953672692596,
+            143.02988189818947,
+            291.08068994613626
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 842,
+          "total_njev": 647,
+          "runtime_s": 21.11163875000011,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1009,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 431.8517057454301,
+          "residual_rms": 0.014041067638168415,
+          "reprop_arrival_residual": 0.10206217352472072,
+          "energy_error": 0.026360134423273913,
+          "n_switches": 6,
+          "switch_times_days": [
+            127.60174551168436,
+            128.4817220301361,
+            132.7026515813078,
+            133.57067178387817,
+            139.92654574148352,
+            292.20571950645797
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON-OFF-ON",
+          "total_nfev": 1399,
+          "total_njev": 1008,
+          "runtime_s": 45.844798413000035,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      }
+    }
+  },
+  "ablation_c_rho_schedule": {
+    "n5_to_1e-10": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 457.73920106230446,
+          "residual_rms": 0.008000919403080559,
+          "reprop_arrival_residual": 0.5965198622824242,
+          "energy_error": 0.1349577662708544,
+          "n_switches": 2,
+          "switch_times_days": [
+            164.54867559021994,
+            282.27388220929146
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 168,
+          "total_njev": 92,
+          "runtime_s": 3.8744360389998747,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 524.7885643104362,
+          "residual_rms": 0.0040989576633863435,
+          "reprop_arrival_residual": 0.6358040590066678,
+          "energy_error": 0.12387893951215574,
+          "n_switches": 2,
+          "switch_times_days": [
+            161.5364393346093,
+            273.6855693166862
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 313,
+          "total_njev": 172,
+          "runtime_s": 9.698739827999816,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 457.73920123337246,
+          "residual_rms": 0.008001912834863078,
+          "reprop_arrival_residual": 0.596519845486956,
+          "energy_error": 0.13495776644117408,
+          "n_switches": 2,
+          "switch_times_days": [
+            164.54867559018476,
+            282.273882174989
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 638,
+          "total_njev": 326,
+          "runtime_s": 14.704225554999994,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 524.7876333487176,
+          "residual_rms": 0.004098942948641416,
+          "reprop_arrival_residual": 0.6357886527623909,
+          "energy_error": 0.12387353203081408,
+          "n_switches": 2,
+          "switch_times_days": [
+            161.53643933558047,
+            273.68556931991986
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 783,
+          "total_njev": 406,
+          "runtime_s": 20.977824257999828,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 457.7392010249846,
+          "residual_rms": 0.008000705141135163,
+          "reprop_arrival_residual": 0.5965195232012727,
+          "energy_error": 0.13495776623751718,
+          "n_switches": 2,
+          "switch_times_days": [
+            164.5486755902277,
+            282.273882216804
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 175,
+          "total_njev": 95,
+          "runtime_s": 3.955315862000134,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 524.7886345479899,
+          "residual_rms": 0.004098958795703244,
+          "reprop_arrival_residual": 0.6358052076398224,
+          "energy_error": 0.12387934643160829,
+          "n_switches": 2,
+          "switch_times_days": [
+            161.53643933453642,
+            273.6855693164429
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 320,
+          "total_njev": 175,
+          "runtime_s": 9.770588117000216,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 457.7392011394227,
+          "residual_rms": 0.00800136830586006,
+          "reprop_arrival_residual": 0.5965198491750897,
+          "energy_error": 0.1349577663443999,
+          "n_switches": 2,
+          "switch_times_days": [
+            164.54867559020408,
+            282.2738821937777
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 224,
+          "total_njev": 119,
+          "runtime_s": 4.3812104060000365,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 524.7882557152916,
+          "residual_rms": 0.00409895279624379,
+          "reprop_arrival_residual": 0.6357989669723768,
+          "energy_error": 0.12387714855257459,
+          "n_switches": 2,
+          "switch_times_days": [
+            161.53643933493055,
+            273.6855693177569
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 369,
+          "total_njev": 199,
+          "runtime_s": 9.433325823000132,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 457.73920123067296,
+          "residual_rms": 0.008001898557594594,
+          "reprop_arrival_residual": 0.5965198427942153,
+          "energy_error": 0.13495776643977445,
+          "n_switches": 2,
+          "switch_times_days": [
+            164.54867559018527,
+            282.2738821755574
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 165,
+          "total_njev": 90,
+          "runtime_s": 3.1742344009999215,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 524.7877334669229,
+          "residual_rms": 0.004098944592593779,
+          "reprop_arrival_residual": 0.6357903105149028,
+          "energy_error": 0.12387411295782456,
+          "n_switches": 2,
+          "switch_times_days": [
+            161.53643933547548,
+            273.6855693195723
+          ],
+          "thrust_sequence": "ON-OFF-ON",
+          "total_nfev": 310,
+          "total_njev": 170,
+          "runtime_s": 8.260133995999922,
+          "n_unknowns": 640,
+          "n_residuals": 2720
+        }
+      }
+    },
+    "n10_to_1e-10": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.7683624618786,
+          "residual_rms": 0.002219450602055032,
+          "reprop_arrival_residual": 0.09492995676076485,
+          "energy_error": 0.015361789824920468,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049480263497,
+            66.54494555376976,
+            144.9766253569495,
+            294.18244864327556
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 94,
+          "total_njev": 72,
+          "runtime_s": 1.8700379199999588,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 392.6500057020145,
+          "residual_rms": 0.004885240611391114,
+          "reprop_arrival_residual": 0.08013914255456918,
+          "energy_error": 0.010820502587291779,
+          "n_switches": 4,
+          "switch_times_days": [
+            47.88690541786955,
+            70.53536070997889,
+            143.01241025746623,
+            290.5546390283792
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 191,
+          "total_njev": 151,
+          "runtime_s": 7.497689262999984,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.76836246188225,
+          "residual_rms": 0.0022194506020185804,
+          "reprop_arrival_residual": 0.09492993522849313,
+          "energy_error": 0.015361789824938065,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049480263487,
+            66.54494555376986,
+            144.97662535694948,
+            294.1824486432755
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 564,
+          "total_njev": 306,
+          "runtime_s": 10.831059417999995,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 392.65000570201437,
+          "residual_rms": 0.004885240630330404,
+          "reprop_arrival_residual": 0.08013917030219313,
+          "energy_error": 0.010820502587292334,
+          "n_switches": 4,
+          "switch_times_days": [
+            47.88690541786958,
+            70.53536070997885,
+            143.01241025746623,
+            290.5546390283792
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 661,
+          "total_njev": 385,
+          "runtime_s": 15.98773487099993,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.7683624618826,
+          "residual_rms": 0.0022194506019855577,
+          "reprop_arrival_residual": 0.09492996028261222,
+          "energy_error": 0.015361789824930293,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.3004948026349,
+            66.54494555376976,
+            144.9766253569495,
+            294.1824486432755
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 101,
+          "total_njev": 75,
+          "runtime_s": 2.000625353000032,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 392.65000570201437,
+          "residual_rms": 0.00488524061119187,
+          "reprop_arrival_residual": 0.08013941611269605,
+          "energy_error": 0.010820502587291945,
+          "n_switches": 4,
+          "switch_times_days": [
+            47.88690541786958,
+            70.53536070997889,
+            143.01241025746626,
+            290.5546390283792
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 198,
+          "total_njev": 154,
+          "runtime_s": 7.443022275000203,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.76836246188043,
+          "residual_rms": 0.002219450602014118,
+          "reprop_arrival_residual": 0.09492960069581959,
+          "energy_error": 0.01536178982493812,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049480263487,
+            66.54494555376986,
+            144.97662535694957,
+            294.1824486432755
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 150,
+          "total_njev": 99,
+          "runtime_s": 3.0513293900000917,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 392.6500057020148,
+          "residual_rms": 0.004885240611269924,
+          "reprop_arrival_residual": 0.08013916759781627,
+          "energy_error": 0.010820502587291945,
+          "n_switches": 4,
+          "switch_times_days": [
+            47.886905417869535,
+            70.5353607099788,
+            143.01241025746623,
+            290.5546390283792
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 247,
+          "total_njev": 178,
+          "runtime_s": 8.408807140000135,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.7683624618817,
+          "residual_rms": 0.002219450601998408,
+          "reprop_arrival_residual": 0.09492995882982784,
+          "energy_error": 0.015361789824949167,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049480263494,
+            66.5449455537699,
+            144.97662535694957,
+            294.1824486432755
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 91,
+          "total_njev": 70,
+          "runtime_s": 1.8907026749998295,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 392.6500057020147,
+          "residual_rms": 0.004885240637354404,
+          "reprop_arrival_residual": 0.08013916185819135,
+          "energy_error": 0.010820502587291279,
+          "n_switches": 4,
+          "switch_times_days": [
+            47.88690541786967,
+            70.5353607099788,
+            143.01241025746626,
+            290.5546390283792
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 188,
+          "total_njev": 149,
+          "runtime_s": 7.2820381539997925,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "n20_to_1e-10": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909446,
+          "residual_rms": 0.002055750899775939,
+          "reprop_arrival_residual": 0.08640623882401803,
+          "energy_error": 0.016072399848884898,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300493410916474,
+            66.544947991202,
+            144.97662458475443,
+            291.287319929795
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 108,
+          "total_njev": 101,
+          "runtime_s": 2.265021594000018,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163404,
+          "residual_rms": 0.004800482557487278,
+          "reprop_arrival_residual": 0.0362974484672878,
+          "energy_error": 0.008243460298962823,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905818,
+            68.59397192098882,
+            141.7181210380852,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 240,
+          "total_njev": 226,
+          "runtime_s": 10.139144034000083,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909445,
+          "residual_rms": 0.002055750899916319,
+          "reprop_arrival_residual": 0.0864062424823141,
+          "energy_error": 0.01607239984888362,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091656,
+            66.54494799120222,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 578,
+          "total_njev": 335,
+          "runtime_s": 11.549573892999888,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634077,
+          "residual_rms": 0.004800482557382185,
+          "reprop_arrival_residual": 0.03629743964487029,
+          "energy_error": 0.008243460298963045,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.828239819058155,
+            68.59397192098882,
+            141.7181210380852,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 710,
+          "total_njev": 460,
+          "runtime_s": 19.358661555999788,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69662579094484,
+          "residual_rms": 0.002055750892768516,
+          "reprop_arrival_residual": 0.08640624416483506,
+          "energy_error": 0.01607239984888301,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091649,
+            66.54494799120204,
+            144.97662458475443,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 115,
+          "total_njev": 104,
+          "runtime_s": 2.2580490410000493,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634054,
+          "residual_rms": 0.004800482557382186,
+          "reprop_arrival_residual": 0.03629744863671163,
+          "energy_error": 0.008243460298963433,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905824,
+            68.59397192098875,
+            141.71812103808517,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 247,
+          "total_njev": 229,
+          "runtime_s": 9.913185087000102,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909446,
+          "residual_rms": 0.002055750892764026,
+          "reprop_arrival_residual": 0.08640623857890137,
+          "energy_error": 0.016072399848883232,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091652,
+            66.54494799120205,
+            144.97662458475446,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 164,
+          "total_njev": 128,
+          "runtime_s": 3.135398840999869,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.52153231634065,
+          "residual_rms": 0.004800482557555513,
+          "reprop_arrival_residual": 0.03629744420485053,
+          "energy_error": 0.008243460298962934,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905818,
+            68.59397192098888,
+            141.71812103808523,
+            290.5546391819568
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 296,
+          "total_njev": 253,
+          "runtime_s": 10.593928002999746,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6966257909447,
+          "residual_rms": 0.0020557508997267678,
+          "reprop_arrival_residual": 0.08640629203563321,
+          "energy_error": 0.01607239984888501,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049341091646,
+            66.544947991202,
+            144.97662458475446,
+            291.28731992979493
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 105,
+          "total_njev": 99,
+          "runtime_s": 2.0812764960001005,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 396.5215323163403,
+          "residual_rms": 0.004800482557385816,
+          "reprop_arrival_residual": 0.03629746039799867,
+          "energy_error": 0.008243460298963489,
+          "n_switches": 4,
+          "switch_times_days": [
+            49.82823981905816,
+            68.59397192098871,
+            141.71812103808517,
+            290.55463918195676
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 237,
+          "total_njev": 224,
+          "runtime_s": 9.828217903999985,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "n40_to_1e-10": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.2738371423176,
+          "residual_rms": 0.00219868172700795,
+          "reprop_arrival_residual": 0.02432234212668443,
+          "energy_error": 0.004164669782694131,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.300438637150535,
+            69.6697688472888,
+            144.97662316203017,
+            291.28731820578815
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 194,
+          "total_njev": 188,
+          "runtime_s": 3.7946052889999464,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 398.3388952678122,
+          "residual_rms": 0.004810463697830498,
+          "reprop_arrival_residual": 0.12534889298800778,
+          "energy_error": 0.021755252873480492,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.71059221837403,
+            71.1825002570865,
+            141.07104653433905,
+            290.554638332104
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 445,
+          "total_njev": 437,
+          "runtime_s": 21.31838451999988,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.2738371423176,
+          "residual_rms": 0.002198681734191768,
+          "reprop_arrival_residual": 0.024322346165481047,
+          "energy_error": 0.004164669782694402,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043863715061,
+            69.6697688472888,
+            144.9766231620302,
+            291.28731820578815
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 664,
+          "total_njev": 422,
+          "runtime_s": 15.419354634000001,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 398.33889526781206,
+          "residual_rms": 0.0048104636978077665,
+          "reprop_arrival_residual": 0.12534889224667994,
+          "energy_error": 0.02175525287348066,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.710592218374074,
+            71.18250025708667,
+            141.07104653433905,
+            290.554638332104
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 915,
+          "total_njev": 671,
+          "runtime_s": 33.428074740000056,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.27383714231746,
+          "residual_rms": 0.002198681731722303,
+          "reprop_arrival_residual": 0.024322350268089755,
+          "energy_error": 0.0041646697827006675,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043863715052,
+            69.6697688472888,
+            144.97662316203028,
+            291.28731820578815
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 201,
+          "total_njev": 191,
+          "runtime_s": 4.809933535000027,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 398.33889526781195,
+          "residual_rms": 0.004810463697812605,
+          "reprop_arrival_residual": 0.125348766033984,
+          "energy_error": 0.021755252873480714,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.71059221837398,
+            71.18250025708663,
+            141.07104653433913,
+            290.55463833210393
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 452,
+          "total_njev": 440,
+          "runtime_s": 23.688175065999985,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.2738371423177,
+          "residual_rms": 0.0021986817324914144,
+          "reprop_arrival_residual": 0.024322348315935306,
+          "energy_error": 0.0041646697826952,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043863715056,
+            69.66976884728871,
+            144.97662316203022,
+            291.28731820578815
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 250,
+          "total_njev": 215,
+          "runtime_s": 5.87936062100016,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 398.33889526781206,
+          "residual_rms": 0.004810463697807767,
+          "reprop_arrival_residual": 0.1253488683827447,
+          "energy_error": 0.021755252873480548,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.710592218374074,
+            71.18250025708669,
+            141.07104653433905,
+            290.55463833210393
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 501,
+          "total_njev": 464,
+          "runtime_s": 23.00219134100007,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": true,
+          "success_reprop_1e1": true,
+          "fuel_kg": 397.2738371423177,
+          "residual_rms": 0.002198681738166899,
+          "reprop_arrival_residual": 0.024322316068703026,
+          "energy_error": 0.004164669782696678,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30043863715052,
+            69.66976884728875,
+            144.97662316203025,
+            291.28731820578815
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 191,
+          "total_njev": 186,
+          "runtime_s": 4.527454057000114,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 398.33889526781206,
+          "residual_rms": 0.00481046369782056,
+          "reprop_arrival_residual": 0.12534888333376268,
+          "energy_error": 0.021755252873480325,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.71059221837403,
+            71.18250025708662,
+            141.07104653433905,
+            290.554638332104
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 442,
+          "total_njev": 435,
+          "runtime_s": 23.51510998499998,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "n20_to_1e-3": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69788002151483,
+          "residual_rms": 0.0020557573419999454,
+          "reprop_arrival_residual": 0.08534584874796804,
+          "energy_error": 0.015893201004892114,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.29807205079054,
+            66.5471905646,
+            144.97661384404938,
+            291.2840753744569
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 145,
+          "total_njev": 139,
+          "runtime_s": 4.101194378000173,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.8062821087524,
+          "residual_rms": 0.004641173606554308,
+          "reprop_arrival_residual": 0.07735981828811976,
+          "energy_error": 0.014766102415865954,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.70583925495376,
+            71.17342643979369,
+            141.0706173183197,
+            290.5530432931111
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 410,
+          "total_njev": 404,
+          "runtime_s": 25.76705655600017,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69788002151483,
+          "residual_rms": 0.0020557573419999436,
+          "reprop_arrival_residual": 0.08534587936483354,
+          "energy_error": 0.015893201004892225,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.29807205079054,
+            66.54719056459992,
+            144.97661384404944,
+            291.2840753744569
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 615,
+          "total_njev": 373,
+          "runtime_s": 15.67720691799991,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.8062821087524,
+          "residual_rms": 0.004641173606554255,
+          "reprop_arrival_residual": 0.07735979676725548,
+          "energy_error": 0.014766102415865122,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.705839254953965,
+            71.17342643979381,
+            141.07061731831976,
+            290.5530432931111
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 880,
+          "total_njev": 638,
+          "runtime_s": 36.72424454299994,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69788002151483,
+          "residual_rms": 0.002055757341999947,
+          "reprop_arrival_residual": 0.08534587296199364,
+          "energy_error": 0.015893201004892225,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.29807205079059,
+            66.54719056459992,
+            144.97661384404938,
+            291.28407537445685
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 152,
+          "total_njev": 142,
+          "runtime_s": 4.025347821999958,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.8062821087527,
+          "residual_rms": 0.004641173606554289,
+          "reprop_arrival_residual": 0.0773597987962889,
+          "energy_error": 0.014766102415864622,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.705839254953815,
+            71.17342643979359,
+            141.07061731831973,
+            290.5530432931111
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 417,
+          "total_njev": 407,
+          "runtime_s": 24.661639914000034,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69788002151483,
+          "residual_rms": 0.002055757341999942,
+          "reprop_arrival_residual": 0.08534587478659313,
+          "energy_error": 0.01589320100489228,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.29807205079057,
+            66.54719056459997,
+            144.9766138440494,
+            291.2840753744569
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 201,
+          "total_njev": 166,
+          "runtime_s": 5.353650830000106,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.8062821087524,
+          "residual_rms": 0.0046411736065542775,
+          "reprop_arrival_residual": 0.07736000617365343,
+          "energy_error": 0.014766102415865621,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.705839254953965,
+            71.1734264397936,
+            141.07061731831976,
+            290.5530432931111
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 466,
+          "total_njev": 431,
+          "runtime_s": 27.296825487000206,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69788002151483,
+          "residual_rms": 0.0020557573419999428,
+          "reprop_arrival_residual": 0.08534581392994867,
+          "energy_error": 0.015893201004892502,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.29807205079051,
+            66.54719056459994,
+            144.9766138440494,
+            291.2840753744569
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 142,
+          "total_njev": 137,
+          "runtime_s": 3.914606647000028,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 398.8062821087524,
+          "residual_rms": 0.004641173606554288,
+          "reprop_arrival_residual": 0.07735980333463523,
+          "energy_error": 0.014766102415864622,
+          "n_switches": 4,
+          "switch_times_days": [
+            53.705839254953915,
+            71.17342643979359,
+            141.0706173183198,
+            290.55304329311116
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 407,
+          "total_njev": 402,
+          "runtime_s": 25.123265550000042,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    },
+    "n20_to_1e-6": {
+      "1000": {
+        "coarse": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6954966203517,
+          "residual_rms": 0.0020557499796713514,
+          "reprop_arrival_residual": 0.08641451747496733,
+          "energy_error": 0.016073349502085568,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049070840604,
+            66.54494977465271,
+            144.97662457155064,
+            291.2873166750806
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 120,
+          "total_njev": 114,
+          "runtime_s": 3.318978639999841,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1000,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 397.2058125184968,
+          "residual_rms": 0.004785626900607063,
+          "reprop_arrival_residual": 0.10564060787229225,
+          "energy_error": 0.019192953779871503,
+          "n_switches": 4,
+          "switch_times_days": [
+            52.416810605231845,
+            70.53527744107356,
+            141.07104629983436,
+            290.5546372030524
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 293,
+          "total_njev": 287,
+          "runtime_s": 17.3671480659998,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1001": {
+        "coarse": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6954966203517,
+          "residual_rms": 0.0020557499796713557,
+          "reprop_arrival_residual": 0.08641484428353043,
+          "energy_error": 0.016073349502085735,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049070840599,
+            66.54494977465272,
+            144.97662457155067,
+            291.28731667508066
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 590,
+          "total_njev": 348,
+          "runtime_s": 14.923192394999887,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1001,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 397.2058125184967,
+          "residual_rms": 0.004785626900607064,
+          "reprop_arrival_residual": 0.10564060224913607,
+          "energy_error": 0.01919295377987167,
+          "n_switches": 4,
+          "switch_times_days": [
+            52.41681060523187,
+            70.5352774410735,
+            141.07104629983428,
+            290.55463720305244
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 763,
+          "total_njev": 521,
+          "runtime_s": 28.3471733949998,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1002": {
+        "coarse": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6954966203517,
+          "residual_rms": 0.002055749979671345,
+          "reprop_arrival_residual": 0.08641485631583944,
+          "energy_error": 0.0160733495020854,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049070840612,
+            66.54494977465279,
+            144.97662457155064,
+            291.28731667508066
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 127,
+          "total_njev": 117,
+          "runtime_s": 3.340087949000008,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1002,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 397.20581251849694,
+          "residual_rms": 0.004785626900607063,
+          "reprop_arrival_residual": 0.10564060127174198,
+          "energy_error": 0.019192953779871447,
+          "n_switches": 4,
+          "switch_times_days": [
+            52.41681060523177,
+            70.53527744107352,
+            141.07104629983434,
+            290.55463720305244
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 300,
+          "total_njev": 290,
+          "runtime_s": 16.75880096700007,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1003": {
+        "coarse": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.6954966203517,
+          "residual_rms": 0.0020557499796713522,
+          "reprop_arrival_residual": 0.08641483526928799,
+          "energy_error": 0.0160733495020854,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049070840607,
+            66.54494977465272,
+            144.97662457155067,
+            291.28731667508066
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 176,
+          "total_njev": 141,
+          "runtime_s": 4.583473312999786,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1003,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 397.2058125184968,
+          "residual_rms": 0.004785626900607067,
+          "reprop_arrival_residual": 0.10564060344119289,
+          "energy_error": 0.019192953779871447,
+          "n_switches": 4,
+          "switch_times_days": [
+            52.41681060523187,
+            70.53527744107356,
+            141.0710462998343,
+            290.55463720305244
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 349,
+          "total_njev": 314,
+          "runtime_s": 18.313912622999624,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      },
+      "1004": {
+        "coarse": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": true,
+          "fuel_kg": 400.69549662035183,
+          "residual_rms": 0.0020557499796713522,
+          "reprop_arrival_residual": 0.08641485660609424,
+          "energy_error": 0.016073349502085568,
+          "n_switches": 4,
+          "switch_times_days": [
+            46.30049070840605,
+            66.54494977465275,
+            144.97662457155064,
+            291.28731667508066
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 117,
+          "total_njev": 112,
+          "runtime_s": 3.653031623000061,
+          "n_unknowns": 560,
+          "n_residuals": 1120
+        },
+        "refined": {
+          "seed": 1004,
+          "success": false,
+          "success_reprop_1e1": false,
+          "fuel_kg": 397.2058125184967,
+          "residual_rms": 0.0047856269006070614,
+          "reprop_arrival_residual": 0.10564061514809153,
+          "energy_error": 0.019192953779871447,
+          "n_switches": 4,
+          "switch_times_days": [
+            52.41681060523187,
+            70.53527744107356,
+            141.07104629983425,
+            290.5546372030524
+          ],
+          "thrust_sequence": "ON-OFF-ON-OFF-ON",
+          "total_nfev": 290,
+          "total_njev": 285,
+          "runtime_s": 18.265594747000023,
+          "n_unknowns": 640,
+          "n_residuals": 4320
+        }
+      }
+    }
+  },
+  "ablation_d_grid_and_solver": {
+    "uniform_140_lm_svd": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": -16.076283142911734,
+        "residual_rms": 6.857115925280076e-06,
+        "reprop_arrival_residual": 1.4863717977501274,
+        "energy_error": 0.7647119106634185,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "OFF",
+        "total_nfev": 75,
+        "total_njev": 60,
+        "runtime_s": 1.6983706070000153,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": -15.033026714240464,
+        "residual_rms": 6.708685730179524e-06,
+        "reprop_arrival_residual": 1.4863717977501274,
+        "energy_error": 0.764349902003342,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "OFF",
+        "total_nfev": 64,
+        "total_njev": 56,
+        "runtime_s": 1.3858202769999934,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1002": {
+        "seed": 1002,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": -0.4621209594404263,
+        "residual_rms": 6.590527383370449e-06,
+        "reprop_arrival_residual": 1.4863717977501274,
+        "energy_error": 0.7641474068346427,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "OFF",
+        "total_nfev": 60,
+        "total_njev": 55,
+        "runtime_s": 1.3084986200001367,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 336.806411520544,
+        "residual_rms": 0.004541333342778817,
+        "reprop_arrival_residual": 3.105227749486713,
+        "energy_error": 0.5435569808386961,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "ON",
+        "total_nfev": 970,
+        "total_njev": 515,
+        "runtime_s": 23.618135414000108,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 10.607511386733563,
+        "residual_rms": 6.590641580238082e-06,
+        "reprop_arrival_residual": 1.4863717977501274,
+        "energy_error": 0.764159394914834,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "OFF",
+        "total_nfev": 66,
+        "total_njev": 59,
+        "runtime_s": 1.5076602049998655,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      }
+    },
+    "cgl_140_lm_svd": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909446,
+        "residual_rms": 0.002055750899775939,
+        "reprop_arrival_residual": 0.08640623882401803,
+        "energy_error": 0.016072399848884898,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493410916474,
+          66.544947991202,
+          144.97662458475443,
+          291.287319929795
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 108,
+        "total_njev": 101,
+        "runtime_s": 2.853759769999897,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 629.0763985124984,
+        "residual_rms": 0.01650958417447659,
+        "reprop_arrival_residual": 2.0037240069321647,
+        "energy_error": 0.382657863032009,
+        "n_switches": 2,
+        "switch_times_days": [
+          266.11211505491576,
+          266.6922334481222
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 863,
+        "total_njev": 452,
+        "runtime_s": 21.721953172999974,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1002": {
+        "seed": 1002,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.69662579094484,
+        "residual_rms": 0.002055750892768516,
+        "reprop_arrival_residual": 0.08640624416483506,
+        "energy_error": 0.01607239984888301,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091649,
+          66.54494799120204,
+          144.97662458475443,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 115,
+        "total_njev": 104,
+        "runtime_s": 3.0234487320001335,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909446,
+        "residual_rms": 0.002055750892764026,
+        "reprop_arrival_residual": 0.08640623857890137,
+        "energy_error": 0.016072399848883232,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091652,
+          66.54494799120205,
+          144.97662458475446,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 164,
+        "total_njev": 128,
+        "runtime_s": 3.993176640999991,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6966257909447,
+        "residual_rms": 0.0020557508997267678,
+        "reprop_arrival_residual": 0.08640629203563321,
+        "energy_error": 0.01607239984888501,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341091646,
+          66.544947991202,
+          144.97662458475446,
+          291.28731992979493
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 105,
+        "total_njev": 99,
+        "runtime_s": 2.7541268169998148,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      }
+    },
+    "cgl_140_scipy_lm": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.69845789358635,
+        "residual_rms": 0.0020557499298585334,
+        "reprop_arrival_residual": 0.08640288817400966,
+        "energy_error": 0.01607167599013686,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341572561,
+          66.5449479918271,
+          144.9766245840858,
+          291.28731993419103
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 167,
+        "total_njev": 126,
+        "runtime_s": 20.458184460999973,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 544.4997165517591,
+        "residual_rms": 0.24039106331398508,
+        "reprop_arrival_residual": 3.0298304139068546,
+        "energy_error": 2.7886592371869767,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "ON",
+        "total_nfev": 155,
+        "total_njev": 80,
+        "runtime_s": 15.524526380999987,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1002": {
+        "seed": 1002,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.69843499333285,
+        "residual_rms": 0.0020557499293271577,
+        "reprop_arrival_residual": 0.08640271883952014,
+        "energy_error": 0.016071651020199074,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493416009,
+          66.54494799211736,
+          144.97662458402417,
+          291.2873199341246
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 167,
+        "total_njev": 126,
+        "runtime_s": 20.012103756999977,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 941.429351077316,
+        "residual_rms": 0.06198994770196784,
+        "reprop_arrival_residual": 0.8816782936509681,
+        "energy_error": 0.3453242441404077,
+        "n_switches": 2,
+        "switch_times_days": [
+          242.29395550275882,
+          314.16973247895635
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 175,
+        "total_njev": 80,
+        "runtime_s": 17.170973475999972,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.6984367836053,
+        "residual_rms": 0.0020557499293167155,
+        "reprop_arrival_residual": 0.08640274026754899,
+        "energy_error": 0.01607165256957831,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493415988996,
+          66.54494799209544,
+          144.97662458402772,
+          291.2873199341288
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 278,
+        "total_njev": 215,
+        "runtime_s": 36.20015860000012,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      }
+    },
+    "cgl_140_scipy_trf": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.69838998934733,
+        "residual_rms": 0.002055749928116883,
+        "reprop_arrival_residual": 0.08640234412843277,
+        "energy_error": 0.016071627248715414,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.30049341632042,
+          66.54494799251975,
+          144.97662458402655,
+          291.28731993406524
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 196,
+        "total_njev": 155,
+        "runtime_s": 37.84153520699988,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1001": {
+        "seed": 1001,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 518.7294054987992,
+        "residual_rms": 0.22408390322563637,
+        "reprop_arrival_residual": 2.788844970724291,
+        "energy_error": 1.6238090217619086,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "ON",
+        "total_nfev": 222,
+        "total_njev": 108,
+        "runtime_s": 28.612967330999936,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1002": {
+        "seed": 1002,
+        "success": false,
+        "success_reprop_1e1": true,
+        "fuel_kg": 400.698391035551,
+        "residual_rms": 0.002055749928227201,
+        "reprop_arrival_residual": 0.08640237186036574,
+        "energy_error": 0.016071627473710992,
+        "n_switches": 4,
+        "switch_times_days": [
+          46.300493416316414,
+          66.54494799251626,
+          144.97662458402687,
+          291.2873199340663
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 187,
+        "total_njev": 149,
+        "runtime_s": 27.618348609000122,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1003": {
+        "seed": 1003,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 940.2661473908463,
+        "residual_rms": 0.06643817860116323,
+        "reprop_arrival_residual": 2.5828066324875145,
+        "energy_error": 0.35161903059941885,
+        "n_switches": 2,
+        "switch_times_days": [
+          190.18457973727334,
+          301.9953851222231
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 175,
+        "total_njev": 84,
+        "runtime_s": 17.151783269999896,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      },
+      "1004": {
+        "seed": 1004,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 604.447932362137,
+        "residual_rms": 0.016542739931870422,
+        "reprop_arrival_residual": 1.8304650871320873,
+        "energy_error": 0.3431296087709802,
+        "n_switches": 2,
+        "switch_times_days": [
+          255.846633242331,
+          259.31029488973167
+        ],
+        "thrust_sequence": "ON-OFF-ON",
+        "total_nfev": 377,
+        "total_njev": 270,
+        "runtime_s": 55.06716984000013,
+        "n_unknowns": 560,
+        "n_residuals": 1120
+      }
+    },
+    "uniform_540_lm_svd": {
+      "1000": {
+        "seed": 1000,
+        "success": false,
+        "success_reprop_1e1": false,
+        "fuel_kg": 904.2652862605345,
+        "residual_rms": 0.0822893842011233,
+        "reprop_arrival_residual": 3.2490503135678472,
+        "energy_error": 0.06614731971901637,
+        "n_switches": 0,
+        "switch_times_days": [],
+        "thrust_sequence": "ON",
+        "total_nfev": 494,
+        "total_njev": 255,
+        "runtime_s": 22.16729834500029,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1001": {
+        "seed": 1001,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.5215323163404,
+        "residual_rms": 0.004800482557497548,
+        "reprop_arrival_residual": 0.03629743340155707,
+        "energy_error": 0.008243460298963877,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905818,
+          68.59397192098875,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 210,
+        "total_njev": 172,
+        "runtime_s": 11.307128924000153,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1002": {
+        "seed": 1002,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634054,
+        "residual_rms": 0.004800482557496725,
+        "reprop_arrival_residual": 0.03629743518494365,
+        "energy_error": 0.008243460298963544,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058126,
+          68.59397192098888,
+          141.7181210380852,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 193,
+        "total_njev": 164,
+        "runtime_s": 10.498631297999964,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1003": {
+        "seed": 1003,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634054,
+        "residual_rms": 0.004800482557552323,
+        "reprop_arrival_residual": 0.036297445201462476,
+        "energy_error": 0.008243460298963544,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.828239819058204,
+          68.59397192098868,
+          141.71812103808517,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 177,
+        "total_njev": 156,
+        "runtime_s": 10.400153967999813,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      },
+      "1004": {
+        "seed": 1004,
+        "success": true,
+        "success_reprop_1e1": true,
+        "fuel_kg": 396.52153231634065,
+        "residual_rms": 0.004800482557337222,
+        "reprop_arrival_residual": 0.0362974292429367,
+        "energy_error": 0.008243460298963156,
+        "n_switches": 4,
+        "switch_times_days": [
+          49.82823981905818,
+          68.59397192098871,
+          141.71812103808512,
+          290.5546391819568
+        ],
+        "thrust_sequence": "ON-OFF-ON-OFF-ON",
+        "total_nfev": 195,
+        "total_njev": 165,
+        "runtime_s": 11.219046768000226,
+        "n_unknowns": 640,
+        "n_residuals": 4320
+      }
+    }
+  }
+}
