@@ -28,3 +28,4 @@ results/.phase1_cache.pkl
 results/.phase2_cache.pkl
 
 
+*.egg-info/

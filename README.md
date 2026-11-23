@@ -47,6 +47,26 @@ Mission: 3-D heliocentric Earth–Mars rendezvous, $m_0 = 1000	ext{ kg}$, $t_f =
 | `attitude_0.50` | attitude_flat_plate | 0.50 | 4.61e-04 | 396.647 (+0.587) [3/5] | 396.699 [4/5] | 396.662 (max_it, 0/1) | [46.82, 68.05, 142.69, 290.17] |
 | `attitude_1.00` | attitude_flat_plate | 1.00 | 9.23e-04 | 397.236 (+1.176) [4/5] | 398.066 [4/5] | 397.077 (max_it, 0/1) | [47.06, 68.07, 142.66, 290.09] |
 
+### Preregistered Benchmark & Hybrid Evaluation — Fresh Seeds 2000..2099
+
+Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose $< 5	imes 10^-2$, strict $< 1	imes 10^-2$) and exact two-sided McNemar test ($p < 0.05$, $\Delta \ge +15.0	ext{ pp}$):
+
+#### Scenario A 4-Method Benchmark (Fresh Seeds 2000..2099)
+| Method (100 fresh seeds 2000..2099) | Conv (<5e-2, loose) [95% CI] | Conv (<1e-2, strict) [95% CI] | Fuel Med [Min, Max] (kg) | Reprop Med | Energy Err Med | Runtime Med (s) | nfev / njev Med |
+| --- | :---: | :---: | :---: | ---: | ---: | ---: | :---: |
+| PoNN (frozen, scaled U(0,1)) | 92/100 (92.0%) [85.0%, 95.9%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 19.89 | 241 / 227 |
+| PoNN (frozen, exact paper U(0,1)) | 39/100 (39.0%) [30.0%, 48.8%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 25.84 | 694 / 365 |
+| Indirect Shooting (7-D costates) | 69/100 (69.0%) [59.4%, 77.2%] | 69/100 (69.0%) [59.4%, 77.2%] | 396.06 [396.06, 396.06] | 3.46e-04 | — | 22.26 | 636 / 10 |
+| 180-Node LGL Collocation (IPOPT) | 49/100 (49.0%) [39.4%, 58.7%] | 19/100 (19.0%) [12.5%, 27.8%] | 396.80 [396.09, 407.69] | 1.92e-02 | 8.46e-04 | 67.31 | 261 / 127 |
+
+#### Hybrid vs Shooting across Solar Radiation Pressure (Fresh Seeds 2000..2099)
+| SRP $A/m_0$ (m²/kg) | Mode | Shooting Strict (<1e-2) [95% CI] | Hybrid Strict (<1e-2) [95% CI] | Strict Delta (pp) | Exact McNemar $p$ | $\chi^2$ (cont. corr.) | Discordant (Shoot only / Hyb only) | Shooting Wall-Clock Med (s) | Hybrid Wall-Clock Med (s) [PoNN + Shoot] | Shoot Propagations Med | Hybrid Evaluations Med | Preregistered Verdict |
+| ---: | --- | :---: | :---: | :---: | :---: | :---: | :---: | ---: | ---: | ---: | ---: | :---: |
+| 0.00 | None | 69/100 (69.0%) [59.4%, 77.2%] | 95/100 (95.0%) [88.8%, 97.8%] | **+26.0 pp** | **8.68e-07** | 20.83 (p=5.01e-06) | b=2 / c=28 | 22.26 | 19.01 (3.31 + 15.40) | 636 | 273 (26 + 236) | **`SUPPORTED`** |
+| 0.50 | Radial | 72/100 (72.0%) [62.5%, 79.9%] | 96/100 (96.0%) [90.2%, 98.4%] | **+24.0 pp** | **8.05e-07** | 20.35 (p=6.46e-06) | b=1 / c=25 | 26.50 | 21.31 (2.85 + 18.26) | 626 | 314 (26 + 277) | **`SUPPORTED`** |
+| 1.00 | Radial | 76/100 (76.0%) [66.8%, 83.3%] | 95/100 (95.0%) [88.8%, 97.8%] | **+19.0 pp** | **6.60e-05** | 14.09 (p=1.75e-04) | b=2 / c=21 | 20.54 | 19.07 (3.28 + 15.72) | 482 | 284 (26 + 249) | **`SUPPORTED`** |
+
+
 ---
 
 ## Secondary Study — Scenario B (`1218 kg`, `0.5 N`, `Isp = 3100 s`, SRP)
@@ -70,6 +90,7 @@ Global feasibility scan (preserved in `results/phase1_results.json`) established
 - [`results/figures/scenario_a_phase_a4_ablations.png`](results/figures/scenario_a_phase_a4_ablations.png) — Phase A4 Formulation, Basis, $ho$-Schedule, and Grid/Optimizer Ablations
 - [`results/figures/scenario_a_phase_b_benchmark.png`](results/figures/scenario_a_phase_b_benchmark.png) — Phase B 100-Seed Three-Method Benchmark
 - [`results/figures/scenario_a_phase_c_srp_sweep.png`](results/figures/scenario_a_phase_c_srp_sweep.png) — Phase C Radial & Attitude Flat-Plate SRP Perturbation Sweep
+- [`results/figures/scenario_a_prereg_hybrid_comparison.png`](results/figures/scenario_a_prereg_hybrid_comparison.png) — Preregistered Hybrid vs Shooting Comparison Across SRP (Seeds 2000..2099)
 
 ---
 

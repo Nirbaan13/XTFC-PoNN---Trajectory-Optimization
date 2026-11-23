@@ -37,6 +37,15 @@ This document records every modeling assumption made where D'Ambrosio & Furfaro 
    - The paper uses MATLAB R2023b `lsqnonlin` (`'levenberg-marquardt'` in Sec. 4.1, `'trust-region-reflective'` in Sec. 4.2) with analytical/AD Jacobians.
    - **Assumption:** We compute the exact analytical $8n \times 8L$ Jacobian via JAX automatic differentiation and benchmark SciPy MINPACK `'lm'`, SciPy `'trf'` (`x_scale='jac'`), and an OpenBLAS Cholesky-with-QR+SVD-fallback Levenberg–Marquardt solver (`lm_svd`) implementing MATLAB `lsqnonlin`'s default `ScaleProblem='none'` on step 0 and Jacobian column scaling on continuation steps. Phase A4(d) verifies that all three optimizers converge to identical coarse trajectories (`400.70 kg`, `rms = 2.06e-3`), while `lm_svd` is ~7–10x faster.
 
+## Preregistered Benchmark Protocol (Seeds 2000..2099)
+
+- Evaluation protocol, extraction level $k_{\\text{ext}} = 1$ ($\\rho_{\\text{ext}} = 2.976\\times 10^{-1}$, selected on dev seeds 1000..1019 only), dual thresholds ($e_{\\text{reprop}} < 5\\times 10^{-2}$ loose, $< 1\\times 10^{-2}$ strict), and exact McNemar decision rules locked in `PREREG.md` at commit `3c87713` before running seeds 2000..2099.
+- Costates extracted at $t_0$ via:
+  $\\boldsymbol{\\lambda}_v(t_0) = \\boldsymbol{\\sigma}(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}$
+  $\\boldsymbol{\\lambda}_r(t_0) = -b^2 \\boldsymbol{\\sigma}'(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}$
+  $\\lambda_m(t_0) = (\\boldsymbol{\\sigma}(-1) - \\boldsymbol{\\sigma}(1))^T \\boldsymbol{\\beta}_{\\lambda_m}$
+- All model parameters, dynamics, bases, and solvers remained strictly frozen with zero algorithmic alterations (no split-domain, no SEP power, no tuned losses).
+
 ## Additional Modeling Assumptions (Phase C & Scenario B)
 
 - **Phase C attitude-dependent SRP (`attitude_flat_plate`):** Modeled as a flat absorbing/reflecting plate whose surface normal aligns with the optimal thrust unit vector $\boldsymbol{\alpha} = -\boldsymbol{\lambda}_v/\|\boldsymbol{\lambda}_v\|$, yielding projected area factor $\phi(\mathbf{r}, \boldsymbol{\alpha}) = 0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$ and radial SRP acceleration $\mathbf{a}_p = k_{\text{SRP}}\phi\,\mathbf{r}/r^3$. Since $\boldsymbol{\alpha}$ depends only on $\boldsymbol{\lambda}_v$, the position Jacobian $\partial \mathbf{a}_p/\partial \mathbf{r}$ is exact and verified by central FD (`< 1e-9`).

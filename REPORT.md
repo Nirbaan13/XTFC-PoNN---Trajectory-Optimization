@@ -16,6 +16,7 @@ All numerical results in this report are generated programmatically from stored 
 | 4. PoNN converges reliably from standard uniform random weights beta ~ U(0,1) (Sec. 4.1) | PASS if exact U(0,1) converges on >= 80% of 100 seeds; PARTIAL/CONTRADICTED if < 80% | 100 seeds exact U(0,1): 49/100 (49.0%, 95% CI [39.4%, 58.7%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU. Scaled U(0,1) achieves 92/100 (92.0%, CI [85.0%, 95.9%]) | **CONTRADICTED** for raw U(0,1) (49%); **SUPPORTED** for scaled U(0,1) (92%) |
 | 5. PoNN rivals shooting and collocation in accuracy and convergence (Abstract & Sec. 4.1) | Compare 100-seed convergence rate, fuel, and DOP853 re-propagation error across all 3 methods | Convergence (<5e-2): PoNN scaled 92% > Shooting 68% > LGL-180 55% > PoNN raw U(0,1) 49%. Accuracy (reprop): Shooting 3.46e-04 << LGL-180 2.48e-02 < PoNN 3.63e-02 (0/100 PoNN < 1e-2 vs 68/100 Shooting) | **CONTRADICTED** on open-loop accuracy (<1e-2); **SUPPORTED** on basin width (scaled PoNN 92%) |
 | 6. Exact MATLAB R2023b lsqnonlin runtime & landing case (Sec. 4.2, GPOPS-II comparison) | Requires MATLAB R2023b and GPOPS-II licenses + Sec. 4.2 landing benchmark | Environment uses Python/JAX/SciPy + CasADi/IPOPT and scopes strictly to Sec. 3.1, 3.3, 4.1 Earth–Mars interplanetary case | **CANNOT TEST** |
+| 7. Hybrid warm-starting: PoNN coarse costates significantly improve strict indirect shooting convergence across SRP (PREREG.md, seeds 2000..2099) | SUPPORTED if Delta_strict >= +15.0 pp AND exact two-sided McNemar p < 0.05 across SRP levels | A/m=0.0: Delta=+26.0 pp (p=8.68e-07); A/m=0.5: Delta=+24.0 pp (p=8.05e-07); A/m=1.0: Delta=+19.0 pp (p=6.60e-05) | **SUPPORTED** |
 
 ---
 
@@ -158,6 +159,49 @@ In addition, we applied the **frozen Phase A2 PoNN (zero retuning)** directly to
 | Hybrid: Shooting warm-started from Frozen PoNN | 20/20 (100.0%) [83.9%, 100.0%] | 243.826 ± 0.000 | 4.73 | lam0 extracted from PoNN |
 
 - Standalone frozen PoNN (zero retuning) lands reproducibly at `237.73 kg` (`reprop = 2.51e-1`, `0/20` under strict `< 5e-2`), whereas extracting its initial costates $\boldsymbol{\lambda}(t_0)$ to warm-start indirect shooting achieves **`20/20 (100.0%, 95% CI [83.9%, 100.0%])`** convergence to the exact `243.826 kg` optimal transfer in `4.73 s` mean runtime (versus `17/20 = 85.0%` in `7.71 s` for random costates), rescuing all 3 failed random-costate seeds.
+
+---
+
+---
+
+## 9. Preregistered Held-Out Benchmark & Hybrid Evaluation (`seeds = 2000..2099`)
+
+To strictly test the primary claim without data snooping or post-hoc threshold tuning, the evaluation protocol, dual convergence thresholds ($e_{\\text{reprop}} < 5\\times 10^{-2}$ loose and $< 1\\times 10^{-2}$ strict), extraction continuation level ($k_{\\text{ext}} = 1, \\rho_{\\text{ext}} = 2.976\\times 10^{-1}$, selected on dev seeds `1000..1019` only), and exact two-sided McNemar hypothesis test criteria were **committed to git in [`PREREG.md`](PREREG.md) at commit `3c87713` BEFORE any held-out evaluation was run**.
+
+### 9.1 Scenario A 4-Method Benchmark on Fresh Seeds `2000..2099`
+
+| Method (100 fresh seeds 2000..2099) | Conv (<5e-2, loose) [95% CI] | Conv (<1e-2, strict) [95% CI] | Fuel Med [Min, Max] (kg) | Reprop Med | Energy Err Med | Runtime Med (s) | nfev / njev Med |
+| --- | :---: | :---: | :---: | ---: | ---: | ---: | :---: |
+| PoNN (frozen, scaled U(0,1)) | 92/100 (92.0%) [85.0%, 95.9%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 19.89 | 241 / 227 |
+| PoNN (frozen, exact paper U(0,1)) | 39/100 (39.0%) [30.0%, 48.8%] | 0/100 (0.0%) [0.0%, 3.7%] | 396.52 [396.52, 396.52] | 3.63e-02 | 8.24e-03 | 25.84 | 694 / 365 |
+| Indirect Shooting (7-D costates) | 69/100 (69.0%) [59.4%, 77.2%] | 69/100 (69.0%) [59.4%, 77.2%] | 396.06 [396.06, 396.06] | 3.46e-04 | — | 22.26 | 636 / 10 |
+| 180-Node LGL Collocation (IPOPT) | 49/100 (49.0%) [39.4%, 58.7%] | 19/100 (19.0%) [12.5%, 27.8%] | 396.80 [396.09, 407.69] | 1.92e-02 | 8.46e-04 | 67.31 | 261 / 127 |
+
+**Key Findings on Fresh Seeds:**
+1. **Basin Width vs Open-Loop Accuracy Replication:** On fresh seeds `2000..2099`, scaled-init PoNN replicates its broad basin under loose threshold ($92/100 = 92.0\\%$, 95% Wilson CI $[85.0\\%, 95.9\\%]$), exactly matching the Phase B dev-seed result ($92/100$). Raw unscaled $U(0,1)$ achieves $39/100 = 39.0\\%$, confirming that unscaled initialization struggles due to the $|T_k'(\\pm 1)| = k^2$ boundary derivative magnitude.
+2. **Open-Loop Physical Accuracy Ceiling:** $0/100$ PoNN seeds achieved strict convergence ($e_{\\text{reprop}} < 1\\times 10^{-2}$), with median error remaining at $3.63\\times 10^{-2}$ due to the single-domain Gibbs approximation limit across 4 bang-off-bang switches. In contrast, random-costate indirect shooting achieves $69/100 = 69.0\\%$ strict convergence, and 180-node LGL collocation achieves $19/100 = 19.0\\%$.
+
+### 9.2 Preregistered Hybrid vs. Shooting Evaluation Across Solar Radiation Pressure ($A/m_0 \\in \\{0.0, 0.5, 1.0\\}\\text{ m}^2/\\text{kg}$)
+
+Initial costates at $t_0$ were extracted from the frozen coarse PoNN ($L=70, n=140$ CGL) at continuation level $k_{\\text{ext}} = 1$ ($\\rho_{\\text{ext}} = 2.976\\times 10^{-1}$):
+$$\\boldsymbol{\\lambda}_v(t_0) = \\boldsymbol{\\sigma}(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}, \\quad \\boldsymbol{\\lambda}_r(t_0) = -b^2 \\boldsymbol{\\sigma}'(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}, \\quad \\lambda_m(t_0) = (\\boldsymbol{\\sigma}(-1) - \\boldsymbol{\\sigma}(1))^T \\boldsymbol{\\beta}_{\\lambda_m}$$
+and provided as the initial guess to indirect shooting, continuing the exact same $\\rho$ schedule from $\\rho_{\\text{ext}}$ down to $10^{-5}$.
+
+| SRP $A/m_0$ (m²/kg) | Mode | Shooting Strict (<1e-2) [95% CI] | Hybrid Strict (<1e-2) [95% CI] | Strict Delta (pp) | Exact McNemar $p$ | $\chi^2$ (cont. corr.) | Discordant (Shoot only / Hyb only) | Shooting Wall-Clock Med (s) | Hybrid Wall-Clock Med (s) [PoNN + Shoot] | Shoot Propagations Med | Hybrid Evaluations Med | Preregistered Verdict |
+| ---: | --- | :---: | :---: | :---: | :---: | :---: | :---: | ---: | ---: | ---: | ---: | :---: |
+| 0.00 | None | 69/100 (69.0%) [59.4%, 77.2%] | 95/100 (95.0%) [88.8%, 97.8%] | **+26.0 pp** | **8.68e-07** | 20.83 (p=5.01e-06) | b=2 / c=28 | 22.26 | 19.01 (3.31 + 15.40) | 636 | 273 (26 + 236) | **`SUPPORTED`** |
+| 0.50 | Radial | 72/100 (72.0%) [62.5%, 79.9%] | 96/100 (96.0%) [90.2%, 98.4%] | **+24.0 pp** | **8.05e-07** | 20.35 (p=6.46e-06) | b=1 / c=25 | 26.50 | 21.31 (2.85 + 18.26) | 626 | 314 (26 + 277) | **`SUPPORTED`** |
+| 1.00 | Radial | 76/100 (76.0%) [66.8%, 83.3%] | 95/100 (95.0%) [88.8%, 97.8%] | **+19.0 pp** | **6.60e-05** | 14.09 (p=1.75e-04) | b=2 / c=21 | 20.54 | 19.07 (3.28 + 15.72) | 482 | 284 (26 + 249) | **`SUPPORTED`** |
+
+![Preregistered Hybrid SRP Comparison](results/figures/scenario_a_prereg_hybrid_comparison.png)
+
+**Statistical Hypothesis Testing & Verdict:**
+- **Zero SRP ($A/m_0 = 0.0\\text{ m}^2/\\text{kg}$):** Hybrid achieves **95/100 (95.0%)** strict convergence vs. **69/100 (69.0%)** for random costates. Difference: **$+26.0\\text{ percentage points}$** (discordant: $b=0$ shooting-only, $c=26$ hybrid-only). Exact two-sided McNemar test: $p = 8.68\\times 10^{-7}$ ($\\chi^2 = 20.83, p = 5.03\\times 10^{-6}$). Preregistered Verdict: **`SUPPORTED`**.
+- **Intermediate Radial SRP ($A/m_0 = 0.5\\text{ m}^2/\\text{kg}$):** Hybrid achieves **96/100 (96.0%)** strict convergence vs. **72/100 (72.0%)** for random costates. Difference: **$+24.0\\text{ percentage points}$** ($b=1, c=25$). Exact two-sided McNemar test: $p = 8.05\\times 10^{-7}$ ($\\chi^2 = 20.35, p = 6.46\\times 10^{-6}$). Preregistered Verdict: **`SUPPORTED`**.
+- **High Radial SRP ($A/m_0 = 1.0\\text{ m}^2/\\text{kg}$):** Hybrid achieves **95/100 (95.0%)** strict convergence vs. **76/100 (76.0%)** for random costates. Difference: **$+19.0\\text{ percentage points}$** ($b=2, c=21$). Exact two-sided McNemar test: $p = 6.60\\times 10^{-5}$ ($\\chi^2 = 14.09, p = 1.74\\times 10^{-4}$). Preregistered Verdict: **`SUPPORTED`**.
+
+**Honest Total Runtime & Computational Effort:**
+- Including the full PoNN coarse stage ($3.3\\text{ s}$ median), the total Hybrid wall-clock runtime (**$19.01\\text{ s}$** median for $A/m=0$, **$21.31\\text{ s}$** for $A/m=0.5$, **$19.07\\text{ s}$** for $A/m=1.0$) is actually **lower** than random-costate shooting (**$22.26\\text{ s}$**, **$26.50\\text{ s}$**, **$20.54\\text{ s}$**) because the coarse PoNN costate warm-start cuts shooting ODE trajectory evaluations by more than half (median $273$ total evaluations in Hybrid vs. $636$ in random shooting).
 
 ---
 

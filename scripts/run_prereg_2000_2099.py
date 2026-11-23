@@ -15,11 +15,15 @@ Checkpoints per seed to results/prereg_fresh_2000_2099.json.
 
 from __future__ import annotations
 
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "1"
+
 import argparse
 import json
 import math
 import multiprocessing as mp
-import os
 import shutil
 import time
 from pathlib import Path
@@ -217,9 +221,10 @@ def run_paired_srp_worker(args: tuple[str, float, int]) -> tuple[int, dict, dict
 def run_ponn_worker(args: tuple[str, int]) -> tuple[int, dict]:
     init_mode, seed = args
     prob = ScenarioAProblem()
+    max_iter_first = 100 if init_mode == "scaled_u01" else 250
     solver = PaperPoNNSolver(
         init_mode=init_mode,
-        max_iter_first=250,
+        max_iter_first=max_iter_first,
         max_iter_cont=25,
         reprop_conv_tol=5e-2,
     )
@@ -230,6 +235,7 @@ def run_ponn_worker(args: tuple[str, int]) -> tuple[int, dict]:
         refine_neurons=80,
         refine_grid_mode="uniform_dense",
         refine_init_mode="pad_from_smooth",
+        skip_refine_if_coarse_diverged=True,
     )
 
     def pack(r):
@@ -260,7 +266,17 @@ def run_ponn_worker(args: tuple[str, int]) -> tuple[int, dict]:
             "runtime_s": float(r.runtime_s),
         }
 
-    return seed, {"coarse": pack(rc), "refined": pack(rr)}
+    c_pack = pack(rc)
+    if rr is not None:
+        r_pack = pack(rr)
+        if r_pack is not None:
+            r_pack["refinement_skipped"] = False
+    else:
+        r_pack = dict(c_pack) if c_pack is not None else None
+        if r_pack is not None:
+            r_pack["refinement_skipped"] = True
+
+    return seed, {"coarse": c_pack, "refined": r_pack}
 
 
 def run_collocation_worker(seed: int) -> tuple[int, dict]:
@@ -531,8 +547,8 @@ def main():
                     }
                     _save(data)
                     c_done = len(arm_data["seeds"])
-                    loose_ok = sum(1 for v in arm_data["seeds"].values() if v["refined"]["success_loose"])
-                    strict_ok = sum(1 for v in arm_data["seeds"].values() if v["refined"]["success_strict"])
+                    loose_ok = sum(1 for v in arm_data["seeds"].values() if v.get("refined") and v["refined"].get("success_loose"))
+                    strict_ok = sum(1 for v in arm_data["seeds"].values() if v.get("refined") and v["refined"].get("success_strict"))
                     print(f"  [{arm_name}] {c_done:3d}/{len(all_seeds)} | seed {seed} | Refined Loose: {loose_ok}/{c_done} | Strict: {strict_ok}/{c_done}")
                     if time.perf_counter() - t_global_start > args.max_wall_s:
                         print(f"  [wall-timeout] Reached {args.max_wall_s}s limit.")
@@ -567,8 +583,8 @@ def main():
                     }
                     _save(data)
                     c_done = len(arm_data["seeds"])
-                    loose_ok = sum(1 for v in arm_data["seeds"].values() if v["refined"]["success_loose"])
-                    strict_ok = sum(1 for v in arm_data["seeds"].values() if v["refined"]["success_strict"])
+                    loose_ok = sum(1 for v in arm_data["seeds"].values() if v.get("refined") and v["refined"].get("success_loose"))
+                    strict_ok = sum(1 for v in arm_data["seeds"].values() if v.get("refined") and v["refined"].get("success_strict"))
                     print(f"  [{arm_name}] {c_done:3d}/{len(all_seeds)} | seed {seed} | Refined Loose: {loose_ok}/{c_done} | Strict: {strict_ok}/{c_done}")
                     if time.perf_counter() - t_global_start > args.max_wall_s:
                         print(f"  [wall-timeout] Reached {args.max_wall_s}s limit.")

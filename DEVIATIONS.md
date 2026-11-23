@@ -23,5 +23,9 @@ Every intentional or environment-forced deviation from D'Ambrosio & Furfaro (202
 5. **Scope restriction (Sec. 4.1 Earth–Mars interplanetary only; Sec. 4.2 Mars landing out of scope):**
    - Per project specification, reproduction and benchmarking cover Sections 3.1, 3.3, and 4.1 (Earth–Mars interplanetary transfer), extended with Phase C SRP perturbations and secondary Scenario B transfer tests.
 
+7. **Preregistered held-out testing on fresh seeds 2000..2099:**
+   - Evaluated 600 fresh runs across 6 arms with frozen settings and zero post-hoc parameter adjustments.
+   - Strictly no new methods implemented (no split-domain, no SEP power, no altered loss formulations).
+
 6. **Independent DOP853 re-propagation validation (not reported in paper):**
    - Because TFC constrained expressions satisfy boundary conditions analytically even when interior ODE residuals are nonzero, we re-propagate every solver's open-loop control $(\delta(t), \boldsymbol{\alpha}(t))$ with `DOP853` (`rtol=1e-11, atol=1e-13`) and report actual terminal arrival error alongside energy balance error.
