@@ -25,3 +25,6 @@ dev = [
 
 [project.scripts]
 trajectory-opt = "main:main"
+
+[tool.setuptools.packages.find]
+include = ["trajectory_optimization*"]
