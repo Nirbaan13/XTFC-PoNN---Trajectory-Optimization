@@ -272,3 +272,13 @@ and provided as the initial guess to indirect shooting, continuing the exact sam
 | `N120_to_N240_refined` | 29/30 (96.7% [83.3%, 99.4%]) | 11/30 (36.7% [21.9%, 54.5%]) | 2.20e-02 | 0.813 | 131.77 |
 
 - Full LaTeX table: `results/tables/tab7_collocation_mesh.tex`.
+
+---
+
+## 12. Tier 3 Progress Note: Split-Domain PoNN Refinement & Go/No-Go Gate (`seeds = 7000..7099`)
+
+- **Analytic Jacobian FD check:** `tests/test_split_domain.py::test_split_domain_analytic_jacobian_matches_fd` **PASSED** (max relative error $< 10^-7$ across all switch-time, interface, and basis columns).
+- **Mandatory 5-Seed Go/No-Go Gate (`seeds 7000..7004`):** **`5/5` PASSED** (median fuel error `0.0000 kg`, median max switch error `0.0001 d`, median $e_{\text{reprop}} = 3.41e-06$).
+- **Full 100-Seed Evaluation (`seeds 7000..7099`, initialized from standalone coarse PoNN switch times):** **`92/100` (`92.0%`, 95% Wilson CI `[85.0%, 95.9%]`)** met all three preregistered criteria ($|\Delta m_f| \le 0.05\text{ kg}$, $|\Delta t_k| \le 0.5\text{ d}$, $e_{\text{reprop}} < 10^-2$).
+- **Preregistered Verdict (`>= 90/100` rule):** **`SUPPORTED`**.
+- LaTeX table: `results/tables/tab8_split_domain_tier3.tex`.

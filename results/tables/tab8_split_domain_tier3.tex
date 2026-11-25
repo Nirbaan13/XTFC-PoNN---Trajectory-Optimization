@@ -1,0 +1,13 @@
+\begin{table*}[t]
+\centering
+\caption{Tier~3.9 Split-Domain PoNN refinement results on Scenario A (fresh seeds 7000--7099). Mandatory 5-seed Go/No-Go gate projected the exact shooting solution onto the 5-arc Hermite CE basis; full evaluation initialized from standalone coarse PoNN switch times.}
+\label{tab:tier3_split_domain}
+\begin{tabular}{lccccc}
+\toprule
+Stage & Passed / Total [95\% CI] & Med. $|\Delta m_f|$ (kg) & Med. Max Switch Err (d) & Med. $e_{\mathrm{reprop}}$ & Med. Total Time (s) \\
+\midrule
+Go/No-Go Gate (5 seeds) & 5/5 & 0.0000 & 0.0001 & 3.41e-06 & 4.99 \\
+Full PoNN-init (100 seeds) & 92/100 (92.0\% [85.0, 95.9]) & 0.0000 & 0.0001 & 3.39e-06 & 14.21 \\
+\bottomrule
+\end{tabular}
+\end{table*}
