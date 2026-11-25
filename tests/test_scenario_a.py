@@ -196,3 +196,63 @@ def test_phase_a1_shooting_and_phase_a2_projection():
     ops = model.operators(z_cgl)
     r_vec = model.residual_only(xi, ops, rho=rho_s)
     assert float(np.sqrt(np.mean(r_vec ** 2))) < 1e-4
+
+
+@pytest.mark.parametrize(
+    "srp_mode,a_over_m",
+    [
+        ("radial", 0.02),
+        ("radial", 0.50),
+        ("radial", 1.00),
+        ("attitude_flat_plate", 0.10),
+        ("attitude_flat_plate", 0.50),
+        ("attitude_flat_plate", 1.00),
+    ],
+)
+def test_srp_costate_fd_1000_random_states(srp_mode: str, a_over_m: float):
+    """Tier 1.3 public test: verify PMP costate ODE terms vs central FD at 1000 random states."""
+    prob = ScenarioAProblem(srp_mode=srp_mode, srp_area_to_mass=a_over_m)
+    rhs = make_scenario_a_rhs14(prob, rho=1e-2)
+    rng = np.random.default_rng(4900)
+    n_states = 1000
+    eps = 1e-6
+
+    radii = rng.uniform(0.7, 2.0, size=n_states)
+    dirs = rng.normal(size=(n_states, 3))
+    dirs /= np.linalg.norm(dirs, axis=1, keepdims=True)
+    r_all = dirs * radii[:, None]
+    v_all = rng.uniform(-1.5, 1.5, size=(n_states, 3))
+    m_all = rng.uniform(0.3, 1.2, size=(n_states, 1))
+    lr_all = rng.uniform(-2.0, 2.0, size=(n_states, 3))
+    lv_all = rng.uniform(-2.0, 2.0, size=(n_states, 3))
+    lv_all = np.where(np.linalg.norm(lv_all, axis=1, keepdims=True) < 0.05, lv_all + 0.2, lv_all)
+    lm_all = rng.uniform(-1.0, 2.0, size=(n_states, 1))
+    Y_all = np.hstack([r_all, v_all, m_all, lr_all, lv_all, lm_all])
+
+    max_rel = 0.0
+    for i in range(n_states):
+        y = Y_all[i]
+        dy = rhs(0.0, y)
+        r, v, m, lr, lv, lm = y[0:3], y[3:6], y[6], y[7:10], y[10:13], y[13]
+        lvn = float(np.linalg.norm(lv))
+        alpha = -lv / lvn
+        S = prob.c * lvn / m + lm - 1.0
+        delta = 0.5 * (1.0 + np.tanh(S / 1e-2))
+
+        def _H(r_in, v_in, m_in):
+            rn_in = float(np.linalg.norm(r_in))
+            ap_in, _ = srp_accel_and_jacobian(prob, r_in, alpha)
+            acc_in = -prob.mu * r_in / (rn_in ** 3) + ap_in + (prob.t_max * delta / m_in) * alpha
+            return float(prob.t_max * delta / prob.c + np.dot(lr, v_in) + np.dot(lv, acc_in) - lm * prob.t_max * delta / prob.c)
+
+        lr_fd = np.array([-(_H(r + eps * e, v, m) - _H(r - eps * e, v, m)) / (2.0 * eps) for e in np.eye(3)])
+        lv_fd = np.array([-(_H(r, v + eps * e, m) - _H(r, v - eps * e, m)) / (2.0 * eps) for e in np.eye(3)])
+        lm_fd = -(_H(r, v, m + eps) - _H(r, v, m - eps)) / (2.0 * eps)
+
+        rel_lr = float(np.linalg.norm(dy[7:10] - lr_fd)) / max(float(np.linalg.norm(dy[7:10])), 1.0)
+        rel_lv = float(np.linalg.norm(dy[10:13] - lv_fd)) / max(float(np.linalg.norm(dy[10:13])), 1.0)
+        rel_lm = abs(dy[13] - lm_fd) / max(abs(dy[13]), 1.0)
+        max_rel = max(max_rel, rel_lr, rel_lv, rel_lm)
+
+    assert max_rel < 1e-7
+

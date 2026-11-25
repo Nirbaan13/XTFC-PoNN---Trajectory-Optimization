@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Extra physical cases ($N=50$ fresh seeds per case, feasibility verified $t_{\min}\le 0.95\,t_f$). Strict convergence ($e_{\mathrm{reprop}}<10^{-2}$) shown with 95\% Wilson CIs; PoNN shown as loose/strict.}
+\label{tab:extra_cases}
+\begin{tabular}{lcccccccc}
+\toprule
+Case & $t_{\min}/t_f$ & Switches (Seq.) & PoNN (L / S) & Shooting (S) & Hybrid (S) & LGL-180 (S) & $\Delta$ (pp) / $p_{\mathrm{Holm}}$ & Verdict \\
+\midrule
+Scen. A ($m_0=800$ kg) & 0.805 & 4 (ON-OFF-ON-OFF-ON) & 0/50 / 0/50 & 21/50 (42\%) & 48/50 (96\%) & 5/50 (10\%) & +54.0 / 1.64e-07 & \textbf{SUPPORTED} \\
+Scen. A ($m_0=1200$ kg) & 0.937 & 2 (ON-OFF-ON) & 0/50 / 0/50 & 50/50 (100\%) & 49/50 (98\%) & 28/50 (56\%) & -2.0 / 1.0000 & \textbf{CONTRADICTED} \\
+Scen. A ($T_{\max}=0.4$ N) & 0.949 & 2 (ON-OFF-ON) & 0/50 / 0/50 & 45/50 (90\%) & 50/50 (100\%) & 31/50 (62\%) & +10.0 / 0.1875 & \textbf{CONTRADICTED} \\
+Scen. A ($T_{\max}=0.7$ N) & 0.763 & 4 (ON-OFF-ON-OFF-ON) & 0/50 / 0/50 & 17/50 (34\%) & 47/50 (94\%) & 2/50 (4\%) & +60.0 / 1.82e-06 & \textbf{SUPPORTED} \\
+Scen. B ($t_f=300$ d) & 0.910 & 2 (ON-OFF-ON) & 50/50 / 50/50 & 48/50 (96\%) & 50/50 (100\%) & 44/50 (88\%) & +4.0 / 1.0000 & \textbf{CONTRADICTED} \\
+Scen. B ($t_f=330$ d) & 0.888 & 2 (ON-OFF-ON) & 0/50 / 0/50 & 42/50 (84\%) & 50/50 (100\%) & 23/50 (46\%) & +16.0 / 0.0312 & \textbf{SUPPORTED} \\
+Scen. B ($t_f=360$ d) & 0.857 & 4 (OFF-ON-OFF-ON-OFF) & 50/50 / 15/50 & 36/50 (72\%) & 50/50 (100\%) & 10/50 (20\%) & +28.0 / 0.0006 & \textbf{SUPPORTED} \\
+\bottomrule
+\end{tabular}
+\end{table*}

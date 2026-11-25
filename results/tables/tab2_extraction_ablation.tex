@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Extraction-level ablation on Scenario A (fresh seeds 4000--4099, $N=100$). Exact paired McNemar $p$-values are Holm--Bonferroni corrected across all $M=13$ Tier~1 tests.}
+\label{tab:extraction_ablation}
+\begin{tabular}{lccccccc}
+\toprule
+Arm & Loose & Strict [95\% CI] & $\Delta_{\mathrm{strict}}$ (pp) & $p_{\mathrm{raw}}$ / $p_{\mathrm{Holm}}$ & PoNN / Shoot / Total (s) & PoNN / Shoot Evals & Verdict \\
+\midrule
+Random Shooting (baseline) & 68/100 & 68/100 (68.0\% [58.3, 76.3]) & -- & -- & 0.00 / 21.43 / 21.43 & 0 / 566 & Baseline \\
+Hybrid ($\rho_{\mathrm{ext}}=1.0$) & 95/100 & 95/100 (95.0\% [88.8, 97.8]) & +27.0 & 3.47e-06 / 2.08e-05 & 1.72 / 15.31 / 17.74 & 25 / 264 & \textbf{SUPPORTED} \\
+Hybrid ($\rho_{\mathrm{ext}}=2.98\times 10^{-1}$) & 97/100 & 97/100 (97.0\% [91.5, 99.0]) & +29.0 & 4.18e-07 / 2.92e-06 & 1.96 / 14.71 / 16.90 & 31 / 234 & \textbf{SUPPORTED} \\
+Hybrid ($\rho_{\mathrm{ext}}=10^{-1}$) & 99/100 & 99/100 (99.0\% [94.6, 99.8]) & +31.0 & 7.92e-09 / 1.03e-07 & 2.20 / 14.51 / 17.24 & 37 / 220 & \textbf{SUPPORTED} \\
+Hybrid ($\rho_{\mathrm{ext}}=10^{-2}$) & 98/100 & 98/100 (98.0\% [93.0, 99.4]) & +30.0 & 6.94e-08 / 6.94e-07 & 2.96 / 13.82 / 17.03 & 56 / 173 & \textbf{SUPPORTED} \\
+Hybrid ($\rho_{\mathrm{ext}}=10^{-3}$) & 99/100 & 99/100 (99.0\% [94.6, 99.8]) & +31.0 & 7.92e-09 / 1.03e-07 & 3.75 / 13.74 / 18.30 & 75 / 136 & \textbf{SUPPORTED} \\
+Hybrid ($\rho_{\mathrm{ext}}=\mathrm{final}$) & 98/100 & 98/100 (98.0\% [93.0, 99.4]) & +30.0 & 6.94e-08 / 6.94e-07 & 5.12 / 5.66 / 11.04 & 114 / 46 & \textbf{SUPPORTED} \\
+\bottomrule
+\end{tabular}
+\end{table*}

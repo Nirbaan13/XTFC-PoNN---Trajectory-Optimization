@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Scenario A convergence on held-out seeds 2000--2099 ($N=100$, $A/m_0=0$). Intervals are 95\% Wilson score CIs; fuel, open-loop error $e_{\mathrm{reprop}}$, and wall-clock time are median [Q25, Q75].}
+\label{tab:scenario_a_convergence}
+\begin{tabular}{lccccc}
+\toprule
+Method & Loose ($<5\times 10^{-2}$) & Strict ($<10^{-2}$) & Fuel (kg) & $e_{\mathrm{reprop}}$ & Time (s) \\
+\midrule
+PoNN (scaled $U(0,1)$) & 0/100 (0.0\% [0.0, 3.7]) & 0/100 (0.0\% [0.0, 3.7]) & -- & -- & -- \\
+PoNN (paper $U(0,1)$) & 0/100 (0.0\% [0.0, 3.7]) & 0/100 (0.0\% [0.0, 3.7]) & -- & -- & -- \\
+Indirect Shooting (random) & 69/100 (69.0\% [59.4, 77.2]) & 69/100 (69.0\% [59.4, 77.2]) & 396.06 [396.06, 396.06] & -- & 22.26 [18.19, 48.51] \\
+Hybrid (PoNN $\to$ Shooting) & 95/100 (95.0\% [88.8, 97.8]) & 95/100 (95.0\% [88.8, 97.8]) & 396.06 [396.06, 396.06] & -- & -- \\
+LGL Collocation ($N=180$) & 49/100 (49.0\% [39.4, 58.7]) & 19/100 (19.0\% [12.5, 27.8]) & 396.80 [396.34, 398.22] & -- & 67.31 [56.85, 83.09] \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -50,3 +50,11 @@ This document records every modeling assumption made where D'Ambrosio & Furfaro 
 
 - **Phase C attitude-dependent SRP (`attitude_flat_plate`):** Modeled as a flat absorbing/reflecting plate whose surface normal aligns with the optimal thrust unit vector $\boldsymbol{\alpha} = -\boldsymbol{\lambda}_v/\|\boldsymbol{\lambda}_v\|$, yielding projected area factor $\phi(\mathbf{r}, \boldsymbol{\alpha}) = 0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$ and radial SRP acceleration $\mathbf{a}_p = k_{\text{SRP}}\phi\,\mathbf{r}/r^3$. Since $\boldsymbol{\alpha}$ depends only on $\boldsymbol{\lambda}_v$, the position Jacobian $\partial \mathbf{a}_p/\partial \mathbf{r}$ is exact and verified by central FD (`< 1e-9`).
 - **Scenario B (secondary):** Retained unchanged from earlier workspace work ($m_0 = 1218\text{ kg}$, $T_{\max} = 0.5\text{ N}$, $I_{\text{sp}} = 3100\text{ s}$, circular coplanar Earth/Mars orbits at $1.0$ and $1.524\text{ AU}$, radial SRP). In Phase D, the frozen Phase A2 PoNN is evaluated on Scenario B with zero retuning.
+
+## Complete Flat-Plate SRP Model Specification (Tier 1.3)
+
+- **Coordinate frame:** Heliocentric J2000 inertial Cartesian frame.
+- **Attitude coupling:** **Prescribed** thrust-aligned normal $\hat{\mathbf{n}} = \boldsymbol{\alpha}^* = -\boldsymbol{\lambda}_v / \|\boldsymbol{\lambda}_v\|$ (the solar array / bus normal tracks the optimal thrust direction; attitude is **not** independently optimized as a separate control variable).
+- **Eclipse / shadowing:** None (continuous heliocentric illumination; no Earth or Mars umbra/penumbra eclipses).
+- **Projected-area law:** $\phi(\mathbf{r}, \boldsymbol{\alpha}) = \tfrac{1}{2} + \tfrac{1}{2}(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$, with $\mathbf{a}_{\mathrm{SRP}}(\mathbf{r}, \boldsymbol{\alpha}) = k_{\mathrm{SRP}}\,\phi(\mathbf{r}, \boldsymbol{\alpha})\,\mathbf{r}/\|\mathbf{r}\|^3$ and $k_{\mathrm{SRP}} = P_0 C_R (A/m_0)/a_{\mathrm{ref}}$ (constant initial $A/m_0$ cannonball scaling).
+- **Escape-phase $J_2$ note:** Earth's oblateness $J_2$ is **NOT** included in any heliocentric trajectory optimization (Scenario A or Scenario B); it appears strictly in the prescribed Phase 1 Earth-departure escape propagation (`escape_phase.py`).

@@ -67,7 +67,7 @@ Key numerical findings from single-seed verification:
 
 - **Exact paper $\beta \sim U(0, 1)$ initialization:** Because $|T_k'(\pm 1)| = k^2$ (up to $73^2 = 5329$), unscaled $\beta_{1..3} \sim U(0, 1)$ in the Table A6 Hermite CE places the initial trajectory at $\|\mathbf{r}\| \approx 25{,}000\text{ AU}$ ($\|\mathbf{L}_0\| \approx 1.4\times 10^7$). Even from that extreme initial state, unscaled SVD/Cholesky Levenberg–Marquardt recovers the exact optimal branch on **`49/100` (`49.0%`, 95% Wilson CI `[39.4%, 58.7%]`)** of seeds, with every converged seed landing identically at `396.521532 ± 4.9e-11 kg`.
 - **Scaled $\beta_{1..3} \sim 10^{-3} U(0,1), \beta_{\lambda_v} \sim 10^{-2} U(0,1)$ initialization:** Keeping the random initial trajectory near $\sim 1\text{ AU}$ raises convergence to **`92/100` (`92.0%`, 95% Wilson CI `[85.0%, 95.9%]`)** with median total runtime `11.78 s`.
-- **Open-loop accuracy ceiling of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `3.63e-02`), reflecting the Gibbs approximation floor of representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion.
+- **Open-loop accuracy of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `3.63e-02`), reflecting an observed plateau when representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion (our independent implementation differs from the published configuration; investigated systematically in Tier 2).
 
 ---
 
@@ -210,3 +210,42 @@ and provided as the initial guess to indirect shooting, continuing the exact sam
 - Unit test suite: `.venv/bin/pytest tests/ -v` (verifies Scenario A Hamiltonian & SRP FD checks, Phase A1 shooting reproduction, Phase A2 CE exactness, analytical Jacobian FD checks, shooting projection residual, plus all 19 Scenario B tests).
 - Regenerate all tables, figures, and markdown reports from stored JSONs:
   `PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py`
+
+---
+
+## 10. Tier 1 Progress Note & Preregistered Addendum Verdicts
+
+**Preregistration addendum commit:** `38e2908` ([PREREG_ADDENDUM.md](PREREG_ADDENDUM.md)). All 13 Tier 1 primary paired McNemar tests (`H1a–H1f` extraction-level ablation on seeds `4000..4099`; `H2a–H2g` extra physical cases on seeds `5000+`) are Holm–Bonferroni corrected at family-wise $\alpha = 0.05$. Verdicts follow the numeric rule strictly (`SUPPORTED` iff $\Delta_{\text{strict}} \ge +15.0\text{ pp}$ and $\tilde{p}_{\text{Holm}} < 0.05$; else `CONTRADICTED`; `CANNOT TEST` if $t_{\min} > 0.95\,t_f$).
+
+### 10.1 Master Holm–Bonferroni Verdict Table (Tier 1, $M = 13$ Tests)
+
+| ID | Study | Condition | $\Delta_{\text{strict}}$ (pp) | $p_{\text{raw}}$ | $p_{\text{Holm}}$ | Verdict |
+|:---:|:---|:---|---:|---:|---:|:---:|
+| `H1a` | Tier 1.1 Extraction Ablation | hybrid_rho_1e0 | +27.0 | 3.47e-06 | 2.08e-05 | **`SUPPORTED`** |
+| `H1b` | Tier 1.1 Extraction Ablation | hybrid_rho_2.98e-1 | +29.0 | 4.18e-07 | 2.92e-06 | **`SUPPORTED`** |
+| `H1c` | Tier 1.1 Extraction Ablation | hybrid_rho_1e-1 | +31.0 | 7.92e-09 | 1.03e-07 | **`SUPPORTED`** |
+| `H1d` | Tier 1.1 Extraction Ablation | hybrid_rho_1e-2 | +30.0 | 6.94e-08 | 6.94e-07 | **`SUPPORTED`** |
+| `H1e` | Tier 1.1 Extraction Ablation | hybrid_rho_1e-3 | +31.0 | 7.92e-09 | 1.03e-07 | **`SUPPORTED`** |
+| `H1f` | Tier 1.1 Extraction Ablation | hybrid_rho_final | +30.0 | 6.94e-08 | 6.94e-07 | **`SUPPORTED`** |
+| `H2a` | Tier 1.2 Extra Physical Cases | scen_a_m0_800 | +54.0 | 1.49e-08 | 1.64e-07 | **`SUPPORTED`** |
+| `H2b` | Tier 1.2 Extra Physical Cases | scen_a_m0_1200 | -2.0 | 1.0000 | 1.0000 | **`CONTRADICTED`** |
+| `H2c` | Tier 1.2 Extra Physical Cases | scen_a_tmax_0.4 | +10.0 | 0.0625 | 0.1875 | **`CONTRADICTED`** |
+| `H2d` | Tier 1.2 Extra Physical Cases | scen_a_tmax_0.7 | +60.0 | 2.27e-07 | 1.82e-06 | **`SUPPORTED`** |
+| `H2e` | Tier 1.2 Extra Physical Cases | scen_b_tf_300 | +4.0 | 0.5000 | 1.0000 | **`CONTRADICTED`** |
+| `H2f` | Tier 1.2 Extra Physical Cases | scen_b_tf_330 | +16.0 | 0.0078 | 0.0312 | **`SUPPORTED`** |
+| `H2g` | Tier 1.2 Extra Physical Cases | scen_b_tf_360 | +28.0 | 0.0001 | 0.0006 | **`SUPPORTED`** |
+
+### 10.2 Tier 1.3 SRP Flat-Plate Model, 1,000-State FD Audit, & Resolution Check
+
+- **Flat-plate SRP specification:** Heliocentric J2000 inertial frame; attitude normal is **prescribed** along the thrust unit vector $\hat{\mathbf{n}} = \boldsymbol{\alpha}^* = -\boldsymbol{\lambda}_v / \|\boldsymbol{\lambda}_v\|$ (not independently optimized); no planetary eclipse/shadowing; projected area factor $\phi(\mathbf{r}, \boldsymbol{\alpha}) = \tfrac{1}{2} + \tfrac{1}{2}(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$; constant initial area-to-mass ratio $A/m_0$.
+- **1,000-random-state central FD check:** Across all 8 `(mode, A/m)` combinations (`radial` and `attitude_flat_plate` at $A/m_0 \in \{0.02, 0.10, 0.50, 1.00\}$), the maximum relative error of analytical vs. central-FD PMP costate ODE terms is **7.20e-10** (all 8/8 PASS $< 10^-7$).
+- **Resolution check:** At $A/m_0 = 0.02\text{ m}^2/\text{kg}$, the physical SRP fuel change ($+0.029\text{ kg}$) is $0.07\times$ standalone PoNN's error and $0.06\times$ LGL-180's error (below discretization resolution); at $A/m_0 \ge 0.50\text{ m}^2/\text{kg}$ it exceeds both methods' errors (`tab4_srp_audit.tex`).
+
+### 10.3 Tier 1.4 Single-Process Idle-Machine Runtime Audit (`seeds = 4100..4129`)
+
+- **Environment:** Intel(R) Xeon(R) CPU @ 2.30GHz (2 vCPU), 7.77 GB RAM, Linux `6.18.57`, Python `3.12.16`, NumPy `2.5.5`, SciPy `1.18.1`, Matplotlib `3.11.2`, CasADi `3.8.2`, JAX `0.12.1`, single-threaded BLAS (`OPENBLAS_NUM_THREADS=1`), one-time JAX JIT warmup `0.96 s`.
+- **Median wall-clock runtimes (all seeds):** Random Shooting `22.26 s`, Hybrid total `16.09 s` (PoNN stage `0.90 s` + Shooting stage `14.29 s`), Standalone PoNN `22.57 s`, LGL-180 `73.26 s`. Full distributions split by success/failure and evaluation counts are tabulated in `results/tables/tab5_runtime_distributions.tex`.
+
+### 10.4 Paper-Ready Outputs Generated
+- LaTeX `booktabs` tables: `results/tables/tab1_convergence_scenario_a.tex` through `tab5_runtime_distributions.tex`.
+- PDF figures: `results/figures/fig_switching_throttle_ponn_vs_shooting.pdf`, `fig_convergence_bars_ci.pdf`, `fig_extraction_ablation.pdf`, `fig_reprop_error_vs_seed.pdf`, `fig_srp_fuel_change.pdf`.

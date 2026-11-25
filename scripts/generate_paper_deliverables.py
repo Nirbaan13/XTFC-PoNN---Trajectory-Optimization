@@ -788,7 +788,7 @@ __TAB_A3__
 
 - **Exact paper $\beta \sim U(0, 1)$ initialization:** Because $|T_k'(\pm 1)| = k^2$ (up to $73^2 = 5329$), unscaled $\beta_{1..3} \sim U(0, 1)$ in the Table A6 Hermite CE places the initial trajectory at $\|\mathbf{r}\| \approx 25{,}000\text{ AU}$ ($\|\mathbf{L}_0\| \approx 1.4\times 10^7$). Even from that extreme initial state, unscaled SVD/Cholesky Levenberg–Marquardt recovers the exact optimal branch on **`__U01_CONV__/100` (`__U01_RATE__%`, 95% Wilson CI `[__U01_LO__%, __U01_HI__%]`)** of seeds, with every converged seed landing identically at `__U01_FMEAN__ ± __U01_FSTD__ kg`.
 - **Scaled $\beta_{1..3} \sim 10^{-3} U(0,1), \beta_{\lambda_v} \sim 10^{-2} U(0,1)$ initialization:** Keeping the random initial trajectory near $\sim 1\text{ AU}$ raises convergence to **`__SC_CONV__/100` (`__SC_RATE__%`, 95% Wilson CI `[__SC_LO__%, __SC_HI__%]`)** with median total runtime `__SC_RT__ s`.
-- **Open-loop accuracy ceiling of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `__SC_RP__`), reflecting the Gibbs approximation floor of representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion.
+- **Open-loop accuracy of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `__SC_RP__`), reflecting an observed plateau when representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion (our independent implementation differs from the published configuration; investigated systematically in Tier 2).
 
 ---
 

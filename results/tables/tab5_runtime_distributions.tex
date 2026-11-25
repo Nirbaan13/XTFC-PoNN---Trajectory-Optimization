@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\caption{Single-process idle-machine runtime distributions on Scenario A (fresh seeds 4100--4129, $N=30$, single-threaded BLAS). CPU: Intel(R) Xeon(R) CPU @ 2.30GHz (2 vCPU), RAM: 7.77 GB, OS: Linux 6.18.57, Python 3.12.16, NumPy 2.5.5, SciPy 1.18.1, CasADi 3.8.2, JAX 0.12.1 (one-time JIT warmup: 0.96~s).}
+\label{tab:runtime_distributions}
+\begin{tabular}{lcccccc}
+\toprule
+Method / Stage & All Median [Q25, Q75] (s) & Mean $\pm$ Std (s) & Success Median (s) & Failure Median (s) & Med. \texttt{nfev} & Med. \texttt{njev} \\
+\midrule
+Indirect Shooting (random) & 22.26 [17.32, 56.84] & 40.25 $\pm$ 28.97 & 17.50 ($n=18$) & 59.90 ($n=12$) & 990 & 10 \\
+Hybrid — PoNN stage & 0.90 [0.84, 1.24] & 2.17 $\pm$ 3.48 & -- & -- & 26 & 19 \\
+Hybrid — Shooting stage & 14.29 [13.41, 15.43] & 14.32 $\pm$ 1.56 & -- & -- & 232 & 9 \\
+Hybrid — Total (honest) & 16.09 [14.96, 17.13] & 16.49 $\pm$ 3.72 & 16.09 ($n=30$) & -- & -- & -- \\
+PoNN (scaled $U(0,1)$, full) & 22.57 [22.01, 23.78] & 23.17 $\pm$ 2.22 & 22.57 ($n=28$) & 26.54 ($n=2$) & 350 & 327 \\
+LGL Collocation ($N=180$) & 73.26 [61.64, 83.27] & 74.15 $\pm$ 16.00 & 69.88 ($n=4$) & 75.31 ($n=26$) & 278 & 136 \\
+\bottomrule
+\end{tabular}
+\end{table*}

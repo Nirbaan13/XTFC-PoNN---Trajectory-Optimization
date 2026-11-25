@@ -61,7 +61,28 @@ from trajectory_optimization.reporting import (
 
 def main():
     import pickle
+    import subprocess
     import sys
+
+    if "--from-stored" in sys.argv or (
+        "--recompute-legacy" not in sys.argv
+        and Path("results/prereg_fresh_2000_2099.json").exists()
+    ):
+        print("==================================================================", flush=True)
+        print("Reproducing all tables, figures, and reports from stored JSON data", flush=True)
+        print("==================================================================", flush=True)
+        env = dict(**__import__("os").environ)
+        env["PYTHONPATH"] = "."
+        subprocess.run([sys.executable, "scripts/generate_paper_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_tier1_deliverables.py").exists() and Path("results/tier1_extraction_ablation_4000_4099.json").exists():
+            subprocess.run([sys.executable, "scripts/generate_tier1_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_tier2_deliverables.py").exists() and Path("results/tier2_plateau_6000_6029.json").exists():
+            subprocess.run([sys.executable, "scripts/generate_tier2_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_tier3_deliverables.py").exists() and Path("results/tier3_split_domain_7000.json").exists():
+            subprocess.run([sys.executable, "scripts/generate_tier3_deliverables.py"], check=True, env=env)
+        print("ALL STORED DELIVERABLES REPRODUCED SUCCESSFULLY.", flush=True)
+        return
+
     t0_all = time.perf_counter()
     tables_dir = Path("results/tables")
     figures_dir = Path("results/figures")

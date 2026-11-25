@@ -1,0 +1,294 @@
+{
+  "m_tests": 13,
+  "alpha_fwer": 0.05,
+  "tests": {
+    "H1a": {
+      "id": "H1a",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e0",
+      "label": "$\\rho_{\\mathrm{ext}}=1.0$",
+      "delta_strict_pp": 26.99999999999999,
+      "p_raw": 3.4654513001441956e-06,
+      "feasible": true,
+      "p_holm": 2.0792707800865173e-05,
+      "verdict": "SUPPORTED"
+    },
+    "H1b": {
+      "id": "H1b",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_2.98e-1",
+      "label": "$\\rho_{\\mathrm{ext}}=2.98\\times 10^{-1}$",
+      "delta_strict_pp": 28.999999999999993,
+      "p_raw": 4.176981747150421e-07,
+      "feasible": true,
+      "p_holm": 2.923887223005295e-06,
+      "verdict": "SUPPORTED"
+    },
+    "H1c": {
+      "id": "H1c",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-1",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-1}$",
+      "delta_strict_pp": 30.999999999999993,
+      "p_raw": 7.916241884231567e-09,
+      "feasible": true,
+      "p_holm": 1.0291114449501038e-07,
+      "verdict": "SUPPORTED"
+    },
+    "H1d": {
+      "id": "H1d",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-2",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-2}$",
+      "delta_strict_pp": 29.999999999999993,
+      "p_raw": 6.938353180885315e-08,
+      "feasible": true,
+      "p_holm": 6.938353180885315e-07,
+      "verdict": "SUPPORTED"
+    },
+    "H1e": {
+      "id": "H1e",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-3",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-3}$",
+      "delta_strict_pp": 30.999999999999993,
+      "p_raw": 7.916241884231567e-09,
+      "feasible": true,
+      "p_holm": 1.0291114449501038e-07,
+      "verdict": "SUPPORTED"
+    },
+    "H1f": {
+      "id": "H1f",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_final",
+      "label": "$\\rho_{\\mathrm{ext}}=\\text{final}$",
+      "delta_strict_pp": 29.999999999999993,
+      "p_raw": 6.938353180885315e-08,
+      "feasible": true,
+      "p_holm": 6.938353180885315e-07,
+      "verdict": "SUPPORTED"
+    },
+    "H2a": {
+      "id": "H2a",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_m0_800",
+      "label": "Scen. A, $m_0=800$ kg",
+      "delta_strict_pp": 54.0,
+      "p_raw": 1.4901161193847656e-08,
+      "feasible": true,
+      "p_holm": 1.6391277313232422e-07,
+      "verdict": "SUPPORTED"
+    },
+    "H2b": {
+      "id": "H2b",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_m0_1200",
+      "label": "Scen. A, $m_0=1200$ kg",
+      "delta_strict_pp": -2.0000000000000018,
+      "p_raw": 1.0,
+      "feasible": true,
+      "p_holm": 1.0,
+      "verdict": "CONTRADICTED"
+    },
+    "H2c": {
+      "id": "H2c",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_tmax_0.4",
+      "label": "Scen. A, $T_{\\max}=0.4$ N",
+      "delta_strict_pp": 9.999999999999998,
+      "p_raw": 0.0625,
+      "feasible": true,
+      "p_holm": 0.1875,
+      "verdict": "CONTRADICTED"
+    },
+    "H2d": {
+      "id": "H2d",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_tmax_0.7",
+      "label": "Scen. A, $T_{\\max}=0.7$ N",
+      "delta_strict_pp": 59.999999999999986,
+      "p_raw": 2.2721360437572002e-07,
+      "feasible": true,
+      "p_holm": 1.8177088350057602e-06,
+      "verdict": "SUPPORTED"
+    },
+    "H2e": {
+      "id": "H2e",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_300",
+      "label": "Scen. B, $t_f=300$ d",
+      "delta_strict_pp": 4.0000000000000036,
+      "p_raw": 0.5,
+      "feasible": true,
+      "p_holm": 1.0,
+      "verdict": "CONTRADICTED"
+    },
+    "H2f": {
+      "id": "H2f",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_330",
+      "label": "Scen. B, $t_f=330$ d",
+      "delta_strict_pp": 16.000000000000004,
+      "p_raw": 0.0078125,
+      "feasible": true,
+      "p_holm": 0.03125,
+      "verdict": "SUPPORTED"
+    },
+    "H2g": {
+      "id": "H2g",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_360",
+      "label": "Scen. B, $t_f=360$ d",
+      "delta_strict_pp": 28.000000000000004,
+      "p_raw": 0.0001220703125,
+      "feasible": true,
+      "p_holm": 0.0006103515625,
+      "verdict": "SUPPORTED"
+    }
+  },
+  "ordered": [
+    {
+      "id": "H1a",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e0",
+      "label": "$\\rho_{\\mathrm{ext}}=1.0$",
+      "delta_strict_pp": 26.99999999999999,
+      "p_raw": 3.4654513001441956e-06,
+      "feasible": true,
+      "p_holm": 2.0792707800865173e-05,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H1b",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_2.98e-1",
+      "label": "$\\rho_{\\mathrm{ext}}=2.98\\times 10^{-1}$",
+      "delta_strict_pp": 28.999999999999993,
+      "p_raw": 4.176981747150421e-07,
+      "feasible": true,
+      "p_holm": 2.923887223005295e-06,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H1c",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-1",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-1}$",
+      "delta_strict_pp": 30.999999999999993,
+      "p_raw": 7.916241884231567e-09,
+      "feasible": true,
+      "p_holm": 1.0291114449501038e-07,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H1d",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-2",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-2}$",
+      "delta_strict_pp": 29.999999999999993,
+      "p_raw": 6.938353180885315e-08,
+      "feasible": true,
+      "p_holm": 6.938353180885315e-07,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H1e",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_1e-3",
+      "label": "$\\rho_{\\mathrm{ext}}=10^{-3}$",
+      "delta_strict_pp": 30.999999999999993,
+      "p_raw": 7.916241884231567e-09,
+      "feasible": true,
+      "p_holm": 1.0291114449501038e-07,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H1f",
+      "family": "Tier 1.1 Extraction Ablation",
+      "arm": "hybrid_rho_final",
+      "label": "$\\rho_{\\mathrm{ext}}=\\text{final}$",
+      "delta_strict_pp": 29.999999999999993,
+      "p_raw": 6.938353180885315e-08,
+      "feasible": true,
+      "p_holm": 6.938353180885315e-07,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H2a",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_m0_800",
+      "label": "Scen. A, $m_0=800$ kg",
+      "delta_strict_pp": 54.0,
+      "p_raw": 1.4901161193847656e-08,
+      "feasible": true,
+      "p_holm": 1.6391277313232422e-07,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H2b",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_m0_1200",
+      "label": "Scen. A, $m_0=1200$ kg",
+      "delta_strict_pp": -2.0000000000000018,
+      "p_raw": 1.0,
+      "feasible": true,
+      "p_holm": 1.0,
+      "verdict": "CONTRADICTED"
+    },
+    {
+      "id": "H2c",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_tmax_0.4",
+      "label": "Scen. A, $T_{\\max}=0.4$ N",
+      "delta_strict_pp": 9.999999999999998,
+      "p_raw": 0.0625,
+      "feasible": true,
+      "p_holm": 0.1875,
+      "verdict": "CONTRADICTED"
+    },
+    {
+      "id": "H2d",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_a_tmax_0.7",
+      "label": "Scen. A, $T_{\\max}=0.7$ N",
+      "delta_strict_pp": 59.999999999999986,
+      "p_raw": 2.2721360437572002e-07,
+      "feasible": true,
+      "p_holm": 1.8177088350057602e-06,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H2e",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_300",
+      "label": "Scen. B, $t_f=300$ d",
+      "delta_strict_pp": 4.0000000000000036,
+      "p_raw": 0.5,
+      "feasible": true,
+      "p_holm": 1.0,
+      "verdict": "CONTRADICTED"
+    },
+    {
+      "id": "H2f",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_330",
+      "label": "Scen. B, $t_f=330$ d",
+      "delta_strict_pp": 16.000000000000004,
+      "p_raw": 0.0078125,
+      "feasible": true,
+      "p_holm": 0.03125,
+      "verdict": "SUPPORTED"
+    },
+    {
+      "id": "H2g",
+      "family": "Tier 1.2 Extra Physical Cases",
+      "arm": "scen_b_tf_360",
+      "label": "Scen. B, $t_f=360$ d",
+      "delta_strict_pp": 28.000000000000004,
+      "p_raw": 0.0001220703125,
+      "feasible": true,
+      "p_holm": 0.0006103515625,
+      "verdict": "SUPPORTED"
+    }
+  ]
+}

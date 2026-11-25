@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{SRP perturbation resolution check on Scenario A. $\Delta m_f$ is the shooting reference fuel shift relative to $A/m_0=0$; resolution ratio is $|\Delta m_f| / |m_{\mathrm{method}}-m_{\mathrm{shoot}}|$. All 8 mode/$A/m_0$ PMP costate FD checks ($N=1000$ random states each) pass with max relative error $\le 7.2\times 10^{-10}$.}
+\label{tab:srp_audit}
+\begin{tabular}{llccccc}
+\toprule
+SRP Mode & $A/m_0$ (m$^2$/kg) & $\Delta m_{f,\mathrm{shoot}}$ (kg) & PoNN Err (kg) & PoNN Res. ($|\Delta m_f|/\text{err}$) & LGL-180 Err (kg) & LGL-180 Res. \\
+\midrule
+radial & 0.02 & +0.0290 & 0.4414 & 0.07$\times$ & 0.4456 & 0.06$\times$ \\
+radial & 0.10 & +0.1448 & 0.3603 & 0.40$\times$ & 0.1188 & 1.22$\times$ \\
+radial & 0.25 & +0.3621 & 0.2081 & 1.74$\times$ & 0.5804 & 0.62$\times$ \\
+radial & 0.50 & +0.7247 & 0.0458 & 15.81$\times$ & 0.2789 & 2.60$\times$ \\
+radial & 1.00 & +1.4511 & 0.6350 & 2.29$\times$ & 0.4232 & 3.43$\times$ \\
+attitude flat plate & 0.10 & +0.1173 & 0.3797 & 0.31$\times$ & -- & -- \\
+attitude flat plate & 0.50 & +0.5873 & 0.0515 & 11.40$\times$ & -- & -- \\
+attitude flat plate & 1.00 & +1.1761 & 0.8298 & 1.42$\times$ & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table*}

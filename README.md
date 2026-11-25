@@ -1,6 +1,9 @@
 # X-TFC Pontryagin Neural Networks — Earth–Mars Trajectory Optimization Benchmark
 
-Exact reproduction, ablation, and perturbation benchmark of **D'Ambrosio & Furfaro (2024)**, *"Learning Fuel-Optimal Trajectories for Space Applications via Pontryagin Neural Networks"*, *Aerospace* 11(3), 228 (`doi:10.3390/aerospace11030228`), Sections 3.1, 3.3, and 4.1, alongside a secondary low-thrust Earth–Mars transfer study (Scenario B).
+Exact reproduction, ablation, and perturbation benchmark of **Andrea D'Ambrosio & Roberto Furfaro (2024)**, *"Learning Fuel-Optimal Trajectories for Space Applications via Pontryagin Neural Networks"*, *Aerospace* 11(3), 228 (`doi:10.3390/aerospace11030228`), Sections 3.1, 3.3, and 4.1, alongside a secondary low-thrust Earth–Mars transfer study (Scenario B).
+
+> **Scope note on $J_2$ and independent implementation:** Earth's $J_2$ oblateness is **not** included in the heliocentric trajectory optimization; it is used exclusively in the prescribed Earth-departure escape propagation (`escape_phase.py`). Where results differ from published figures, our independent implementation differs from the published configuration (see `DEVIATIONS.md`).
+
 
 All tables, figures, and metrics in this repository are generated directly from stored experiment JSONs under `results/` with zero hard-coded outputs.
 
@@ -87,7 +90,8 @@ Global feasibility scan (preserved in `results/phase1_results.json`) established
 - [`results/figures/scenario_a_fig2_coarse_vs_shooting.png`](results/figures/scenario_a_fig2_coarse_vs_shooting.png) — Coarse PoNN vs. Indirect Shooting ($S(t)$ and $\delta(t)$)
 - [`results/figures/scenario_a_fig3_trajectory_3d.png`](results/figures/scenario_a_fig3_trajectory_3d.png) — 3-D Earth–Mars Transfer and Optimal Thrust Direction
 - [`results/figures/scenario_a_fig5_refined_solution.png`](results/figures/scenario_a_fig5_refined_solution.png) — Refined PoNN vs. Shooting & LGL-180 Collocation ($S, \delta, m, \lambda_m$)
-- [`results/figures/scenario_a_phase_a4_ablations.png`](results/figures/scenario_a_phase_a4_ablations.png) — Phase A4 Formulation, Basis, $ho$-Schedule, and Grid/Optimizer Ablations
+- [`results/figures/scenario_a_phase_a4_ablations.png`](results/figures/scenario_a_phase_a4_ablations.png) — Phase A4 Formulation, Basis, $
+ho$-Schedule, and Grid/Optimizer Ablations
 - [`results/figures/scenario_a_phase_b_benchmark.png`](results/figures/scenario_a_phase_b_benchmark.png) — Phase B 100-Seed Three-Method Benchmark
 - [`results/figures/scenario_a_phase_c_srp_sweep.png`](results/figures/scenario_a_phase_c_srp_sweep.png) — Phase C Radial & Attitude Flat-Plate SRP Perturbation Sweep
 - [`results/figures/scenario_a_prereg_hybrid_comparison.png`](results/figures/scenario_a_prereg_hybrid_comparison.png) — Preregistered Hybrid vs Shooting Comparison Across SRP (Seeds 2000..2099)
@@ -116,3 +120,11 @@ PYTHONPATH=. .venv/bin/python scripts/run_phase_d.py
 # Regenerate all figures, markdown tables, REPORT.md, README.md, ASSUMPTIONS.md, DEVIATIONS.md
 PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py
 ```
+
+## Tier 1 Paper-Ready Tables, PDF Figures, & Holm-Corrected Verdicts
+
+- **Preregistration addendum:** [PREREG_ADDENDUM.md](PREREG_ADDENDUM.md) (commit `38e2908`).
+- **Holm–Bonferroni corrected verdicts ($M=13$ tests, FWER $\alpha=0.05$):** **10/13 `SUPPORTED`** (full breakdown in [REPORT.md](REPORT.md) Section 10 and `results/tier1_holm_verdicts.json`).
+- **LaTeX `booktabs` tables:** `results/tables/tab1_convergence_scenario_a.tex` – `tab5_runtime_distributions.tex`.
+- **PDF figures:** `results/figures/fig_switching_throttle_ponn_vs_shooting.pdf`, `fig_convergence_bars_ci.pdf`, `fig_extraction_ablation.pdf`, `fig_reprop_error_vs_seed.pdf`, `fig_srp_fuel_change.pdf`.
+- **Reproduce all tables and figures from stored JSON:** `python3 run_all.py --from-stored`
