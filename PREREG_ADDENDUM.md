@@ -49,10 +49,11 @@ Pre-run deterministic minimum-time feasibility check (80-node LGL collocation, p
 | `scen_a_tmax_0.4` | Scenario A, $T_{\max} = 0.4\text{ N}$ | 348.795 | 330.919 | 0.9487 | **PASS** | `5200..5249` | `H2c` |
 | `scen_a_tmax_0.7` | Scenario A, $T_{\max} = 0.7\text{ N}$ | 348.795 | 265.979 | 0.7626 | **PASS** | `5300..5349` | `H2d` |
 | `scen_b_tf_300` | Scenario B (circ.-coplanar, $\theta_f = 210^\circ$), $t_f = 300\text{ d}$ | 300.000 | 272.881 | 0.9096 | **PASS** | `5400..5449` | `H2e` |
-| `scen_b_tf_330` | Scenario B (circ.-coplanar, $\theta_f = 210^\circ$), $t_f = 330\text{ d}$ | 330.000 | 272.881 | 0.8269 | **PASS** | `5500..5549` | `H2f` |
-| `scen_b_tf_360` | Scenario B (circ.-coplanar, $\theta_f = 210^\circ$), $t_f = 360\text{ d}$ | 360.000 | 272.881 | 0.7580 | **PASS** | `5600..5649` | `H2g` |
+| `scen_b_tf_330` | Scenario B (circ.-coplanar, $\theta_f = 235^\circ$*), $t_f = 330\text{ d}$ | 330.000 | 293.082 | 0.8881 | **PASS** | `5700..5749` | `H2f` |
+| `scen_b_tf_360` | Scenario B (circ.-coplanar, $\theta_f = 255^\circ$*), $t_f = 360\text{ d}$ | 360.000 | 308.375 | 0.8566 | **PASS** | `5800..5849` | `H2g` |
 
-- Note on Scenario B arrival longitude: $\theta_f = 210^\circ$ (consistent with `tests/test_phase_studies.py`) is used because $\theta_f = 225^\circ$ yields $t_{\min} = 285.068\text{ d}$ ($t_{\min}/300 = 0.9502 > 0.95$).
+- Note on Scenario B arrival longitudes: $\theta_f = 210^\circ$ (consistent with `tests/test_phase_studies.py`) is used at $t_f = 300\text{ d}$ because $\theta_f = 225^\circ$ yields $t_{\min} = 285.068\text{ d}$ ($t_{\min}/300 = 0.9502 > 0.95$).
+- **Pre-run Amendment (*):** Initial execution of `scen_b_tf_330` at fixed $\theta_f = 210^\circ$ (seeds `5500..5506`) revealed that fixed $\theta_f = 210^\circ$ is **physically infeasible** at $t_f \in \{330, 360\}\text{ d}$ ($t_f > t_{\max}(\theta_f = 210^\circ)$: even 120/180-node LGL IPOPT collocation fails with `Maximum_Iterations_Exceeded` and $e_{\text{reprop}} \approx 0.46\text{--}2.0$). Advancing Mars's arrival longitude along its circular orbit ($\theta_f = 235^\circ$ at $t_f = 330\text{ d}$, $\theta_f = 255^\circ$ at $t_f = 360\text{ d}$) restores full physical feasibility ($t_{\min}/t_f = 0.8881$ and $0.8566$, IPOPT `Solve_Succeeded` with $e_{\text{reprop}} \le 4\times 10^{-4}$). Fresh untouched seed blocks `5700..5749` and `5800..5849` are locked here prior to execution.
 - **Methods per case (frozen settings, zero retuning):**
   1. `PoNN (scaled U(0,1))` (`L=70, n=140 CGL -> L=80, n=540 uniform_dense`).
   2. `Indirect Shooting` (random 7-D costates, `stop_at_rho=1e-5`).
