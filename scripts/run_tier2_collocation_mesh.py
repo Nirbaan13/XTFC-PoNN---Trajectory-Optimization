@@ -132,7 +132,10 @@ def solve_warmstarted_240(prob: ScenarioAProblem, r120, fuel_ref: float) -> dict
 
     term_err = float(np.linalg.norm(np.concatenate([R[-1] - prob.rf, V[-1] - prob.vf])))
     prop = propagate_control_scenario_a(prob, t240, Dlt, A)
-    rp = float(prop["arrival_residual"]) if np.isfinite(prop["arrival_residual"]) else float("nan")
+    if prop.success and prop.y.shape[1] > 0:
+        rp = float(np.linalg.norm(np.concatenate([prop.y[0:3, -1] - prob.rf, prop.y[3:6, -1] - prob.vf])))
+    else:
+        rp = float("nan")
     mf_kg = float(M[-1] * prob.m_ref_kg)
     f_kg = float((prob.m0 - M[-1]) * prob.m_ref_kg)
     sw, _ = _detect_throttle_switches(t240 * prob.t_ref_days, Dlt)
@@ -155,13 +158,22 @@ def solve_warmstarted_240(prob: ScenarioAProblem, r120, fuel_ref: float) -> dict
     }
 
 
+_COL_CACHE: dict[int, ScenarioACollocationSolver] = {}
+
+
+def _get_col(N: int) -> ScenarioACollocationSolver:
+    if N not in _COL_CACHE:
+        _COL_CACHE[N] = ScenarioACollocationSolver(n_nodes=N, max_iter=500, tol=1e-7)
+    return _COL_CACHE[N]
+
+
 def _run_seed_all_meshes(args_tuple: tuple[int, float]) -> tuple[int, dict[str, Any]]:
     seed, fuel_ref = args_tuple
     prob = ScenarioAProblem(srp_mode="none", srp_area_to_mass=0.0, label="tier2_colloc")
     out: dict[str, Any] = {}
     r120 = None
     for N in (60, 120, 180, 240):
-        sol = ScenarioACollocationSolver(n_nodes=N, max_iter=500, tol=1e-7)
+        sol = _get_col(N)
         r = sol.solve(prob, seed=seed)
         out[f"N{N}"] = _pack_col(r, fuel_ref)
         if N == 120:
@@ -208,7 +220,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--n-seeds", type=int, default=30)
     parser.add_argument("--workers", type=int, default=2)
-    parser.add_argument("--max-wall-s", type=float, default=450.0)
+    parser.add_argument("--max-wall-s", type=float, default=520.0)
+    parser.add_argument("--max-batch", type=int, default=2)
     args = parser.parse_args()
 
     if OUT_PATH.exists():
@@ -229,6 +242,8 @@ def main() -> None:
 
     t_start = time.perf_counter()
     todo = [(6000 + i, fuel_ref) for i in range(args.n_seeds) if str(6000 + i) not in data["seeds"]]
+    if args.max_batch > 0:
+        todo = todo[:args.max_batch]
     print(f"[Tier 2.8 Colloc Mesh] {len(data['seeds'])}/{args.n_seeds} done, {len(todo)} remaining", flush=True)
 
     if todo:

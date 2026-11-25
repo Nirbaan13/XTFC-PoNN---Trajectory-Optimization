@@ -249,3 +249,26 @@ and provided as the initial guess to indirect shooting, continuing the exact sam
 ### 10.4 Paper-Ready Outputs Generated
 - LaTeX `booktabs` tables: `results/tables/tab1_convergence_scenario_a.tex` through `tab5_runtime_distributions.tex`.
 - PDF figures: `results/figures/fig_switching_throttle_ponn_vs_shooting.pdf`, `fig_convergence_bars_ci.pdf`, `fig_extraction_ablation.pdf`, `fig_reprop_error_vs_seed.pdf`, `fig_srp_fuel_change.pdf`.
+
+---
+
+## 11. Tier 2 Progress Note: PoNN Sweep & Collocation Mesh Study (`seeds = 6000..6029`)
+
+### 11.1 Tier 2.7 PoNN $(L, n)$ Sweep, Error Decomposition, & Condition Numbers
+
+- **Numeric sweep finding (PREREG_ADDENDUM.md rule):** Across all overdetermined CGL $(L, n)$ cells ($L \in \{40,60,80,120,160\}, n \in \{140,280,540,1080\}, n \ge L$), median open-loop error **decreases by a factor of 8.55x (from 4.83e-02 at cgl_L80_n280_t1e-9 to 5.64e-03 at cgl_L160_n280_t1e-9)**.
+- **Control-discretization vs. state-approximation error:** Re-propagating the exact shooting control sampled on the CGL grid yields $e_{\text{reprop}} = 1.49e-02$ ($n=140$), $3.05e-03$ ($n=280$), $1.73e-02$ ($n=540$), and $6.67e-03$ ($n=1080$).
+- **Condition number definition:** $\kappa_2(J_s) = \sigma_{\max}(J_s)/\sigma_{\min}(J_s)$ for the column-scaled Jacobian $J_s = J\,\operatorname{diag}(\|J_{:,j}\|_2)^{-1}$ factorized inside `lm_svd`, reported alongside unscaled $\kappa_2(J)$ in `results/tables/tab6_ponn_plateau.tex`.
+- **Deliverables:** `results/tables/tab6_ponn_plateau.tex` and `results/figures/fig_tier2_ponn_plateau.pdf`.
+
+### 11.2 Tier 2.8 Collocation Mesh Study (`seeds = 6000..6029`)
+
+| Mesh | Loose [95% CI] | Strict [95% CI] | Med. $e_{\text{reprop}}$ (loose) | Med. $|\Delta m_f|$ vs. Shoot (kg) | Med. Time (s) |
+|:---|:---:|:---:|---:|---:|---:|
+| `N60` | 17/30 (56.7% [39.2%, 72.6%]) | 12/30 (40.0% [24.6%, 57.7%]) | 2.88e-03 | 0.517 | 2.04 |
+| `N120` | 12/30 (40.0% [24.6%, 57.7%]) | 6/30 (20.0% [9.5%, 37.3%]) | 1.02e-02 | 0.356 | 17.22 |
+| `N180` | 13/30 (43.3% [27.4%, 60.8%]) | 5/30 (16.7% [7.3%, 33.6%]) | 2.84e-02 | 1.221 | 76.47 |
+| `N240` | 22/30 (73.3% [55.6%, 85.8%]) | 5/30 (16.7% [7.3%, 33.6%]) | 2.38e-02 | 1.047 | 157.01 |
+| `N120_to_N240_refined` | 29/30 (96.7% [83.3%, 99.4%]) | 11/30 (36.7% [21.9%, 54.5%]) | 2.20e-02 | 0.813 | 131.77 |
+
+- Full LaTeX table: `results/tables/tab7_collocation_mesh.tex`.

@@ -19,9 +19,9 @@ Checkpoints per (cell, seed) to results/tier2_plateau_6000_6029.json.
 from __future__ import annotations
 
 import os
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["OMP_NUM_THREADS"] = "1"
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import argparse
 import json
@@ -120,8 +120,10 @@ def compute_control_discretization_baseline() -> dict[str, Any]:
             S = prob.c * lvn / Y[:, 6] + Y[:, 13] - 1.0
             delta_smooth = np.array([throttle_paper(float(s), float(sh.rho_reached)) for s in S])
             delta_hard = np.array([throttle_paper(float(s), 0.0) for s in S])
-            err_smooth = float(propagate_control_scenario_a(prob, t_tu, delta_smooth, alpha)["arrival_residual"])
-            err_hard = float(propagate_control_scenario_a(prob, t_tu, delta_hard, alpha)["arrival_residual"])
+            ps = propagate_control_scenario_a(prob, t_tu, delta_smooth, alpha)
+            ph = propagate_control_scenario_a(prob, t_tu, delta_hard, alpha)
+            err_smooth = float(np.linalg.norm(np.concatenate([ps.y[0:3, -1] - prob.rf, ps.y[3:6, -1] - prob.vf]))) if ps.success else float("nan")
+            err_hard = float(np.linalg.norm(np.concatenate([ph.y[0:3, -1] - prob.rf, ph.y[3:6, -1] - prob.vf]))) if ph.success else float("nan")
             out["grids"][f"{grid_type}_n{n}"] = {
                 "ctrl_disc_err_smooth": err_smooth,
                 "ctrl_disc_err_hard": err_hard,
@@ -162,27 +164,30 @@ def _run_cell_seed(args_tuple: tuple[str, int, int, str, float, int]) -> tuple[s
 
     prop_smooth = propagate_control_scenario_a(prob, t_tu, delta_smooth, alpha)
     prop_hard = propagate_control_scenario_a(prob, t_tu, delta_hard, alpha)
-    err_smooth = float(prop_smooth["arrival_residual"]) if np.isfinite(prop_smooth["arrival_residual"]) else float("nan")
-    err_hard = float(prop_hard["arrival_residual"]) if np.isfinite(prop_hard["arrival_residual"]) else float("nan")
+    err_smooth = float(np.linalg.norm(np.concatenate([prop_smooth.y[0:3, -1] - prob.rf, prop_smooth.y[3:6, -1] - prob.vf]))) if prop_smooth.success else float("nan")
+    err_hard = float(np.linalg.norm(np.concatenate([prop_hard.y[0:3, -1] - prob.rf, prop_hard.y[3:6, -1] - prob.vf]))) if prop_hard.success else float("nan")
 
     # State-approximation RMS error: ||[r_ponn, v_ponn] - [r_reprop, v_reprop]|| on the collocation grid
     state_err_rms = float("nan")
-    if "r" in prop_smooth and "v" in prop_smooth and len(prop_smooth["r"]) == len(t_tu):
-        dr = ev["r"] - prop_smooth["r"]
-        dv = ev["v"] - prop_smooth["v"]
+    if prop_smooth.success and prop_smooth.sol is not None:
+        Y_rep = prop_smooth.sol(t_tu).T
+        dr = ev["r"] - Y_rep[:, 0:3]
+        dv = ev["v"] - Y_rep[:, 3:6]
         state_err_rms = float(np.sqrt(np.mean(np.sum(dr ** 2 + dv ** 2, axis=1))))
 
-    # Condition numbers of terminal Jacobian J and column-scaled J_s (compute on first 5 seeds per cell to save SVD time on huge n=1080)
+    # Condition numbers of terminal Jacobian J and column-scaled J_s (computed on seed 6000 per cell)
     cond_scaled = None
     cond_unscaled = None
-    if seed < 6005 and np.isfinite(rc.residual_rms):
+    if seed == 6000 and np.isfinite(rc.residual_rms):
         try:
             _, J = model.residual_and_jacobian(rc.xi, ops, rho=float(rc.rho_reached))
             col_norms = np.linalg.norm(J, axis=0)
             col_norms = np.where(col_norms > 0.0, col_norms, 1.0)
             Js = J / col_norms[None, :]
-            s_scaled = np.linalg.svd(Js, compute_uv=False)
-            s_unscaled = np.linalg.svd(J, compute_uv=False)
+            _, Rs = np.linalg.qr(Js, mode="reduced")
+            _, Ru = np.linalg.qr(J, mode="reduced")
+            s_scaled = np.linalg.svd(Rs, compute_uv=False)
+            s_unscaled = np.linalg.svd(Ru, compute_uv=False)
             cond_scaled = float(s_scaled[0] / max(s_scaled[-1], 1e-300))
             cond_unscaled = float(s_unscaled[0] / max(s_unscaled[-1], 1e-300))
         except Exception:
@@ -270,12 +275,15 @@ def main() -> None:
     parser.add_argument("--n-seeds", type=int, default=30)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--max-wall-s", type=float, default=450.0)
+    parser.add_argument("--cell-prefix", type=str, default="")
     args = parser.parse_args()
 
     t_start = time.perf_counter()
     data = _load()
     todo = []
     for cid, L, n, g, tol in CELLS:
+        if args.cell_prefix and not cid.startswith(args.cell_prefix):
+            continue
         done = data["cells"][cid]["seeds"]
         for i in range(args.n_seeds):
             s = 6000 + i
