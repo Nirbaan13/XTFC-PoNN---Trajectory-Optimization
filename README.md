@@ -11,7 +11,7 @@ All tables, figures, and metrics in this repository are generated directly from 
 
 ## Key Results Summary — Scenario A (D'Ambrosio & Furfaro 2024, Table 1)
 
-Mission: 3-D heliocentric Earth–Mars rendezvous, $m_0 = 1000	ext{ kg}$, $t_f = 348.795	ext{ d}$, $T_{\max} = 0.5	ext{ N}$, $I_{	ext{sp}} = 2000	ext{ s}$, Sun two-body gravity.
+Mission: 3-D heliocentric Earth–Mars rendezvous, $m_0 = 1000\text{ kg}$, $t_f = 348.795\text{ d}$, $T_{\max} = 0.5\text{ N}$, $I_{\text{sp}} = 2000\text{ s}$, Sun two-body gravity.
 
 ### Single-Seed Reproduction vs. Independent Paper Checks
 
@@ -52,7 +52,7 @@ Mission: 3-D heliocentric Earth–Mars rendezvous, $m_0 = 1000	ext{ kg}$, $t_f =
 
 ### Preregistered Benchmark & Hybrid Evaluation — Fresh Seeds 2000..2099
 
-Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose $< 5	imes 10^-2$, strict $< 1	imes 10^-2$) and exact two-sided McNemar test ($p < 0.05$, $\Delta \ge +15.0	ext{ pp}$):
+Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose $< 5\times 10^{-2}$, strict $< 1\times 10^{-2}$) and exact two-sided McNemar test ($p < 0.05$, $\Delta \ge +15.0\text{ pp}$):
 
 #### Scenario A 4-Method Benchmark (Fresh Seeds 2000..2099)
 | Method (100 fresh seeds 2000..2099) | Conv (<5e-2, loose) [95% CI] | Conv (<1e-2, strict) [95% CI] | Fuel Med [Min, Max] (kg) | Reprop Med | Energy Err Med | Runtime Med (s) | nfev / njev Med |
@@ -74,9 +74,9 @@ Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose
 
 ## Secondary Study — Scenario B (`1218 kg`, `0.5 N`, `Isp = 3100 s`, SRP)
 
-Global feasibility scan (preserved in `results/phase1_results.json`) established $t_{\min} = 260.833	ext{ d}$ at $	heta_f = 192.518^\circ$ for the 1218 kg spacecraft at $T_{\max} = 0.5	ext{ N}$. Testing the **frozen Phase A2 PoNN (no retuning)** on Scenario B ($t_f = 300	ext{ d}, 	heta_f = 225^\circ$):
+Global feasibility scan (preserved in `results/phase1_results.json`) yielded numerical minimum time $t_{\min} = 260.833\text{ d}$ at $\theta_f = 192.518^\circ$ for the 1218 kg spacecraft at $T_{\max} = 0.5\text{ N}$ (no feasible solution found at $t_f = 247.9\text{ d}$). Testing the **frozen Phase A2 PoNN (no retuning)** on Scenario B ($t_f = 300\text{ d}, \theta_f = 225^\circ$):
 
-| Method on Scenario B ($t_f=300$ d, $\theta_f=225^\circ$, $1218$ kg, $I_{\text{sp}}=3100$ s) | Conv Rate [95% Wilson CI] | Fuel Mean ± SD (kg) | Median Runtime (s) | Notes |
+| Method on Scenario B ($t_f=300$ d, $\theta_f=225^\circ$, $1218$ kg, $I_{\text{sp}}=3100$ s) | Conv Rate [95% Wilson CI] | Fuel Mean ± SD (kg) | Mean Runtime (s) | Notes |
 | --- | :---: | :---: | ---: | --- |
 | 180-Node LGL Collocation (smooth init) | 1/1 | 244.080 | 47.75 | reprop=4.11e-04, 3 switches |
 | Frozen Phase A2 PoNN (ZERO retuning, 20 seeds) | 0/20 (0.0%) [0.0%, 16.1%] | — | 13.52 | 8-res Chebyshev CE, L=70->80 |
@@ -90,8 +90,7 @@ Global feasibility scan (preserved in `results/phase1_results.json`) established
 - [`results/figures/scenario_a_fig2_coarse_vs_shooting.png`](results/figures/scenario_a_fig2_coarse_vs_shooting.png) — Coarse PoNN vs. Indirect Shooting ($S(t)$ and $\delta(t)$)
 - [`results/figures/scenario_a_fig3_trajectory_3d.png`](results/figures/scenario_a_fig3_trajectory_3d.png) — 3-D Earth–Mars Transfer and Optimal Thrust Direction
 - [`results/figures/scenario_a_fig5_refined_solution.png`](results/figures/scenario_a_fig5_refined_solution.png) — Refined PoNN vs. Shooting & LGL-180 Collocation ($S, \delta, m, \lambda_m$)
-- [`results/figures/scenario_a_phase_a4_ablations.png`](results/figures/scenario_a_phase_a4_ablations.png) — Phase A4 Formulation, Basis, $
-ho$-Schedule, and Grid/Optimizer Ablations
+- [`results/figures/scenario_a_phase_a4_ablations.png`](results/figures/scenario_a_phase_a4_ablations.png) — Phase A4 Formulation, Basis, $\rho$-Schedule, and Grid/Optimizer Ablations
 - [`results/figures/scenario_a_phase_b_benchmark.png`](results/figures/scenario_a_phase_b_benchmark.png) — Phase B 100-Seed Three-Method Benchmark
 - [`results/figures/scenario_a_phase_c_srp_sweep.png`](results/figures/scenario_a_phase_c_srp_sweep.png) — Phase C Radial & Attitude Flat-Plate SRP Perturbation Sweep
 - [`results/figures/scenario_a_prereg_hybrid_comparison.png`](results/figures/scenario_a_prereg_hybrid_comparison.png) — Preregistered Hybrid vs Shooting Comparison Across SRP (Seeds 2000..2099)
@@ -103,22 +102,16 @@ ho$-Schedule, and Grid/Optimizer Ablations
 - `docs/PAPER_SPEC.md` — Complete Phase 0 equation specification, FD verification, and ambiguity list
 - `trajectory_optimization/scenario_a.py` — Scenario A dynamics, analytical radial/attitude SRP Jacobians, and Phase A1 shooting solver
 - `trajectory_optimization/ponn_paper.py` — Exact 8-group Chebyshev PoNN (Table A6/A1 CEs, JAX analytical Jacobian, `lm_svd` / SciPy `'lm'` / `'trf'`, Sec. 4.1 refinement)
+- `trajectory_optimization/split_domain_ponn.py` — Multi-arc Hermite CE Split-Domain PoNN with unknown switch times and analytic JAX Jacobian
 - `trajectory_optimization/scenario_a_collocation.py` — 180-node LGL pseudospectral direct collocation (CasADi + IPOPT)
 - `REPORT.md`, `ASSUMPTIONS.md`, `DEVIATIONS.md` — Full scientific report (with paper claim audit), ambiguity log, and deviations log
 
 ```bash
-# Run full unit test suite (29 tests: Scenario A FD/CE/Jacobian/Shooting/Projection + Scenario B)
-.venv/bin/pytest tests/ -v
+# Run full unit test suite (FD checks, CE exactness, split-domain Jacobian, narrative-table consistency)
+pytest tests/ -v
 
-# Re-run individual phases (checkpointed per seed)
-PYTHONPATH=. .venv/bin/python scripts/run_phase_a3.py --n-seeds 100
-PYTHONPATH=. .venv/bin/python scripts/run_phase_a4.py --n-seeds 10
-PYTHONPATH=. .venv/bin/python scripts/run_phase_b.py --n-seeds 100
-PYTHONPATH=. .venv/bin/python scripts/run_phase_c.py --n-seeds 5 --colloc-seeds 1
-PYTHONPATH=. .venv/bin/python scripts/run_phase_d.py
-
-# Regenerate all figures, markdown tables, REPORT.md, README.md, ASSUMPTIONS.md, DEVIATIONS.md
-PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py
+# Regenerate all figures, LaTeX & Markdown tables, REPORT.md, README.md, ASSUMPTIONS.md, DEVIATIONS.md from stored JSONs
+python3 run_all.py --from-stored
 ```
 
 ## Tier 1 Paper-Ready Tables, PDF Figures, & Holm-Corrected Verdicts
@@ -128,3 +121,9 @@ PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py
 - **LaTeX `booktabs` tables:** `results/tables/tab1_convergence_scenario_a.tex` – `tab5_runtime_distributions.tex`.
 - **PDF figures:** `results/figures/fig_switching_throttle_ponn_vs_shooting.pdf`, `fig_convergence_bars_ci.pdf`, `fig_extraction_ablation.pdf`, `fig_reprop_error_vs_seed.pdf`, `fig_srp_fuel_change.pdf`.
 - **Reproduce all tables and figures from stored JSON:** `python3 run_all.py --from-stored`
+
+## Addendum 2 Baselines & Split-Domain Comparison (`seeds 8000..8099`)
+
+- **Preregistration:** [PREREG_ADDENDUM_2.md](PREREG_ADDENDUM_2.md) (commit `24cd1df`).
+- **Strict convergence ($e_{\text{reprop}} < 10^{-2}$, $N=100$):** Single-start Shooting `66/100`, Multi-start Shooting ($K\le 5$) `99/100` (med. `16.09 s`), Deterministic Energy-Opt. Shooting `1/1` (`13.18 s`), Hybrid (`rho_ext=1`) `94/100` (med. `13.13 s`), Split-Domain PoNN `98/100` (med. `13.60 s`).
+- **Deliverables:** `results/tables/tab9_addendum2_baselines.tex`, `results/figures/fig_addendum2_baselines.pdf`, and [REPORT.md](REPORT.md) Section 13.

@@ -44,22 +44,27 @@ def _f(v, fmt="{:.2e}"):
 
 
 def analyze_plateau_verdict(pl: dict) -> dict:
-    """Apply preregistered numeric rule: ratio max_med / min_med across overdetermined (L, n) CGL cells."""
+    """Apply preregistered numeric rule: ratio max_med / min_med across complete (N=30) overdetermined (L, n) CGL cells."""
     meds = {}
+    exploratory = []
     for cid, c in pl["cells"].items():
         m = c["meta"]
+        n_seeds = c["summary"].get("n_seeds", 0)
+        if n_seeds < 30:
+            exploratory.append((cid, n_seeds))
+            continue
         if m["grid_type"] == "cgl" and m["tol"] == 1e-9 and not m["underdetermined"]:
             s = c["summary"].get("reprop_smooth_loose")
             if s and s["n"] >= 3:
                 meds[cid] = float(s["median"])
     if not meds:
-        return {"factor": None, "verdict_phrase": "CANNOT TEST", "min_cell": None, "max_cell": None}
+        return {"factor": None, "verdict_phrase": "CANNOT TEST", "min_cell": None, "max_cell": None, "exploratory": exploratory}
     min_k = min(meds, key=meds.get)
     max_k = max(meds, key=meds.get)
     factor = meds[max_k] / max(meds[min_k], 1e-15)
     is_plateau = factor <= 2.0
     phrase = (
-        f"observed plateau (factor {factor:.2f}x <= 2.0 across overdetermined sweep)"
+        f"observed plateau (factor {factor:.2f}x <= 2.0 across complete N=30 overdetermined sweep)"
         if is_plateau
         else f"decreases by a factor of {factor:.2f}x (from {meds[max_k]:.2e} at {max_k} to {meds[min_k]:.2e} at {min_k})"
     )
@@ -71,6 +76,7 @@ def analyze_plateau_verdict(pl: dict) -> dict:
         "max_cell": max_k,
         "max_val": meds[max_k],
         "verdict_phrase": phrase,
+        "exploratory": exploratory,
     }
 
 
@@ -78,7 +84,7 @@ def write_tab6_plateau(pl: dict, verdict: dict) -> None:
     lines = [
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Tier~2.7 PoNN $(L, n)$ sweep on Scenario A (fresh seeds 6000--6029, $N=30$ per cell). Condition numbers $\kappa_2(J_s)$ (column-scaled QR/SVD Jacobian) and $\kappa_2(J)$ (unscaled) are medians at terminal $\rho$. Finding: " + verdict["verdict_phrase"].replace("_", r"\_") + r".}",
+        r"\caption{Tier~2.7 PoNN $(L, n)$ sweep on Scenario A (fresh seeds 6000--6029, $N=30$ per confirmatory cell; $^*$underdetermined $n<L$; $^\dagger$exploratory $N<30$ due to 410--600\,s/seed dense QR+SVD cost, excluded from primary sweep ratio). Condition numbers $\kappa_2(J_s)$ (column-scaled QR/SVD Jacobian) and $\kappa_2(J)$ (unscaled) are medians at terminal $\rho$. Finding: " + verdict["verdict_phrase"].replace("_", r"\_") + r".}",
         r"\label{tab:tier2_plateau}",
         r"\begin{tabular}{lccccccc}",
         r"\toprule",
@@ -98,7 +104,12 @@ def write_tab6_plateau(pl: dict, verdict: dict) -> None:
         ks = s["cond_J_scaled"]["median"] if s.get("cond_J_scaled") else None
         ku = s["cond_J_unscaled"]["median"] if s.get("cond_J_unscaled") else None
         rt = s["runtime_s"]["median"] if s.get("runtime_s") else None
-        tag = f"{m['grid_type'].upper()}, $L={m['L']}$, $n={m['n']}$, {m['tol']:.0e}" + ("$^*$" if m["underdetermined"] else "")
+        suffix = ""
+        if m["underdetermined"]:
+            suffix += "$^*$"
+        if n_tot < 30:
+            suffix += r"$^\dagger$ [exploratory]"
+        tag = f"{m['grid_type'].upper()}, $L={m['L']}$, $n={m['n']}$, {m['tol']:.0e}{suffix}"
         lines.append(
             f"{tag} & {nl}/{n_tot} / {ns}/{n_tot} & {_f(rp_s)} & {_f(rp_h)} & {_f(st_r)} & {_f(ks)} & {_f(ku)} & {_f(rt, '{:.2f}')} \\\\"
         )
@@ -210,12 +221,20 @@ def update_report_tier2(pl: dict, cm: dict, verdict: dict) -> None:
         txt = txt.split(marker)[0]
 
     base = pl["control_discretization_baseline"]["grids"]
+    exp_list = verdict.get("exploratory", [])
+    exp_note = (
+        f"- **Exploratory cells ($N < 30$, excluded from primary confirmatory ratio):** "
+        + ", ".join(f"`{cid}` ($N={n_s}$)" for cid, n_s in exp_list)
+        + " (truncated due to 410–600 s/seed dense QR+SVD cost on 2 vCPUs; marked `$^\\dagger$ [exploratory]` in `tab6_ponn_plateau.tex`)."
+        if exp_list else ""
+    )
     lines = [
         marker,
         "",
         "### 11.1 Tier 2.7 PoNN $(L, n)$ Sweep, Error Decomposition, & Condition Numbers",
         "",
-        f"- **Numeric sweep finding (PREREG_ADDENDUM.md rule):** Across all overdetermined CGL $(L, n)$ cells ($L \\in \\{{40,60,80,120,160\\}}, n \\in \\{{140,280,540,1080\\}}, n \\ge L$), median open-loop error **{verdict['verdict_phrase']}**.",
+        f"- **Numeric sweep finding (PREREG_ADDENDUM.md rule):** Across all complete ($N=30$) overdetermined CGL $(L, n)$ cells ($L \\in \\{{40,60,80,120,160\\}}, n \\in \\{{140,280,540,1080\\}}, n \\ge L$), median open-loop error **{verdict['verdict_phrase']}** (contradicting an irreducible accuracy floor; increasing $L$ lowers error substantially at the cost of higher $\\kappa_2(J_s)$ and lower convergence rate).",
+        *( [exp_note] if exp_note else [] ),
         f"- **Control-discretization vs. state-approximation error:** Re-propagating the exact shooting control sampled on the CGL grid yields $e_{{\\text{{reprop}}}} = {base['cgl_n140']['ctrl_disc_err_smooth']:.2e}$ ($n=140$), ${base['cgl_n280']['ctrl_disc_err_smooth']:.2e}$ ($n=280$), ${base['cgl_n540']['ctrl_disc_err_smooth']:.2e}$ ($n=540$), and ${base['cgl_n1080']['ctrl_disc_err_smooth']:.2e}$ ($n=1080$).",
         "- **Condition number definition:** $\\kappa_2(J_s) = \\sigma_{\\max}(J_s)/\\sigma_{\\min}(J_s)$ for the column-scaled Jacobian $J_s = J\\,\\operatorname{diag}(\\|J_{:,j}\\|_2)^{-1}$ factorized inside `lm_svd`, reported alongside unscaled $\\kappa_2(J)$ in `results/tables/tab6_ponn_plateau.tex`.",
         "- **Deliverables:** `results/tables/tab6_ponn_plateau.tex` and `results/figures/fig_tier2_ponn_plateau.pdf`.",

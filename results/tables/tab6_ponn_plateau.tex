@@ -1,6 +1,6 @@
 \begin{table*}[t]
 \centering
-\caption{Tier~2.7 PoNN $(L, n)$ sweep on Scenario A (fresh seeds 6000--6029, $N=30$ per cell). Condition numbers $\kappa_2(J_s)$ (column-scaled QR/SVD Jacobian) and $\kappa_2(J)$ (unscaled) are medians at terminal $\rho$. Finding: decreases by a factor of 8.55x (from 4.83e-02 at cgl\_L80\_n280\_t1e-9 to 5.64e-03 at cgl\_L160\_n280\_t1e-9).}
+\caption{Tier~2.7 PoNN $(L, n)$ sweep on Scenario A (fresh seeds 6000--6029, $N=30$ per confirmatory cell; $^*$underdetermined $n<L$; $^\dagger$exploratory $N<30$ due to 410--600\,s/seed dense QR+SVD cost, excluded from primary sweep ratio). Condition numbers $\kappa_2(J_s)$ (column-scaled QR/SVD Jacobian) and $\kappa_2(J)$ (unscaled) are medians at terminal $\rho$. Finding: decreases by a factor of 8.55x (from 4.83e-02 at cgl\_L80\_n280\_t1e-9 to 5.64e-03 at cgl\_L160\_n280\_t1e-9).}
 \label{tab:tier2_plateau}
 \begin{tabular}{lccccccc}
 \toprule
@@ -24,8 +24,8 @@ CGL, $L=120$, $n=540$, 1e-09 & 22/30 / 0/30 & 2.45e-02 & 3.88e-03 & 1.24e-02 & 1
 CGL, $L=120$, $n=1080$, 1e-09 & 12/30 / 0/30 & 1.10e-02 & 1.14e-02 & 7.38e-03 & 4.88e+06 & 5.78e+10 & 184.72 \\
 CGL, $L=160$, $n=140$, 1e-09$^*$ & 0/30 / 0/30 & -- & -- & -- & 1.54e+10 & 2.31e+10 & 183.73 \\
 CGL, $L=160$, $n=280$, 1e-09 & 15/30 / 15/30 & 5.64e-03 & 1.06e-02 & 3.11e-03 & 9.53e+09 & 2.69e+13 & 105.15 \\
-CGL, $L=160$, $n=540$, 1e-09 & 2/6 / 2/6 & 4.46e-03 & 2.76e-03 & 2.81e-03 & 9.01e+09 & 3.42e+10 & 223.25 \\
-CGL, $L=160$, $n=1080$, 1e-09 & 0/3 / 0/3 & -- & -- & -- & 7.52e+07 & 4.10e+14 & 489.37 \\
+CGL, $L=160$, $n=540$, 1e-09$^\dagger$ [exploratory] & 2/6 / 2/6 & 4.46e-03 & 2.76e-03 & 2.81e-03 & 9.01e+09 & 3.42e+10 & 223.25 \\
+CGL, $L=160$, $n=1080$, 1e-09$^\dagger$ [exploratory] & 0/3 / 0/3 & -- & -- & -- & 7.52e+07 & 4.10e+14 & 489.37 \\
 UNIFORM, $L=80$, $n=140$, 1e-09 & 0/30 / 0/30 & -- & -- & -- & 6.28e+10 & 1.41e+16 & 3.01 \\
 UNIFORM, $L=80$, $n=280$, 1e-09 & 0/30 / 0/30 & -- & -- & -- & 1.25e+13 & 6.74e+12 & 64.26 \\
 UNIFORM, $L=80$, $n=540$, 1e-09 & 22/30 / 0/30 & 3.51e-02 & 4.59e-02 & 2.21e-02 & 1.29e+10 & 4.65e+10 & 29.10 \\

@@ -1,0 +1,28 @@
+\begin{table*}[t]
+\centering
+\caption{Preregistration Addendum~2 baseline comparison on Scenario~A (fresh seeds 8000--8099, $N=100$, $A/m_0=0$). Multi-start shooting runs up to 5 random restarts and stops at the first strict success ($e_{\mathrm{reprop}} < 10^{-2}$). Deterministic energy-optimal shooting solves $\rho=1 \to 10^{-5}$ from the fixed prograde guess $\boldsymbol{\lambda}_0^{\mathrm{fix}} = [\mathbf{0}_3, -\hat{\mathbf{v}}_0, 0.5]$ (5 idle-machine timing trials).}
+\label{tab:addendum2_baselines}
+\begin{tabular}{lccccc}
+\toprule
+Method & Strict ($<10^{-2}$) [95\% CI] & Med. Time All (s) [IQR] & Med. Time Strict (s) & Med. $e_{\mathrm{reprop}}$ & Notes \\
+\midrule
+Deterministic Energy-Opt. Shoot & 1/1 (det.) & 13.18 [13.12, 13.34] & 13.18 & 3.46e-04 & fixed prograde $\boldsymbol{\lambda}_0^{\mathrm{fix}}$ \\
+Single-Start Random Shooting ($k=0$) & 66/100 (66.0\% [56.3, 74.5]) & 16.27 [13.43, 40.53] & 14.15 & 3.46e-04 & 1 random costate \\
+Multi-Start Random Shooting ($K \le 5$) & 99/100 (99.0\% [94.6, 99.8]) & 16.27 [13.43, 54.78] & 16.09 & 3.46e-04 & med. 1 att. (mean 1.43) \\
+Hybrid (PoNN $\rho_{\mathrm{ext}}=1 \to$ Shoot) & 94/100 (94.0\% [87.5, 97.2]) & 13.24 [12.39, 15.15] & 13.13 & 3.46e-04 & PoNN 1.15s + Shoot 12.27s \\
+Split-Domain PoNN Pipeline (5-arc) & 98/100 (98.0\% [93.0, 99.4]) & 13.65 [12.92, 17.68] & 13.60 & 3.40e-06 & Coarse 4.34s + Split 8.89s \\
+\midrule
+\multicolumn{6}{l}{\textit{Holm--Bonferroni corrected pairwise tests ($M=10$, FWER $\alpha=0.05$):}} \\
+\texttt{M1}: hybrid\_rho1 vs single\_shoot & $\Delta=+28.0$ pp (A-only=33, B-only=5) & $p_{\mathrm{raw}}=4.26e-06$ & $p_{\mathrm{Holm}}=2.98e-05$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{M2}: split\_domain vs single\_shoot & $\Delta=+32.0$ pp (A-only=34, B-only=2) & $p_{\mathrm{raw}}=1.94e-08$ & $p_{\mathrm{Holm}}=1.55e-07$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{M3}: multistart\_shoot\_5 vs single\_shoot & $\Delta=+33.0$ pp (A-only=33, B-only=0) & $p_{\mathrm{raw}}=2.33e-10$ & $p_{\mathrm{Holm}}=2.33e-09$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{M4}: hybrid\_rho1 vs multistart\_shoot\_5 & $\Delta=-5.0$ pp (A-only=1, B-only=6) & $p_{\mathrm{raw}}=0.1250$ & $p_{\mathrm{Holm}}=0.5000$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\texttt{M5}: split\_domain vs multistart\_shoot\_5 & $\Delta=-1.0$ pp (A-only=1, B-only=2) & $p_{\mathrm{raw}}=1.0000$ & $p_{\mathrm{Holm}}=1.0000$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\texttt{M6}: hybrid\_rho1 vs split\_domain & $\Delta=-4.0$ pp (A-only=1, B-only=5) & $p_{\mathrm{raw}}=0.2188$ & $p_{\mathrm{Holm}}=0.6562$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\texttt{T1}: hybrid\_rho1 vs multistart\_shoot\_5 (time) & $\Delta t_{\mathrm{med}}=-2.73$ s ($n=93$) & $p_{\mathrm{raw}}=1.02e-09$ & $p_{\mathrm{Holm}}=9.21e-09$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{T2}: split\_domain vs multistart\_shoot\_5 (time) & $\Delta t_{\mathrm{med}}=-1.86$ s ($n=97$) & $p_{\mathrm{raw}}=9.69e-06$ & $p_{\mathrm{Holm}}=5.81e-05$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{T3}: hybrid\_rho1 vs split\_domain (time) & $\Delta t_{\mathrm{med}}=-0.60$ s ($n=93$) & $p_{\mathrm{raw}}=2.74e-05$ & $p_{\mathrm{Holm}}=0.0001$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{T4}: hybrid\_rho1 vs det\_energy\_shoot (time) & $\Delta t_{\mathrm{med}}=-0.05$ s ($n=94$) & $p_{\mathrm{raw}}=0.3468$ & $p_{\mathrm{Holm}}=0.6936$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\bottomrule
+\end{tabular}
+\end{table*}

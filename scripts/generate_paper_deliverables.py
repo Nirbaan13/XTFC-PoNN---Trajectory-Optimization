@@ -482,11 +482,17 @@ def write_tables_and_docs(a3: dict, a4: dict, pb: dict, pc: dict, pd: dict, ph1:
         rmss = [v["residual_rms"] for v in vals if v.get("residual_rms") is not None]
         rps = [v["reprop_arrival_residual"] for v in vals if v.get("reprop_arrival_residual") is not None]
         rts = [v["runtime_s"] for v in vals if v.get("runtime_s") is not None]
+        med_fuel = float(np.median(fuels)) if fuels else None
+        med_rp = float(np.median(rps)) if rps else None
+        if ok == 0 and (med_fuel is None or med_fuel <= 0.0 or (med_rp is not None and med_rp >= 1.0)):
+            fuel_str = "NaN"
+        else:
+            fuel_str = _fmt(med_fuel, ".2f")
         t3_lines.append(
             f"| {grp} | {var} | {n} | {ok}/{n} ({100*ok/n:.0f}%) "
-            f"| {_fmt(float(np.median(fuels)) if fuels else None, '.2f')} "
+            f"| {fuel_str} "
             f"| {_fmt(float(np.median(rmss)) if rmss else None, '.2e')} "
-            f"| {_fmt(float(np.median(rps)) if rps else None, '.2e')} "
+            f"| {_fmt(med_rp, '.2e')} "
             f"| {_fmt(float(np.median(rts)) if rts else None, '.2f')} |"
         )
 
@@ -572,7 +578,7 @@ def write_tables_and_docs(a3: dict, a4: dict, pb: dict, pc: dict, pd: dict, ph1:
 
     # --- Table 6: Phase D Scenario B (Frozen Phase A2 PoNN + Existing Scenario B Data) ---
     t6_lines = [
-        "| Method on Scenario B ($t_f=300$ d, $\\theta_f=225^\\circ$, $1218$ kg, $I_{\\text{sp}}=3100$ s) | Conv Rate [95% Wilson CI] | Fuel Mean ± SD (kg) | Median Runtime (s) | Notes |",
+        "| Method on Scenario B ($t_f=300$ d, $\\theta_f=225^\\circ$, $1218$ kg, $I_{\\text{sp}}=3100$ s) | Conv Rate [95% Wilson CI] | Fuel Mean ± SD (kg) | Mean Runtime (s) | Notes |",
         "| --- | :---: | :---: | ---: | --- |",
     ]
     col_b = pd["collocation_ref"]
@@ -788,7 +794,7 @@ __TAB_A3__
 
 - **Exact paper $\beta \sim U(0, 1)$ initialization:** Because $|T_k'(\pm 1)| = k^2$ (up to $73^2 = 5329$), unscaled $\beta_{1..3} \sim U(0, 1)$ in the Table A6 Hermite CE places the initial trajectory at $\|\mathbf{r}\| \approx 25{,}000\text{ AU}$ ($\|\mathbf{L}_0\| \approx 1.4\times 10^7$). Even from that extreme initial state, unscaled SVD/Cholesky Levenberg–Marquardt recovers the exact optimal branch on **`__U01_CONV__/100` (`__U01_RATE__%`, 95% Wilson CI `[__U01_LO__%, __U01_HI__%]`)** of seeds, with every converged seed landing identically at `__U01_FMEAN__ ± __U01_FSTD__ kg`.
 - **Scaled $\beta_{1..3} \sim 10^{-3} U(0,1), \beta_{\lambda_v} \sim 10^{-2} U(0,1)$ initialization:** Keeping the random initial trajectory near $\sim 1\text{ AU}$ raises convergence to **`__SC_CONV__/100` (`__SC_RATE__%`, 95% Wilson CI `[__SC_LO__%, __SC_HI__%]`)** with median total runtime `__SC_RT__ s`.
-- **Open-loop accuracy of single-domain global polynomials:** Across all 200 PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `__SC_RP__`), reflecting an observed plateau when representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion (our independent implementation differs from the published configuration; investigated systematically in Tier 2).
+- **Open-loop accuracy at baseline degree $L=80$:** Across all 200 baseline ($L=80$) PoNN runs, `0/100` achieved DOP853 re-propagated terminal error `< 1e-2` (all converged runs sit at `__SC_RP__`) when representing four sharp bang-off-bang switches ($\rho = 10^{-10}$) with a single unsegmented degree-80 Chebyshev expansion (our independent implementation differs from the published configuration). As established in the Tier 2 $(L, n)$ sweep (Section 11), this is **not** an irreducible floor: increasing Chebyshev degree from $L=80$ to $L=160$ reduces median open-loop error by $8.55\times$ to $5.64\times 10^{-3}$ (crossing below $10^{-2}$), at the cost of elevated Jacobian condition number ($\kappa_2(J_s) \sim 10^{10}$) and reduced convergence rate.
 
 ---
 
@@ -801,7 +807,7 @@ __TAB_A4__
 1. **8-residual CE vs. 14-residual unreduced (`A4(a)`):** Eliminating $\mathbf{v} = \dot{\mathbf{r}}$ via Table A6 Hermite CEs and $\boldsymbol{\lambda}_r = -\dot{\boldsymbol{\lambda}}_v$ increases convergence from `1/10 (10%)` to `10/10 (100%)` and cuts runtime by more than $2\times$.
 2. **Chebyshev NN vs. random-weight $\tanh$ ELM (`A4(b)`):** Deterministic orthogonal Chebyshev polynomials (`chebyshev_shifted`: `10/10`, `396.52 kg`; `chebyshev_literal`: `9/10`, `399.45 kg`) decisively outperform random-weight $\tanh$ ELM features (`0/10` on both CGL and uniform grids, stalling at `425–451 kg`, `reprop ~ 0.10`, 6 switches).
 3. **Continuation $\rho$ schedule (`A4(c)`):** Too few steps (`5` steps) jump to a 2-switch suboptimal branch (`524.79 kg`, `reprop = 0.636`); `10` steps undershoot (`392.65 kg`, `reprop = 0.080`). The paper's 20-step log-spaced schedule from $1$ to $10^{-10}$ achieves the best balance (`5/5`, `396.52 kg`, `reprop = 3.63e-2`).
-4. **Grid & optimizer (`A4(d)`):** `lm_svd` (Cholesky with QR+SVD fallback), SciPy MINPACK `'lm'`, and SciPy `'trf'` all converge to the identical coarse solution (`400.70 kg`, `rms = 2.06e-3`, `reprop = 8.64e-2`) on CGL-140, with `lm_svd` running ~7–10x faster (~3 s vs 20–30 s). Uniform-540 directly from random init converges `4/5 (80%)` to `396.52 kg`, confirming that uniform-grid failure at $n=140$ is purely a Runge oversampling effect.
+4. **Grid & optimizer (`A4(d)`):** `lm_svd` (Cholesky with QR+SVD fallback), SciPy MINPACK `'lm'`, and SciPy `'trf'` all converge to the identical coarse solution (`400.70 kg`, `rms = 2.06e-3`, `reprop = 8.64e-2`) on CGL-140, with `lm_svd` running ~7–10x faster (~3 s vs 20–30 s). Uniform-540 directly from random init converges `4/5 (80%)` to `396.52 kg`, confirming that uniform-grid failure at $n=140$ (`NaN` fuel due to divergence) is purely a Runge oversampling effect.
 
 ---
 
@@ -814,7 +820,7 @@ __TAB_B__
 ![Phase B 100-Seed Benchmark](results/figures/scenario_a_phase_b_benchmark.png)
 
 - **Convergence basin width (`reprop < 5e-2`):** Scaled-init PoNN leads at **`__PB_SC_RATE__%`**, followed by Indirect Shooting (**`__PB_SH_RATE__%`**), 180-Node LGL Collocation from random trajectories (**`__PB_CO_RATE__%`**), and unscaled paper-init PoNN (**`__PB_U01_RATE__%`**).
-- **Open-loop physical accuracy (`reprop < 1e-2`):** Indirect Shooting leads decisively (**`__PB_SH_RATE1__%`** at median `reprop = __PB_SH_RP__`, `fuel = 396.06 kg`, `energy_err = 9.90e-5`), followed by 180-Node LGL Collocation (**`__PB_CO_RATE1__%`** at `< 1e-2`, best `396.09 kg` with `reprop = 1.74e-4`, though random noisy throttle initializations often induce multi-switch chattering), while unsegmented global PoNN sits at `0.0%` below `1e-2` (`median reprop = __SC_RP__`).
+- **Open-loop physical accuracy (`reprop < 1e-2`):** Indirect Shooting leads decisively (**`__PB_SH_RATE1__%`** at median `reprop = __PB_SH_RP__`, `fuel = 396.06 kg`, `energy_err = 9.90e-5`), followed by 180-Node LGL Collocation (**`__PB_CO_RATE1__%`** at `< 1e-2`, best `396.09 kg` with `reprop = 1.74e-4`, though random noisy throttle initializations often induce multi-switch chattering), while unsegmented baseline $L=80$ PoNN sits at `0.0%` below `1e-2` (`median reprop = __SC_RP__`).
 - **Wall-clock speed:** Indirect Shooting has the lowest median runtime (`__PB_SH_RT__ s` overall; `__PB_SH_RTC__ s` when converged), followed by scaled PoNN (`__SC_RT__ s`), unscaled PoNN (`__U01_RT__ s`), and 180-node LGL Collocation (`__PB_CO_RT__ s`).
 
 ---
@@ -834,56 +840,85 @@ __TAB_C__
 
 ## 7. Phase D: Secondary Scenario B (`1218 kg`, `0.5 N`, `Isp = 3100 s`, SRP)
 
-All prior Scenario B results are preserved in `results/phase1_results.json` and `results/phase2_results.json` (global feasibility scan confirming minimum time $t_{\min} = 260.833\text{ d}$ at $\theta_f = 192.518^\circ$ across all 5 multi-start free-$\theta_f$ 180-node solves and 25 fixed-angle scans in $[60^\circ, 300^\circ]$, establishing that $t_f = 247.9\text{ d}$ is infeasible at $T_{\max} = 0.5\text{ N}$ for this 1218 kg spacecraft; plus 20-run multi-$t_f$ robustness across $t_f \in \{247.9, 280, 300, 330, 360\}\text{ d}$ and 100-seed basin/hybrid studies).
+All prior Scenario B results are preserved in `results/phase1_results.json` and `results/phase2_results.json` (global feasibility scan yielding numerical minimum time $t_{\min} = 260.833\text{ d}$ at $\theta_f = 192.518^\circ$ across all 5 multi-start free-$\theta_f$ 180-node solves and 25 fixed-angle scans in $[60^\circ, 300^\circ]$, with no feasible solution found at $t_f = 247.9\text{ d}$ under $T_{\max} = 0.5\text{ N}$ for this 1218 kg spacecraft; plus 20-run multi-$t_f$ robustness across $t_f \in \{247.9, 280, 300, 330, 360\}\text{ d}$ and 100-seed basin/hybrid studies).
 
 In addition, we applied the **frozen Phase A2 PoNN (zero retuning)** directly to Scenario B at $t_f = 300\text{ d}, \theta_f = 225^\circ$, alongside random indirect shooting and hybrid PoNN→Shooting warm-starting across 20 seeds:
 
 __TAB_D__
 
-- Standalone frozen PoNN (zero retuning) lands reproducibly at `237.73 kg` (`reprop = 2.51e-1`, `0/20` under strict `< 5e-2`), whereas extracting its initial costates $\boldsymbol{\lambda}(t_0)$ to warm-start indirect shooting achieves **`20/20 (100.0%, 95% CI [83.9%, 100.0%])`** convergence to the exact `243.826 kg` optimal transfer in `4.73 s` mean runtime (versus `17/20 = 85.0%` in `7.71 s` for random costates), rescuing all 3 failed random-costate seeds.
+- Standalone frozen PoNN (zero retuning) lands reproducibly at `237.73 kg` (`reprop = 2.51e-1`, `0/20` under loose `< 5e-2`), whereas extracting its initial costates $\boldsymbol{\lambda}(t_0)$ to warm-start indirect shooting achieves **`__PD_HYB_CONV__/20 (__PD_HYB_RATE__%, 95% CI [__PD_HYB_LO__%, __PD_HYB_HI__%])`** convergence to the exact `__PD_HYB_FUEL__ kg` optimal transfer in `__PD_HYB_RT__ s` mean runtime (versus `__PD_SH_CONV__/20 = __PD_SH_RATE__%` in `__PD_SH_RT__ s` for random costates), rescuing all failed random-costate seeds.
 
 ---
 
----
+## 8. Preregistered Held-Out Benchmark & Hybrid Evaluation (`seeds = 2000..2099`)
 
-## 9. Preregistered Held-Out Benchmark & Hybrid Evaluation (`seeds = 2000..2099`)
+To strictly test the primary claim without data snooping or post-hoc threshold tuning, the evaluation protocol, dual convergence thresholds ($e_{\text{reprop}} < 5\times 10^{-2}$ loose and $< 1\times 10^{-2}$ strict), extraction continuation level ($k_{\text{ext}} = 1, \rho_{\text{ext}} = 2.976\times 10^{-1}$, selected on dev seeds `1000..1019` only), and exact two-sided McNemar hypothesis test criteria were **committed to git in [`PREREG.md`](PREREG.md) at commit `3c87713` BEFORE any held-out evaluation was run**.
 
-To strictly test the primary claim without data snooping or post-hoc threshold tuning, the evaluation protocol, dual convergence thresholds ($e_{\\text{reprop}} < 5\\times 10^{-2}$ loose and $< 1\\times 10^{-2}$ strict), extraction continuation level ($k_{\\text{ext}} = 1, \\rho_{\\text{ext}} = 2.976\\times 10^{-1}$, selected on dev seeds `1000..1019` only), and exact two-sided McNemar hypothesis test criteria were **committed to git in [`PREREG.md`](PREREG.md) at commit `3c87713` BEFORE any held-out evaluation was run**.
-
-### 9.1 Scenario A 4-Method Benchmark on Fresh Seeds `2000..2099`
+### 8.1 Scenario A 4-Method Benchmark on Fresh Seeds `2000..2099`
 
 __TAB_PREREG_BENCH__
 
 **Key Findings on Fresh Seeds:**
-1. **Basin Width vs Open-Loop Accuracy Replication:** On fresh seeds `2000..2099`, scaled-init PoNN replicates its broad basin under loose threshold ($92/100 = 92.0\\%$, 95% Wilson CI $[85.0\\%, 95.9\\%]$), exactly matching the Phase B dev-seed result ($92/100$). Raw unscaled $U(0,1)$ achieves $39/100 = 39.0\\%$, confirming that unscaled initialization struggles due to the $|T_k'(\\pm 1)| = k^2$ boundary derivative magnitude.
-2. **Open-Loop Physical Accuracy Ceiling:** $0/100$ PoNN seeds achieved strict convergence ($e_{\\text{reprop}} < 1\\times 10^{-2}$), with median error remaining at $3.63\\times 10^{-2}$ due to the single-domain Gibbs approximation limit across 4 bang-off-bang switches. In contrast, random-costate indirect shooting achieves $69/100 = 69.0\\%$ strict convergence, and 180-node LGL collocation achieves $19/100 = 19.0\\%$.
+1. **Basin Width vs Open-Loop Accuracy Replication:** On fresh seeds `2000..2099`, scaled-init PoNN replicates its broad basin under the loose threshold (`__P_SC_L__/100 = __P_SC_LR__%`, 95% Wilson CI `[__P_SC_LLO__%, __P_SC_LHI__%]`), matching the Phase B dev-seed result (`__PB_SC_RATE__%`). Raw unscaled $U(0,1)$ achieves `__P_U01_L__/100 = __P_U01_LR__%`, confirming that unscaled initialization struggles due to the $|T_k'(\pm 1)| = k^2$ boundary derivative magnitude.
+2. **Open-Loop Accuracy at Baseline $L=80$ vs. Degree Scaling:** At the baseline degree $L=80$, `__P_SC_S__/100` PoNN seeds achieved strict convergence ($e_{\text{reprop}} < 1\times 10^{-2}$), with median error `__P_SC_RP__`. In contrast, random-costate indirect shooting achieves `__P_SH_S__/100 = __P_SH_SR__%` strict convergence, and 180-node LGL collocation achieves `__P_CO_S__/100 = __P_CO_SR__%`. As shown in Tier 2 (Section 11), increasing the single-domain Chebyshev degree from $L=80$ to $L=160$ reduces median open-loop error by $8.55\times$ to $5.64\times 10^{-3}$ (below $10^{-2}$), and segmenting at switch times (Tier 3, Section 12) reaches $3.39\times 10^{-6}$.
 
-### 9.2 Preregistered Hybrid vs. Shooting Evaluation Across Solar Radiation Pressure ($A/m_0 \\in \\{0.0, 0.5, 1.0\\}\\text{ m}^2/\\text{kg}$)
+### 8.2 Preregistered Hybrid vs. Shooting Evaluation Across Solar Radiation Pressure ($A/m_0 \in \{0.0, 0.5, 1.0\}\text{ m}^2/\text{kg}$)
 
-Initial costates at $t_0$ were extracted from the frozen coarse PoNN ($L=70, n=140$ CGL) at continuation level $k_{\\text{ext}} = 1$ ($\\rho_{\\text{ext}} = 2.976\\times 10^{-1}$):
-$$\\boldsymbol{\\lambda}_v(t_0) = \\boldsymbol{\\sigma}(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}, \\quad \\boldsymbol{\\lambda}_r(t_0) = -b^2 \\boldsymbol{\\sigma}'(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}, \\quad \\lambda_m(t_0) = (\\boldsymbol{\\sigma}(-1) - \\boldsymbol{\\sigma}(1))^T \\boldsymbol{\\beta}_{\\lambda_m}$$
-and provided as the initial guess to indirect shooting, continuing the exact same $\\rho$ schedule from $\\rho_{\\text{ext}}$ down to $10^{-5}$.
+Initial costates at $t_0$ were extracted from the frozen coarse PoNN ($L=70, n=140$ CGL) at continuation level $k_{\text{ext}} = 1$ ($\rho_{\text{ext}} = 2.976\times 10^{-1}$):
+$$\boldsymbol{\lambda}_v(t_0) = \boldsymbol{\sigma}(-1)^T \boldsymbol{\beta}_{\lambda_v}, \quad \boldsymbol{\lambda}_r(t_0) = -b^2 \boldsymbol{\sigma}'(-1)^T \boldsymbol{\beta}_{\lambda_v}, \quad \lambda_m(t_0) = (\boldsymbol{\sigma}(-1) - \boldsymbol{\sigma}(1))^T \boldsymbol{\beta}_{\lambda_m}$$
+and provided as the initial guess to indirect shooting, continuing the exact same $\rho$ schedule from $\rho_{\text{ext}}$ down to $10^{-5}$.
 
 __TAB_PREREG_HYBRID__
 
 ![Preregistered Hybrid SRP Comparison](results/figures/scenario_a_prereg_hybrid_comparison.png)
 
-**Statistical Hypothesis Testing & Verdict:**
-- **Zero SRP ($A/m_0 = 0.0\\text{ m}^2/\\text{kg}$):** Hybrid achieves **95/100 (95.0%)** strict convergence vs. **69/100 (69.0%)** for random costates. Difference: **$+26.0\\text{ percentage points}$** (discordant: $b=0$ shooting-only, $c=26$ hybrid-only). Exact two-sided McNemar test: $p = 8.68\\times 10^{-7}$ ($\\chi^2 = 20.83, p = 5.03\\times 10^{-6}$). Preregistered Verdict: **`SUPPORTED`**.
-- **Intermediate Radial SRP ($A/m_0 = 0.5\\text{ m}^2/\\text{kg}$):** Hybrid achieves **96/100 (96.0%)** strict convergence vs. **72/100 (72.0%)** for random costates. Difference: **$+24.0\\text{ percentage points}$** ($b=1, c=25$). Exact two-sided McNemar test: $p = 8.05\\times 10^{-7}$ ($\\chi^2 = 20.35, p = 6.46\\times 10^{-6}$). Preregistered Verdict: **`SUPPORTED`**.
-- **High Radial SRP ($A/m_0 = 1.0\\text{ m}^2/\\text{kg}$):** Hybrid achieves **95/100 (95.0%)** strict convergence vs. **76/100 (76.0%)** for random costates. Difference: **$+19.0\\text{ percentage points}$** ($b=2, c=21$). Exact two-sided McNemar test: $p = 6.60\\times 10^{-5}$ ($\\chi^2 = 14.09, p = 1.74\\times 10^{-4}$). Preregistered Verdict: **`SUPPORTED`**.
+**Statistical Hypothesis Testing & Verdict (Generated Directly from `results/prereg_fresh_2000_2099.json`):**
+__PREREG_SRP_NARRATIVE__
 
 **Honest Total Runtime & Computational Effort:**
-- Including the full PoNN coarse stage ($3.3\\text{ s}$ median), the total Hybrid wall-clock runtime (**$19.01\\text{ s}$** median for $A/m=0$, **$21.31\\text{ s}$** for $A/m=0.5$, **$19.07\\text{ s}$** for $A/m=1.0$) is actually **lower** than random-costate shooting (**$22.26\\text{ s}$**, **$26.50\\text{ s}$**, **$20.54\\text{ s}$**) because the coarse PoNN costate warm-start cuts shooting ODE trajectory evaluations by more than half (median $273$ total evaluations in Hybrid vs. $636$ in random shooting).
+- Including the full PoNN coarse stage (`__P0_HY_RPONN__ s` median at $A/m=0$), total Hybrid wall-clock runtime (**`__P0_HY_RT__ s`** median for $A/m=0$, **`__P05_HY_RT__ s`** for $A/m=0.5$, **`__P10_HY_RT__ s`** for $A/m=1.0$) is lower than random-costate shooting (**`__P0_SH_RT__ s`**, **`__P05_SH_RT__ s`**, **`__P10_SH_RT__ s`**) because the coarse PoNN costate warm-start cuts shooting ODE trajectory evaluations by more than half (median `__P0_HY_EVAL__` total evaluations in Hybrid vs. `__P0_SH_EVAL__` in random shooting).
 
 ---
 
-## 8. Reproducibility & Test Verification
+## 9. Reproducibility & Test Verification
 
-- Unit test suite: `.venv/bin/pytest tests/ -v` (verifies Scenario A Hamiltonian & SRP FD checks, Phase A1 shooting reproduction, Phase A2 CE exactness, analytical Jacobian FD checks, shooting projection residual, plus all 19 Scenario B tests).
+- Unit test suite: `pytest tests/ -v` (verifies Scenario A Hamiltonian & 1,000-random-state SRP FD checks, Phase A1 shooting reproduction, Phase A2 CE exactness, analytical Jacobian FD checks, shooting projection residual, Split-Domain analytic Jacobian FD check, narrative–table consistency test, plus all Scenario B tests).
 - Regenerate all tables, figures, and markdown reports from stored JSONs:
-  `PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py`
+  `python3 run_all.py --from-stored`
 """
+    # Build narrative bullets for Section 8.2 strictly from stored JSON
+    srp_narr_lines = []
+    if prereg is not None:
+        for arm_key, lbl_srp in [
+            ("paired_srp_0.0", "Zero SRP ($A/m_0 = 0.0\\text{ m}^2/\\text{kg}$)"),
+            ("paired_srp_0.5", "Intermediate Radial SRP ($A/m_0 = 0.5\\text{ m}^2/\\text{kg}$)"),
+            ("paired_srp_1.0", "High Radial SRP ($A/m_0 = 1.0\\text{ m}^2/\\text{kg}$)"),
+        ]:
+            arm_s = prereg[arm_key]["summary"]
+            sh_a = arm_s["shooting"]
+            hy_a = arm_s["hybrid"]
+            cp = arm_s["comparison"]
+            n_tot = arm_s["n_total"]
+            srp_narr_lines.append(
+                f"- **{lbl_srp}:** Hybrid achieves **{hy_a['n_strict']}/{n_tot} ({100*hy_a['rate_strict']:.1f}%)** strict convergence "
+                f"vs. **{sh_a['n_strict']}/{n_tot} ({100*sh_a['rate_strict']:.1f}%)** for random costates. "
+                f"Difference: **`{cp['delta_strict_pp']:+.1f}` percentage points** "
+                f"(discordant: `b={cp['discordant_shoot_only_n01']}` shooting-only, `c={cp['discordant_hyb_only_n10']}` hybrid-only). "
+                f"Exact two-sided McNemar test: `p = {cp['mcnemar_exact_p']:.2e}` "
+                f"($\\chi^2 = {cp['mcnemar_chi2']:.2f}, p = {cp['mcnemar_chi2_p']:.2e}$). "
+                f"Preregistered Verdict: **`{cp['prereg_verdict']}`**."
+            )
+    prereg_srp_narrative = "\n".join(srp_narr_lines)
+
+    pd_hyb = pd["summary"]["shooting_hybrid_from_ponn"]
+    pd_sh = pd["summary"]["shooting_random"]
+    p0_s = prereg["paired_srp_0.0"]["summary"] if prereg else {}
+    p05_s = prereg["paired_srp_0.5"]["summary"] if prereg else {}
+    p10_s = prereg["paired_srp_1.0"]["summary"] if prereg else {}
+    p_sc_s = prereg["ponn_scaled_am0.0"]["summary"]["refined"] if prereg else {}
+    p_u01_s = prereg["ponn_paper_u01_am0.0"]["summary"]["refined"] if prereg else {}
+    p_co_s = prereg["collocation_am0.0"]["summary"] if prereg else {}
+
     replacements = {
         "__TAB_AUDIT__": tab_audit,
         "__SH_FUEL__": f"{ss['shooting']['fuel_kg']:.4f}",
@@ -926,8 +961,39 @@ __TAB_PREREG_HYBRID__
         "__PB_CO_RT__": f"{s_co['runtime_s_all']['median']:.2f}",
         "__TAB_C__": tab_c,
         "__TAB_D__": tab_d,
+        "__PD_HYB_CONV__": str(pd_hyb["n_conv"]),
+        "__PD_HYB_RATE__": f"{100*pd_hyb['rate']:.1f}",
+        "__PD_HYB_LO__": f"{100*pd_hyb['ci95'][0]:.1f}",
+        "__PD_HYB_HI__": f"{100*pd_hyb['ci95'][1]:.1f}",
+        "__PD_HYB_FUEL__": f"{pd_hyb['fuel_mean_kg']:.3f}",
+        "__PD_HYB_RT__": f"{pd_hyb['runtime_mean_s']:.2f}",
+        "__PD_SH_CONV__": str(pd_sh["n_conv"]),
+        "__PD_SH_RATE__": f"{100*pd_sh['rate']:.1f}",
+        "__PD_SH_RT__": f"{pd_sh['runtime_mean_s']:.2f}",
         "__TAB_PREREG_BENCH__": tab_prereg_bench,
         "__TAB_PREREG_HYBRID__": tab_prereg_hybrid,
+        "__PREREG_SRP_NARRATIVE__": prereg_srp_narrative,
+        "__P_SC_L__": str(p_sc_s.get("n_loose", "")),
+        "__P_SC_LR__": f"{100*p_sc_s['rate_loose']:.1f}" if p_sc_s else "",
+        "__P_SC_LLO__": f"{100*p_sc_s['ci95_loose'][0]:.1f}" if p_sc_s else "",
+        "__P_SC_LHI__": f"{100*p_sc_s['ci95_loose'][1]:.1f}" if p_sc_s else "",
+        "__P_SC_S__": str(p_sc_s.get("n_strict", "")),
+        "__P_SC_RP__": f"{p_sc_s['reprop_residual']['median']:.2e}" if p_sc_s else "",
+        "__P_U01_L__": str(p_u01_s.get("n_loose", "")),
+        "__P_U01_LR__": f"{100*p_u01_s['rate_loose']:.1f}" if p_u01_s else "",
+        "__P_SH_S__": str(p0_s["shooting"]["n_strict"]) if p0_s else "",
+        "__P_SH_SR__": f"{100*p0_s['shooting']['rate_strict']:.1f}" if p0_s else "",
+        "__P_CO_S__": str(p_co_s.get("n_strict", "")),
+        "__P_CO_SR__": f"{100*p_co_s['rate_strict']:.1f}" if p_co_s else "",
+        "__P0_HY_RPONN__": f"{p0_s['hybrid']['runtime_ponn_s']['median']:.2f}" if p0_s else "",
+        "__P0_HY_RT__": f"{p0_s['hybrid']['runtime_total_s']['median']:.2f}" if p0_s else "",
+        "__P05_HY_RT__": f"{p05_s['hybrid']['runtime_total_s']['median']:.2f}" if p05_s else "",
+        "__P10_HY_RT__": f"{p10_s['hybrid']['runtime_total_s']['median']:.2f}" if p10_s else "",
+        "__P0_SH_RT__": f"{p0_s['shooting']['runtime_s']['median']:.2f}" if p0_s else "",
+        "__P05_SH_RT__": f"{p05_s['shooting']['runtime_s']['median']:.2f}" if p05_s else "",
+        "__P10_SH_RT__": f"{p10_s['shooting']['runtime_s']['median']:.2f}" if p10_s else "",
+        "__P0_HY_EVAL__": f"{p0_s['hybrid']['total_evaluations']['median']:.0f}" if p0_s else "",
+        "__P0_SH_EVAL__": f"{p0_s['shooting']['nfev']['median']:.0f}" if p0_s else "",
     }
     report_md = report_tpl
     for k, v in replacements.items():
@@ -1016,19 +1082,18 @@ Every intentional or environment-forced deviation from D'Ambrosio & Furfaro (202
 5. **Scope restriction (Sec. 4.1 Earth–Mars interplanetary only; Sec. 4.2 Mars landing out of scope):**
    - Per project specification, reproduction and benchmarking cover Sections 3.1, 3.3, and 4.1 (Earth–Mars interplanetary transfer), extended with Phase C SRP perturbations and secondary Scenario B transfer tests.
 
-7. **Preregistered held-out testing on fresh seeds 2000..2099:**
-   - Evaluated 600 fresh runs across 6 arms with frozen settings and zero post-hoc parameter adjustments.
-   - Strictly no new methods implemented (no split-domain, no SEP power, no altered loss formulations).
-
 6. **Independent DOP853 re-propagation validation (not reported in paper):**
    - Because TFC constrained expressions satisfy boundary conditions analytically even when interior ODE residuals are nonzero, we re-propagate every solver's open-loop control $(\\delta(t), \\boldsymbol{\\alpha}(t))$ with `DOP853` (`rtol=1e-11, atol=1e-13`) and report actual terminal arrival error alongside energy balance error.
+
+7. **Preregistered held-out testing on fresh seeds (`2000..2099`, `4000..4099`, `5000+`, `6000..6029`, `7000..7099`, `8000..8099`):**
+   - Evaluated held-out seed suites with frozen settings and zero post-hoc parameter adjustments under `PREREG.md`, `PREREG_ADDENDUM.md`, and `PREREG_ADDENDUM_2.md`.
 """
     (ROOT / "DEVIATIONS.md").write_text(deviations_md)
 
     # --- Write README.md ---
-    readme_md = f"""# X-TFC Pontryagin Neural Networks — Earth–Mars Trajectory Optimization Benchmark
+    readme_md = rf"""# X-TFC Pontryagin Neural Networks — Earth–Mars Trajectory Optimization Benchmark
 
-Exact reproduction, ablation, and perturbation benchmark of **D'Ambrosio & Furfaro (2024)**, *"Learning Fuel-Optimal Trajectories for Space Applications via Pontryagin Neural Networks"*, *Aerospace* 11(3), 228 (`doi:10.3390/aerospace11030228`), Sections 3.1, 3.3, and 4.1, alongside a secondary low-thrust Earth–Mars transfer study (Scenario B).
+Exact reproduction, ablation, and perturbation benchmark of **Andrea D'Ambrosio & Roberto Furfaro (2024)**, *"Learning Fuel-Optimal Trajectories for Space Applications via Pontryagin Neural Networks"*, *Aerospace* 11(3), 228 (`doi:10.3390/aerospace11030228`), Sections 3.1, 3.3, and 4.1, alongside a secondary low-thrust Earth–Mars transfer study (Scenario B).
 
 All tables, figures, and metrics in this repository are generated directly from stored experiment JSONs under `results/` with zero hard-coded outputs.
 
@@ -1052,7 +1117,7 @@ Mission: 3-D heliocentric Earth–Mars rendezvous, $m_0 = 1000\text{{ kg}}$, $t_
 
 ### Preregistered Benchmark & Hybrid Evaluation — Fresh Seeds 2000..2099
 
-Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose $< 5\times 10^{-2}$, strict $< 1\times 10^{-2}$) and exact two-sided McNemar test ($p < 0.05$, $\Delta \ge +15.0\text{{ pp}}$):
+Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose $< 5\times 10^{{-2}}$, strict $< 1\times 10^{{-2}}$) and exact two-sided McNemar test ($p < 0.05$, $\Delta \ge +15.0\text{{ pp}}$):
 
 #### Scenario A 4-Method Benchmark (Fresh Seeds 2000..2099)
 {tab_prereg_bench}
@@ -1065,7 +1130,7 @@ Locked in `PREREG.md` (commit `3c87713`) with dual convergence thresholds (loose
 
 ## Secondary Study — Scenario B (`1218 kg`, `0.5 N`, `Isp = 3100 s`, SRP)
 
-Global feasibility scan (preserved in `results/phase1_results.json`) established $t_{{\min}} = 260.833\text{{ d}}$ at $\theta_f = 192.518^\circ$ for the 1218 kg spacecraft at $T_{{\max}} = 0.5\text{{ N}}$. Testing the **frozen Phase A2 PoNN (no retuning)** on Scenario B ($t_f = 300\text{{ d}}, \theta_f = 225^\circ$):
+Global feasibility scan (preserved in `results/phase1_results.json`) yielded numerical minimum time $t_{{\min}} = 260.833\text{{ d}}$ at $\theta_f = 192.518^\circ$ for the 1218 kg spacecraft at $T_{{\max}} = 0.5\text{{ N}}$ (no feasible solution found at $t_f = 247.9\text{{ d}}$). Testing the **frozen Phase A2 PoNN (no retuning)** on Scenario B ($t_f = 300\text{{ d}}, \theta_f = 225^\circ$):
 
 {tab_d}
 
@@ -1088,22 +1153,16 @@ Global feasibility scan (preserved in `results/phase1_results.json`) established
 - `docs/PAPER_SPEC.md` — Complete Phase 0 equation specification, FD verification, and ambiguity list
 - `trajectory_optimization/scenario_a.py` — Scenario A dynamics, analytical radial/attitude SRP Jacobians, and Phase A1 shooting solver
 - `trajectory_optimization/ponn_paper.py` — Exact 8-group Chebyshev PoNN (Table A6/A1 CEs, JAX analytical Jacobian, `lm_svd` / SciPy `'lm'` / `'trf'`, Sec. 4.1 refinement)
+- `trajectory_optimization/split_domain_ponn.py` — Multi-arc Hermite CE Split-Domain PoNN with unknown switch times and analytic JAX Jacobian
 - `trajectory_optimization/scenario_a_collocation.py` — 180-node LGL pseudospectral direct collocation (CasADi + IPOPT)
 - `REPORT.md`, `ASSUMPTIONS.md`, `DEVIATIONS.md` — Full scientific report (with paper claim audit), ambiguity log, and deviations log
 
 ```bash
-# Run full unit test suite (29 tests: Scenario A FD/CE/Jacobian/Shooting/Projection + Scenario B)
-.venv/bin/pytest tests/ -v
+# Run full unit test suite (FD checks, CE exactness, split-domain Jacobian, narrative-table consistency)
+pytest tests/ -v
 
-# Re-run individual phases (checkpointed per seed)
-PYTHONPATH=. .venv/bin/python scripts/run_phase_a3.py --n-seeds 100
-PYTHONPATH=. .venv/bin/python scripts/run_phase_a4.py --n-seeds 10
-PYTHONPATH=. .venv/bin/python scripts/run_phase_b.py --n-seeds 100
-PYTHONPATH=. .venv/bin/python scripts/run_phase_c.py --n-seeds 5 --colloc-seeds 1
-PYTHONPATH=. .venv/bin/python scripts/run_phase_d.py
-
-# Regenerate all figures, markdown tables, REPORT.md, README.md, ASSUMPTIONS.md, DEVIATIONS.md
-PYTHONPATH=. .venv/bin/python scripts/generate_paper_deliverables.py
+# Regenerate all figures, LaTeX & Markdown tables, REPORT.md, README.md, ASSUMPTIONS.md, DEVIATIONS.md from stored JSONs
+python3 run_all.py --from-stored
 ```
 """
     (ROOT / "README.md").write_text(readme_md)

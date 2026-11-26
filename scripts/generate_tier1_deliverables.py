@@ -564,18 +564,46 @@ def update_docs_tier1(prereg: dict, ablation: dict, extra: dict, srp: dict, rt: 
             f"| `{t['id']}` | {t['family']} | {t['arm']} | {t['delta_strict_pp']:+.1f} | {fmt_p(t['p_raw'])} | {fmt_p(t['p_holm'])} | **`{t['verdict']}`** |"
         )
 
+    prereg_path = Path("results/prereg_fresh_2000_2099.json")
+    prereg_sh_med = None
+    prereg_sh_mean = None
+    if prereg_path.exists():
+        pr_data = json.loads(prereg_path.read_text(encoding="utf-8"))
+        s_2000 = [v["shooting"]["runtime_s"] for v in pr_data["paired_srp_0.0"]["seeds"].values()]
+        prereg_sh_med = float(np.median(s_2000))
+        prereg_sh_mean = float(np.mean(s_2000))
+    s_4100 = [v["shooting"]["runtime_s"] for v in rt["seeds"].values()]
+    rt_4100_med = float(np.median(s_4100))
+    rt_4100_mean = float(np.mean(s_4100))
+    coincidence_note = ""
+    if prereg_sh_med is not None:
+        coincidence_note = (
+            f" *(Independent verification of the `22.26 s` coincidence: seeds `2000..2099` ($N=100$) give median "
+            f"`{prereg_sh_med:.4f} s` / mean `{prereg_sh_mean:.2f} s`, while disjoint single-process seeds `4100..4129` "
+            f"($N=30$) give median `{rt_4100_med:.4f} s` / mean `{rt_4100_mean:.2f} s`; both are computed independently "
+            f"from separate JSON files and differ by `{abs(prereg_sh_med - rt_4100_med):.4f} s`.)*"
+        )
+
+    res02 = next((r for r in srp["resolution_check"] if r["case_id"] == "radial_0.02"), None)
+    res02_txt = (
+        f"At $A/m_0 = 0.02\\text{{ m}}^2/\\text{{kg}}$, the physical SRP fuel change (`{res02['delta_fuel_shoot_kg']:+.3f} kg`) "
+        f"is `{res02['resolution_ratio_ponn']:.2f}x` standalone PoNN's error and `{res02['resolution_ratio_colloc']:.2f}x` "
+        f"LGL-180's error (below discretization resolution); at $A/m_0 \\ge 0.50\\text{{ m}}^2/\\text{{kg}}$ it exceeds both methods' errors (`tab4_srp_audit.tex`)."
+        if res02 else ""
+    )
+
     t_lines += [
         "",
         "### 10.2 Tier 1.3 SRP Flat-Plate Model, 1,000-State FD Audit, & Resolution Check",
         "",
         "- **Flat-plate SRP specification:** Heliocentric J2000 inertial frame; attitude normal is **prescribed** along the thrust unit vector $\\hat{\\mathbf{n}} = \\boldsymbol{\\alpha}^* = -\\boldsymbol{\\lambda}_v / \\|\\boldsymbol{\\lambda}_v\\|$ (not independently optimized); no planetary eclipse/shadowing; projected area factor $\\phi(\\mathbf{r}, \\boldsymbol{\\alpha}) = \\tfrac{1}{2} + \\tfrac{1}{2}(\\hat{\\mathbf{r}}\\cdot\\boldsymbol{\\alpha})^2$; constant initial area-to-mass ratio $A/m_0$.",
         f"- **1,000-random-state central FD check:** Across all 8 `(mode, A/m)` combinations (`radial` and `attitude_flat_plate` at $A/m_0 \\in \\{{0.02, 0.10, 0.50, 1.00\\}}$), the maximum relative error of analytical vs. central-FD PMP costate ODE terms is **{max(max(r['max_rel_err_lam_r_dot'], r['max_rel_err_lam_v_dot'], r['max_rel_err_lam_m_dot']) for r in srp['fd_checks']):.2e}** (all 8/8 PASS $< 10^{-7}$).",
-        "- **Resolution check:** At $A/m_0 = 0.02\\text{ m}^2/\\text{kg}$, the physical SRP fuel change ($+0.029\\text{ kg}$) is $0.07\\times$ standalone PoNN's error and $0.06\\times$ LGL-180's error (below discretization resolution); at $A/m_0 \\ge 0.50\\text{ m}^2/\\text{kg}$ it exceeds both methods' errors (`tab4_srp_audit.tex`).",
+        f"- **Resolution check:** {res02_txt}",
         "",
         "### 10.3 Tier 1.4 Single-Process Idle-Machine Runtime Audit (`seeds = 4100..4129`)",
         "",
         f"- **Environment:** {hw['cpu_model']} ({hw['cpu_count_logical']} vCPU), {hw['ram_gb']} GB RAM, Linux `{hw['kernel']}`, Python `{hw['python_version']}`, NumPy `{pkgs['numpy']}`, SciPy `{pkgs['scipy']}`, Matplotlib `{pkgs['matplotlib']}`, CasADi `{pkgs['casadi']}`, JAX `{pkgs['jax']}`, single-threaded BLAS (`OPENBLAS_NUM_THREADS=1`), one-time JAX JIT warmup `{rt['meta'].get('jax_jit_warmup_s', 0.0):.2f} s`.",
-        f"- **Median wall-clock runtimes (all seeds):** Random Shooting `{rt['summary']['shooting']['runtime_all']['median']:.2f} s`, Hybrid total `{rt['summary']['hybrid']['runtime_all']['median']:.2f} s` (PoNN stage `{rt['summary']['hybrid']['ponn_stage_runtime_all']['median']:.2f} s` + Shooting stage `{rt['summary']['hybrid']['shoot_stage_runtime_all']['median']:.2f} s`), Standalone PoNN `{rt['summary']['ponn']['runtime_all']['median']:.2f} s`, LGL-180 `{rt['summary']['collocation']['runtime_all']['median']:.2f} s`. Full distributions split by success/failure and evaluation counts are tabulated in `results/tables/tab5_runtime_distributions.tex`.",
+        f"- **Median wall-clock runtimes (all seeds):** Random Shooting `{rt['summary']['shooting']['runtime_all']['median']:.2f} s`, Hybrid total `{rt['summary']['hybrid']['runtime_all']['median']:.2f} s` (PoNN stage `{rt['summary']['hybrid']['ponn_stage_runtime_all']['median']:.2f} s` + Shooting stage `{rt['summary']['hybrid']['shoot_stage_runtime_all']['median']:.2f} s`), Standalone PoNN `{rt['summary']['ponn']['runtime_all']['median']:.2f} s`, LGL-180 `{rt['summary']['collocation']['runtime_all']['median']:.2f} s`.{coincidence_note} Full distributions split by success/failure and evaluation counts are tabulated in `results/tables/tab5_runtime_distributions.tex`.",
         "",
         "### 10.4 Paper-Ready Outputs Generated",
         "- LaTeX `booktabs` tables: `results/tables/tab1_convergence_scenario_a.tex` through `tab5_runtime_distributions.tex`.",

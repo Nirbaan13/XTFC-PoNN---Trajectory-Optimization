@@ -80,6 +80,8 @@ def main():
             subprocess.run([sys.executable, "scripts/generate_tier2_deliverables.py"], check=True, env=env)
         if Path("scripts/generate_tier3_deliverables.py").exists() and Path("results/tier3_split_domain_7000.json").exists():
             subprocess.run([sys.executable, "scripts/generate_tier3_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_addendum2_deliverables.py").exists() and Path("results/addendum2_baselines_8000_8099.json").exists():
+            subprocess.run([sys.executable, "scripts/generate_addendum2_deliverables.py"], check=True, env=env)
         print("ALL STORED DELIVERABLES REPRODUCED SUCCESSFULLY.", flush=True)
         return
 
