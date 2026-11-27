@@ -11,10 +11,10 @@ All numerical results in this report are generated programmatically from stored 
 | Paper Claim (D'Ambrosio & Furfaro 2024) | Numeric Evaluation Rule | Observed Data (Stored JSONs) | Verdict |
 | --- | --- | --- | :---: |
 | 1. Scenario A fuel-optimal solution is ~396.06 kg (shooting) with 4 switches ON-OFF-ON-OFF-ON (~47, 66, 148, 292 d) | PASS if |fuel_shoot - 396.06| < 0.2 kg and exact 4 switches ON-OFF-ON-OFF-ON | Shooting: 396.0598 kg (diff 0.0002 kg), 4 switches [46.58, 68.02, 142.72, 290.25] (`ON-OFF-ON-OFF-ON`); LGL-180: 396.1793 kg | **SUPPORTED** |
-| 2. PoNN autonomously finds 4 switches ON-OFF-ON-OFF-ON and ~396.85 kg after refinement without prior switch count | PASS if PoNN finds exact 4 switches ON-OFF-ON-OFF-ON with |fuel - 396.85| < 1.0 kg and reprop < 5e-2 | PoNN Refined (L=80, n=540 uniform): 396.5215 kg (diff 0.3285 kg vs paper, +0.46 kg vs shooting), 4 switches [49.83, 68.59, 141.72, 290.55], reprop=3.63e-02 (requires CGL coarse grid & dense refined grid) | **SUPPORTED** (with grid qualification) |
-| 3. Evenly spaced n=140 discretization is stable for L=70 Chebyshev NN (Sec. 2.2) | PASS if uniform n=140 converges with reprop < 5e-2 on >= 50% of seeds | A4(d): `uniform_140_lm_svd` achieved 0/5 (0%) with cond(Phi_r)=1.67e8, grid RMS=6.6e-6 vs dense RMS=1.94 and reprop=1.49 (Runge aliasing); CGL n=140 eliminates aliasing (cond=6.23e3) and uniform n=540 recovers stability (4/5) | **CONTRADICTED** |
-| 4. PoNN converges reliably from standard uniform random weights beta ~ U(0,1) (Sec. 4.1) | PASS if exact U(0,1) converges on >= 80% of 100 seeds; PARTIAL/CONTRADICTED if < 80% | 100 seeds exact U(0,1): 49/100 (49.0%, 95% CI [39.4%, 58.7%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU. Scaled U(0,1) achieves 92/100 (92.0%, CI [85.0%, 95.9%]) | **CONTRADICTED** for raw U(0,1) (49%); **SUPPORTED** for scaled U(0,1) (92%) |
-| 5. PoNN rivals shooting and collocation in accuracy and convergence (Abstract & Sec. 4.1) | Compare 100-seed convergence rate, fuel, and DOP853 re-propagation error across all 3 methods | Convergence (<5e-2): PoNN scaled 92% > Shooting 68% > LGL-180 55% > PoNN raw U(0,1) 49%. Accuracy (reprop): Shooting 3.46e-04 << LGL-180 2.48e-02 < PoNN 3.63e-02 (0/100 PoNN < 1e-2 vs 68/100 Shooting) | **CONTRADICTED** on open-loop accuracy (<1e-2); **SUPPORTED** on basin width (scaled PoNN 92%) |
+| 2. PoNN autonomously finds 4 switches ON-OFF-ON-OFF-ON and ~396.85 kg after refinement without prior switch count | PASS if PoNN finds exact 4 switches ON-OFF-ON-OFF-ON with |fuel - 396.85| < 1.0 kg and reprop < 5e-2 | In our independent implementation, PoNN Refined (L=80, n=540 uniform): 396.5215 kg (diff 0.3285 kg vs paper, +0.46 kg vs shooting), 4 switches [49.83, 68.59, 141.72, 290.55], reprop=3.63e-02 (requires CGL coarse grid & dense refined grid) | **SUPPORTED** (with grid qualification) |
+| 3. Evenly spaced n=140 discretization is stable for L=70 Chebyshev NN (Sec. 2.2) | PASS if uniform n=140 converges with reprop < 5e-2 on >= 50% of seeds | In our independent implementation, A4(d) `uniform_140_lm_svd` achieved 0/5 (0%) with cond(Phi_r)=1.67e8, grid RMS=6.6e-6 vs dense RMS=1.94 and reprop=1.49 (Runge aliasing); CGL n=140 eliminates aliasing (cond=6.23e3) and uniform n=540 recovers stability (4/5) | **CONTRADICTED** (in our independent implementation) |
+| 4. PoNN converges reliably from standard uniform random weights beta ~ U(0,1) (Sec. 4.1) | PASS if exact U(0,1) converges on >= 80% of 100 seeds; PARTIAL/CONTRADICTED if < 80% | In our independent implementation (100 seeds), exact U(0,1) achieved 49/100 (49.0%, 95% CI [39.4%, 58.7%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU; scaled U(0,1) achieves 92/100 (92.0%, CI [85.0%, 95.9%]) | **CONTRADICTED** for raw U(0,1) (49%, independent impl.); **SUPPORTED** for scaled U(0,1) (92%) |
+| 5. PoNN rivals shooting and collocation in accuracy and convergence (Abstract & Sec. 4.1) | Compare 100-seed convergence rate, fuel, and DOP853 re-propagation error across all 3 methods | In our independent implementation, convergence (<5e-2): PoNN scaled 92% > Shooting 68% > LGL-180 55% > PoNN raw U(0,1) 49%. Accuracy (reprop): Shooting 3.46e-04 << LGL-180 2.48e-02 < baseline L=80 PoNN 3.63e-02 (0/100 PoNN < 1e-2 vs 68/100 Shooting) | **CONTRADICTED** on baseline L=80 open-loop accuracy (<1e-2, independent impl.); **SUPPORTED** on basin width (scaled PoNN 92%) |
 | 6. Exact MATLAB R2023b lsqnonlin runtime & landing case (Sec. 4.2, GPOPS-II comparison) | Requires MATLAB R2023b and GPOPS-II licenses + Sec. 4.2 landing benchmark | Environment uses Python/JAX/SciPy + CasADi/IPOPT and scopes strictly to Sec. 3.1, 3.3, 4.1 Earth–Mars interplanetary case | **CANNOT TEST** |
 | 7. Hybrid warm-starting: PoNN coarse costates significantly improve strict indirect shooting convergence across SRP (PREREG.md, seeds 2000..2099) | SUPPORTED if Delta_strict >= +15.0 pp AND exact two-sided McNemar p < 0.05 across SRP levels | A/m=0.0: Delta=+26.0 pp (p=8.68e-07); A/m=0.5: Delta=+24.0 pp (p=8.05e-07); A/m=1.0: Delta=+19.0 pp (p=6.60e-05) | **SUPPORTED** |
 
@@ -124,7 +124,7 @@ All three solvers were evaluated on the identical `ScenarioAProblem` (Table 1, S
 
 ## 6. Phase C: Solar Radiation Pressure Perturbation Study (Scenario A)
 
-Radial cannonball SRP ($P_0 = 4.56\times 10^{-6}\text{ N/m}^2, C_R = 1.2$, $\mathbf{a}_p = P_0 C_R (A/m_0)(1\text{ AU}/r)^2\hat{\mathbf{r}}$) and attitude-dependent flat-plate SRP ($\mathbf{a}_p = k_{\text{SRP}}\big[0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2\big]\mathbf{r}/r^3$) were added consistently to all three methods with analytical costate gradient $-(\partial \mathbf{a}_p/\partial \mathbf{r})^T\boldsymbol{\lambda}_v$ verified by finite differences (`tests/test_scenario_a.py`).
+*Literature context:* Perturbation-aware PoNNs exist (J2 formation flying, verified abstract; cislunar high-fidelity ephemeris, abstract only; perturbation list unverified). Here we evaluate radial cannonball SRP ($P_0 = 4.56\times 10^{-6}\text{ N/m}^2, C_R = 1.2$, $\mathbf{a}_p = P_0 C_R (A/m_0)(1\text{ AU}/r)^2\hat{\mathbf{r}}$) and attitude-dependent flat-plate SRP ($\mathbf{a}_p = k_{\text{SRP}}\big[0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2\big]\mathbf{r}/r^3$) consistently across all three methods with analytical costate gradient $-(\partial \mathbf{a}_p/\partial \mathbf{r})^T\boldsymbol{\lambda}_v$ verified by finite differences (`tests/test_scenario_a.py`).
 
 | Case | SRP Mode | $A/m_0$ (m²/kg) | $k_{\text{SRP}}$ (nd) | Shooting Fuel (kg) [conv] | PoNN Ref Fuel (kg) [conv] | LGL-180 Fuel (kg) [s=0 / conv] | Shoot Switches (days) |
 | --- | --- | ---: | ---: | :---: | :---: | :---: | --- |
@@ -314,3 +314,34 @@ and provided as the initial guess to indirect shooting, continuing the exact sam
 | `T4` | hybrid_rho1 vs det_energy_shoot (time) | wilcoxon_onesample | `-0.05 s` (n=94) | 0.3468 | 0.6936 | **`CONTRADICTED`** |
 
 - Deliverables: `results/tables/tab9_addendum2_baselines.tex` and `results/figures/fig_addendum2_baselines.pdf`.
+
+---
+
+## 14. Preregistration Addendum 3: Cross-Case Baselines & Equal-Smoothing Accuracy (`seeds 9100..9649`)
+
+**Preregistration commit:** `792b304` ([PREREG_ADDENDUM_3.md](PREREG_ADDENDUM_3.md)). Joint Holm–Bonferroni correction applied across all $M = 40$ Addendum 3 tests (FWER $\alpha = 0.05$).
+
+### 14.1 Task 1: Cross-Case Baseline Comparison (9 Cases × 50 Fresh Seeds, `9200..9649`)
+
+| Case | Det. Shoot (prograde) | Single Shoot | Multi-Start (`K<=5`) | Hybrid (`rho_ext=1`) | Split-Domain | Hyb vs MS5 (rate / time, $p_{\text{Holm}}$) | Plain Verdict |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `scen_a_m0_800` | OK (13.3s) | 23/50 (16.4s) | 49/50 (38.8s) | 44/50 (14.3s) | 46/50 (11.9s) | `-10pp` (1.0000) / `-31.8s` (3.65e-07) | **NO ADVANTAGE vs MS5** |
+| `scen_a_m0_1200` | OK (15.8s) | 48/50 (13.5s) | 50/50 (13.8s) | 45/50 (13.3s) | 45/50 (5.9s) | `-10pp` (1.0000) / `-0.7s` (1.0000) | **NO ADVANTAGE vs MS5** |
+| `scen_a_tmax_0.4` | OK (12.6s) | 49/50 (13.5s) | 50/50 (13.6s) | 48/50 (13.2s) | 48/50 (5.0s) | `-4pp` (1.0000) / `-0.8s` (0.0045) | **HELPS (SPEED, MATCHED RATE)** |
+| `scen_a_tmax_0.7` | FAIL (40.4s) | 18/50 (17.8s) | 44/50 (33.4s) | 47/50 (15.2s) | 49/50 (9.7s) | `+6pp` (1.0000) / `-16.8s` (4.95e-10) | **HELPS (SPEED, MATCHED RATE)** |
+| `scen_b_tf_300` | OK (13.0s) | 45/50 (12.7s) | 50/50 (13.1s) | 50/50 (11.6s) | 50/50 (4.8s) | `+0pp` (1.0000) / `-1.6s` (7.78e-05) | **HELPS (SPEED, MATCHED RATE)** |
+| `scen_b_tf_330` | OK (10.7s) | 42/50 (9.0s) | 50/50 (9.7s) | 50/50 (8.2s) | 0/50 (—) | `+0pp` (1.0000) / `-1.5s` (3.95e-05) | **HELPS (SPEED, MATCHED RATE)** |
+| `scen_b_tf_360` | FAIL (73.1s) | 37/50 (12.9s) | 50/50 (14.9s) | 49/50 (12.0s) | 0/50 (—) | `-2pp` (1.0000) / `-2.3s` (2.53e-10) | **HELPS (SPEED, MATCHED RATE)** |
+| `scen_a_srp_0.5` | OK (14.6s) | 37/50 (17.7s) | 50/50 (19.2s) | 44/50 (18.2s) | 43/50 (14.0s) | `-12pp` (0.5625) / `-1.9s` (0.0500) | **NO ADVANTAGE vs MS5** |
+| `scen_a_srp_1.0` | OK (13.7s) | 33/50 (16.1s) | 50/50 (19.5s) | 45/50 (14.9s) | 46/50 (12.9s) | `-10pp` (1.0000) / `-3.8s` (1.69e-05) | **NO ADVANTAGE vs MS5** |
+
+### 14.2 Task 2: Fair Equal-Smoothing Accuracy Comparison (`seeds 9100..9199`, $N=100$)
+
+| Method | Strict (<1e-2) [95% Wilson CI] | Med. $e_{\text{reprop}}$ (exact arcs) | Med. Fuel (kg) | Med. Time Strict (s) |
+|:---|:---:|---:|---:|---:|
+| Indirect Shooting (`rho=1.27e-8`) | 67/100 (67.0% [57.3%, 75.4%]) | 7.38e-10 | 396.0598 | 34.03 |
+| Indirect Shooting + Hard-Switch Polish (`delta in {0,1}`) | 67/100 (67.0% [57.3%, 75.4%]) | 1.15e-14 | 396.0598 | 35.01 |
+| Split-Domain PoNN Pipeline (5-arc, `delta in {0,1}`) | 90/100 (90.0% [82.6%, 94.5%]) | 3.40e-06 | 396.0598 | 14.02 |
+
+- **Equal-smoothing accuracy verdict (`A3`):** `split_domain` vs. `shoot_hard_polish` median exact-arc error diff = `+3.39e-06`, $p_{\text{Holm}} = 7.65e-10$ → **`CONTRADICTED`** (at equal exact hard-switch smoothing, event-polished indirect shooting is orders of magnitude more accurate than split-domain PoNN).
+- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [`CLAIMS.md`](CLAIMS.md).

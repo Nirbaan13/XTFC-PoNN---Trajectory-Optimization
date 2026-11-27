@@ -692,26 +692,26 @@ def write_tables_and_docs(a3: dict, a4: dict, pb: dict, pc: dict, pd: dict, ph1:
         (
             "2. PoNN autonomously finds 4 switches ON-OFF-ON-OFF-ON and ~396.85 kg after refinement without prior switch count",
             "PASS if PoNN finds exact 4 switches ON-OFF-ON-OFF-ON with |fuel - 396.85| < 1.0 kg and reprop < 5e-2",
-            f"PoNN Refined (L=80, n=540 uniform): {ss['ponn_refined_uniform']['fuel_kg']:.4f} kg (diff {fuel_diff_ponn:.4f} kg vs paper, +0.46 kg vs shooting), 4 switches {_fmt_sw(sw_ponn)}, reprop={ss['ponn_refined_uniform']['reprop_arrival_residual']:.2e} (requires CGL coarse grid & dense refined grid)",
+            f"In our independent implementation, PoNN Refined (L=80, n=540 uniform): {ss['ponn_refined_uniform']['fuel_kg']:.4f} kg (diff {fuel_diff_ponn:.4f} kg vs paper, +0.46 kg vs shooting), 4 switches {_fmt_sw(sw_ponn)}, reprop={ss['ponn_refined_uniform']['reprop_arrival_residual']:.2e} (requires CGL coarse grid & dense refined grid)",
             "**SUPPORTED** (with grid qualification)",
         ),
         (
             "3. Evenly spaced n=140 discretization is stable for L=70 Chebyshev NN (Sec. 2.2)",
             "PASS if uniform n=140 converges with reprop < 5e-2 on >= 50% of seeds",
-            f"A4(d): `uniform_140_lm_svd` achieved 0/5 (0%) with cond(Phi_r)=1.67e8, grid RMS=6.6e-6 vs dense RMS=1.94 and reprop=1.49 (Runge aliasing); CGL n=140 eliminates aliasing (cond=6.23e3) and uniform n=540 recovers stability (4/5)",
-            "**CONTRADICTED**",
+            f"In our independent implementation, A4(d) `uniform_140_lm_svd` achieved 0/5 (0%) with cond(Phi_r)=1.67e8, grid RMS=6.6e-6 vs dense RMS=1.94 and reprop=1.49 (Runge aliasing); CGL n=140 eliminates aliasing (cond=6.23e3) and uniform n=540 recovers stability (4/5)",
+            "**CONTRADICTED** (in our independent implementation)",
         ),
         (
             "4. PoNN converges reliably from standard uniform random weights beta ~ U(0,1) (Sec. 4.1)",
             "PASS if exact U(0,1) converges on >= 80% of 100 seeds; PARTIAL/CONTRADICTED if < 80%",
-            f"100 seeds exact U(0,1): {s_u01['converged_reprop_5e2']}/100 ({100*s_u01['rate_reprop_5e2']:.1f}%, 95% CI [{100*s_u01['ci95_reprop_5e2'][0]:.1f}%, {100*s_u01['ci95_reprop_5e2'][1]:.1f}%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU. Scaled U(0,1) achieves {s_sc['converged_reprop_5e2']}/100 ({100*s_sc['rate_reprop_5e2']:.1f}%, CI [{100*s_sc['ci95_reprop_5e2'][0]:.1f}%, {100*s_sc['ci95_reprop_5e2'][1]:.1f}%])",
-            "**CONTRADICTED** for raw U(0,1) (49%); **SUPPORTED** for scaled U(0,1) (92%)",
+            f"In our independent implementation (100 seeds), exact U(0,1) achieved {s_u01['converged_reprop_5e2']}/100 ({100*s_u01['rate_reprop_5e2']:.1f}%, 95% CI [{100*s_u01['ci95_reprop_5e2'][0]:.1f}%, {100*s_u01['ci95_reprop_5e2'][1]:.1f}%]) because |T_k'(+-1)|=k^2 puts initial |r| at ~25,000 AU; scaled U(0,1) achieves {s_sc['converged_reprop_5e2']}/100 ({100*s_sc['rate_reprop_5e2']:.1f}%, CI [{100*s_sc['ci95_reprop_5e2'][0]:.1f}%, {100*s_sc['ci95_reprop_5e2'][1]:.1f}%])",
+            "**CONTRADICTED** for raw U(0,1) (49%, independent impl.); **SUPPORTED** for scaled U(0,1) (92%)",
         ),
         (
             "5. PoNN rivals shooting and collocation in accuracy and convergence (Abstract & Sec. 4.1)",
             "Compare 100-seed convergence rate, fuel, and DOP853 re-propagation error across all 3 methods",
-            f"Convergence (<5e-2): PoNN scaled {s_sc['converged_reprop_5e2']}% > Shooting {s_sh['n_converged']}% > LGL-180 {s_co['n_converged']}% > PoNN raw U(0,1) {s_u01['converged_reprop_5e2']}%. Accuracy (reprop): Shooting {s_sh['reprop_arrival_residual']['median']:.2e} << LGL-180 {s_co['reprop_arrival_residual']['median']:.2e} < PoNN {s_sc['reprop_converged_5e2']['median']:.2e} (0/100 PoNN < 1e-2 vs 68/100 Shooting)",
-            "**CONTRADICTED** on open-loop accuracy (<1e-2); **SUPPORTED** on basin width (scaled PoNN 92%)",
+            f"In our independent implementation, convergence (<5e-2): PoNN scaled {s_sc['converged_reprop_5e2']}% > Shooting {s_sh['n_converged']}% > LGL-180 {s_co['n_converged']}% > PoNN raw U(0,1) {s_u01['converged_reprop_5e2']}%. Accuracy (reprop): Shooting {s_sh['reprop_arrival_residual']['median']:.2e} << LGL-180 {s_co['reprop_arrival_residual']['median']:.2e} < baseline L=80 PoNN {s_sc['reprop_converged_5e2']['median']:.2e} (0/100 PoNN < 1e-2 vs 68/100 Shooting)",
+            "**CONTRADICTED** on baseline L=80 open-loop accuracy (<1e-2, independent impl.); **SUPPORTED** on basin width (scaled PoNN 92%)",
         ),
         (
             "6. Exact MATLAB R2023b lsqnonlin runtime & landing case (Sec. 4.2, GPOPS-II comparison)",
@@ -827,7 +827,7 @@ __TAB_B__
 
 ## 6. Phase C: Solar Radiation Pressure Perturbation Study (Scenario A)
 
-Radial cannonball SRP ($P_0 = 4.56\times 10^{-6}\text{ N/m}^2, C_R = 1.2$, $\mathbf{a}_p = P_0 C_R (A/m_0)(1\text{ AU}/r)^2\hat{\mathbf{r}}$) and attitude-dependent flat-plate SRP ($\mathbf{a}_p = k_{\text{SRP}}\big[0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2\big]\mathbf{r}/r^3$) were added consistently to all three methods with analytical costate gradient $-(\partial \mathbf{a}_p/\partial \mathbf{r})^T\boldsymbol{\lambda}_v$ verified by finite differences (`tests/test_scenario_a.py`).
+*Literature context:* Perturbation-aware PoNNs exist (J2 formation flying, verified abstract; cislunar high-fidelity ephemeris, abstract only; perturbation list unverified). Here we evaluate radial cannonball SRP ($P_0 = 4.56\times 10^{-6}\text{ N/m}^2, C_R = 1.2$, $\mathbf{a}_p = P_0 C_R (A/m_0)(1\text{ AU}/r)^2\hat{\mathbf{r}}$) and attitude-dependent flat-plate SRP ($\mathbf{a}_p = k_{\text{SRP}}\big[0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2\big]\mathbf{r}/r^3$) consistently across all three methods with analytical costate gradient $-(\partial \mathbf{a}_p/\partial \mathbf{r})^T\boldsymbol{\lambda}_v$ verified by finite differences (`tests/test_scenario_a.py`).
 
 __TAB_C__
 
@@ -1013,23 +1013,23 @@ This document records every modeling assumption made where D'Ambrosio & Furfaro 
    - **Assumption & ablation:** Standard TFC theory requires the free function to be linearly independent of the support polynomials. Our primary validated mode (`chebyshev_shifted`) shifts the free basis to $T_4 \dots T_{L+3}$ for $r_i$, $T_1 \dots T_L$ for $m, \lambda_m$, and $T_0 \dots T_{L-1}$ for $\lambda_v$. We also retain and benchmark the literal $T_0 \dots T_{L-1}$ indexing (`chebyshev`) in Phase A4(b) (`10/10` at `396.52 kg` shifted vs. `9/10` at `399.45 kg` literal).
 
 2. **Solver tolerances:**
-   - The paper specifies Eq. (27) $\|\mathbf{L}\|_2 < \varepsilon$ without printing numerical values for `FunctionTolerance`, `StepTolerance`, or `OptimalityTolerance`.
+   - The original paper specifies Eq. (27) $\|\mathbf{L}\|_2 < \varepsilon$; numerical values for `FunctionTolerance`, `StepTolerance`, and `OptimalityTolerance` are not reported in the original paper.
    - **Assumption:** We set `ftol = 1e-9`, `xtol = 1e-9`, `gtol = 1e-9` uniformly across all PoNN continuation levels and solvers (`lm_svd`, SciPy `'lm'`, SciPy `'trf'`), and `rtol = 1e-10, atol = 1e-12, level_tol = 1e-8` for indirect shooting, `ipopt.tol = 1e-7` for 180-node LGL collocation.
 
 3. **Maximum iterations per $\rho$ continuation level:**
-   - The paper does not report per-level `MaxIterations` or `MaxFunctionEvaluations` for MATLAB `lsqnonlin`.
+   - Per-level `MaxIterations` and `MaxFunctionEvaluations` for MATLAB `lsqnonlin` are not reported in the original paper.
    - **Assumption:** We allow `max_iter_first = 250` (for unscaled `paper_u01`, matching MATLAB's default iteration order of magnitude) or `100` (for `scaled_u01`) at $\rho = 1.0$, and `max_iter_cont = 25` on subsequent warm-started continuation levels ($k \ge 1$), reducing to `5` iterations if the prior level remained diverged (`rms > 0.03` and $\min m < 0.08$).
 
 4. **Refinement pass ($L = 80$) initialization:**
-   - Sec. 4.1 states that after identifying switch intervals, 100 points per switch interval are added, $L$ is increased to $80$, and X-TFC is run again, without specifying how the $L=80$ weights are initialized.
+   - Sec. 4.1 states that after identifying switch intervals, 100 points per switch interval are added, $L$ is increased to $80$, and X-TFC is run again; weight initialization for the $L=80$ refinement pass is not reported in the original paper.
    - **Assumption:** We warm-start the $L=80$ refined basis by zero-padding the smooth coarse $L=70$ Chebyshev coefficients captured at $\rho \approx 0.0886$ (before coarse-grid switch aliasing develops) and running the remaining continuation levels down to $\rho = 10^{-10}$. For `tanh_elm` (where basis functions change with $L$), the smooth coarse trajectory is projected onto the $L=80$ ELM basis via least squares.
 
 5. **Placement of the 100 extra discretization points per switch interval:**
-   - The paper does not specify the bracket width or distribution of the 100 points per switch interval.
-   - **Assumption & ablation:** We tested both literal unweighted bracket clustering (`switch_bracket`: 100 points inside each sign-change bracket $[z_k, z_{k+1}]$) and global redistribution of the same total refined node count $n_{\text{ref}} = n + 100\,n_{\text{sw}} = 540$ uniformly (`uniform_dense`) and on CGL nodes (`cgl_dense`). Because unweighted narrow-bracket clustering causes the optimizer to dodge the dense brackets (`400.63 kg`, `reprop = 1.07e-1`), we adopt `uniform_dense` ($n=540$, `396.52 kg`, `reprop = 3.63e-2`) as our primary refined discretization and report all three modes in Phase A3.
+   - The bracket width and distribution of the 100 points per switch interval are not reported in the original paper.
+   - **Assumption & ablation:** We tested both literal unweighted bracket clustering (`switch_bracket`: 100 points inside each sign-change bracket $[z_k, z_{k+1}]$) and global redistribution of the same total refined node count $n_{\text{ref}} = n + 100\,n_{\text{sw}} = 540$ uniformly (`uniform_dense`) and on CGL nodes (`cgl_dense`). Because unweighted narrow-bracket clustering causes the optimizer to dodge the dense brackets (`400.63 kg`, `reprop = 1.07e-1`) in our independent implementation, we adopt `uniform_dense` ($n=540$, `396.52 kg`, `reprop = 3.63e-2`) as our primary refined discretization and report all three modes in Phase A3.
 
 6. **Switch detection rule:**
-   - The paper plots switches visually from $S(t)$ without stating an explicit numerical zero-crossing or debouncing algorithm.
+   - An explicit numerical zero-crossing or debouncing algorithm for $S(t)$ is not reported in the original paper.
    - **Assumption:** For indirect methods (Shooting and PoNN), switches are detected by linear interpolation of every sign change of $S(t)$ evaluated on a dense 2001-point uniform grid. For direct LGL-180 collocation (which has no costate $S$), switches are detected from crossings of $\delta(t) = 0.5$, excluding 1-day endpoint quadrature artifacts ($t < 1\text{ d}$ or $t > t_f - 1\text{ d}$).
 
 7. **Nondimensional costate units & Table 1 canonical scaling:**
@@ -1037,20 +1037,21 @@ This document records every modeling assumption made where D'Ambrosio & Furfaro 
    - **Assumption:** We use the exact dimensional Table 1 constants normalized by $(R_{\text{ref}}, t_{\text{ref}}, m_{\text{ref}})$. With $J = \int (T_{\max}\delta / c)\,dt$ in canonical units, $\lambda_m$ is dimensionless ($\in [0, 1]$), $\boldsymbol{\lambda}_v$ has units $m_{\text{ref}}/V_{\text{ref}}$, and $\boldsymbol{\lambda}_r$ has units $m_{\text{ref}}/R_{\text{ref}}$. Initial $\boldsymbol{\beta}_{\lambda_m}$ is fit to $\lambda_m \approx 1$ on interior nodes ($z < 1 - 10^{-12}$) with truncated SVD (`rcond = 1e-4`) so $\lambda_m(z_f)=0$ remains exact without an initial boundary spike.
 
 8. **SciPy `'lm'`/`'trf'` and QR/Cholesky SVD-LM vs. MATLAB R2023b `lsqnonlin`:**
-   - The paper uses MATLAB R2023b `lsqnonlin` (`'levenberg-marquardt'` in Sec. 4.1, `'trust-region-reflective'` in Sec. 4.2) with analytical/AD Jacobians.
+   - The original paper uses MATLAB R2023b `lsqnonlin` (`'levenberg-marquardt'` in Sec. 4.1, `'trust-region-reflective'` in Sec. 4.2) with analytical/AD Jacobians.
    - **Assumption:** We compute the exact analytical $8n \times 8L$ Jacobian via JAX automatic differentiation and benchmark SciPy MINPACK `'lm'`, SciPy `'trf'` (`x_scale='jac'`), and an OpenBLAS Cholesky-with-QR+SVD-fallback Levenberg–Marquardt solver (`lm_svd`) implementing MATLAB `lsqnonlin`'s default `ScaleProblem='none'` on step 0 and Jacobian column scaling on continuation steps. Phase A4(d) verifies that all three optimizers converge to identical coarse trajectories (`400.70 kg`, `rms = 2.06e-3`), while `lm_svd` is ~7–10x faster.
 
 ## Preregistered Benchmark Protocol (Seeds 2000..2099)
 
-- Evaluation protocol, extraction level $k_{\\text{ext}} = 1$ ($\\rho_{\\text{ext}} = 2.976\\times 10^{-1}$, selected on dev seeds 1000..1019 only), dual thresholds ($e_{\\text{reprop}} < 5\\times 10^{-2}$ loose, $< 1\\times 10^{-2}$ strict), and exact McNemar decision rules locked in `PREREG.md` at commit `3c87713` before running seeds 2000..2099.
+- Evaluation protocol, extraction level $k_{\text{ext}} = 1$ ($\rho_{\text{ext}} = 2.976\times 10^{-1}$, selected on dev seeds 1000..1019 only), dual thresholds ($e_{\text{reprop}} < 5\times 10^{-2}$ loose, $< 1\times 10^{-2}$ strict), and exact McNemar decision rules locked in `PREREG.md` at commit `3c87713` before running seeds 2000..2099.
 - Costates extracted at $t_0$ via:
-  $\\boldsymbol{\\lambda}_v(t_0) = \\boldsymbol{\\sigma}(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}$
-  $\\boldsymbol{\\lambda}_r(t_0) = -b^2 \\boldsymbol{\\sigma}'(-1)^T \\boldsymbol{\\beta}_{\\lambda_v}$
-  $\\lambda_m(t_0) = (\\boldsymbol{\\sigma}(-1) - \\boldsymbol{\\sigma}(1))^T \\boldsymbol{\\beta}_{\\lambda_m}$
-- All model parameters, dynamics, bases, and solvers remained strictly frozen with zero algorithmic alterations (no split-domain, no SEP power, no tuned losses).
+  $\boldsymbol{\lambda}_v(t_0) = \boldsymbol{\sigma}(-1)^T \boldsymbol{\beta}_{\lambda_v}$,
+  $\boldsymbol{\lambda}_r(t_0) = -b^2 \boldsymbol{\sigma}'(-1)^T \boldsymbol{\beta}_{\lambda_v}$,
+  $\lambda_m(t_0) = (\boldsymbol{\sigma}(-1) - \boldsymbol{\sigma}(1))^T \boldsymbol{\beta}_{\lambda_m}$.
+- All model parameters, dynamics, bases, and solvers remained strictly frozen with zero algorithmic alterations.
 
 ## Additional Modeling Assumptions (Phase C & Scenario B)
 
+- **Prior literature context:** Perturbation-aware PoNNs exist (J2 formation flying, verified abstract; cislunar high-fidelity ephemeris, abstract only; perturbation list unverified).
 - **Phase C attitude-dependent SRP (`attitude_flat_plate`):** Modeled as a flat absorbing/reflecting plate whose surface normal aligns with the optimal thrust unit vector $\boldsymbol{\alpha} = -\boldsymbol{\lambda}_v/\|\boldsymbol{\lambda}_v\|$, yielding projected area factor $\phi(\mathbf{r}, \boldsymbol{\alpha}) = 0.5 + 0.5(\hat{\mathbf{r}}\cdot\boldsymbol{\alpha})^2$ and radial SRP acceleration $\mathbf{a}_p = k_{\text{SRP}}\phi\,\mathbf{r}/r^3$. Since $\boldsymbol{\alpha}$ depends only on $\boldsymbol{\lambda}_v$, the position Jacobian $\partial \mathbf{a}_p/\partial \mathbf{r}$ is exact and verified by central FD (`< 1e-9`).
 - **Scenario B (secondary):** Retained unchanged from earlier workspace work ($m_0 = 1218\text{ kg}$, $T_{\max} = 0.5\text{ N}$, $I_{\text{sp}} = 3100\text{ s}$, circular coplanar Earth/Mars orbits at $1.0$ and $1.524\text{ AU}$, radial SRP). In Phase D, the frozen Phase A2 PoNN is evaluated on Scenario B with zero retuning.
 """
@@ -1067,26 +1068,26 @@ Every intentional or environment-forced deviation from D'Ambrosio & Furfaro (202
 
 2. **Coarse collocation grid (CGL $n=140$ vs. evenly spaced $n=140$):**
    - Sec. 2.2 states evenly spaced discretization points ($n=140, L=70$).
-   - Direct testing (Phase A3 & A4(d)) revealed severe Runge aliasing on uniform $n=140$ ($\\kappa(\\Phi_r)=1.67\\times 10^8$, node RMS `6.6e-6` vs. dense RMS `1.94`, DOP853 re-propagation error `1.36`, `0/5` convergence).
-   - We adopt $n=140$ Chebyshev–Gauss–Lobatto (CGL) nodes for the coarse stage (explicitly noted by the paper as an admissible alternative quadrature scheme), which lowers $\\kappa(\\Phi_r)$ to `6.23e3` and restores physical convergence, while retaining and reporting literal `uniform_140` results honestly.
+   - In our independent implementation, direct testing (Phase A3 & A4(d)) showed Runge aliasing on uniform $n=140$ ($\\kappa(\\Phi_r)=1.67\\times 10^8$, node RMS `6.6e-6` vs. dense RMS `1.94`, DOP853 re-propagation error `1.36`, `0/5` convergence).
+   - We adopt $n=140$ Chebyshev–Gauss–Lobatto (CGL) nodes for the coarse stage (explicitly noted by the original paper as an admissible alternative quadrature scheme), which lowers $\\kappa(\\Phi_r)$ to `6.23e3` and restores physical convergence, while retaining and reporting literal `uniform_140` results honestly.
 
 3. **Refined grid placement (`uniform_dense` $n=540$ vs. literal narrow switch-bracket clustering):**
    - Sec. 4.1 adds 100 points per switch interval ($n=540$ for 4 switches) and sets $L=80$.
-   - Literal unweighted narrow-bracket clustering (`switch_bracket`) caused the solver to shift switches out of the clusters (`400.63 kg`, `reprop = 1.07e-1`).
+   - In our independent implementation, literal unweighted narrow-bracket clustering (`switch_bracket`) caused the solver to shift switches out of the clusters (`400.63 kg`, `reprop = 1.07e-1`).
    - Our primary refined discretization distributes the exact same refined node budget ($n=540$) uniformly (`uniform_dense`, `396.52 kg`, `reprop = 3.63e-2`), and we report `cgl_dense` (`397.53 kg`) and literal `switch_bracket` (`400.63 kg`) side by side.
 
 4. **Random weight initialization scaling (`paper_u01` vs. `scaled_u01`):**
-   - Sec. 4.1 draws $\\beta_{1..3}, \\beta_{\\lambda_v 1..3} \\sim U(0, 1)$, which yields initial positions at $\\sim 25{,}000\\text{ AU}$ due to $|T_k'(\\pm 1)| = k^2$.
+   - Sec. 4.1 draws $\\beta_{1..3}, \\beta_{\\lambda_v 1..3} \\sim U(0, 1)$, which in our independent implementation yields initial positions at $\\sim 25{,}000\\text{ AU}$ due to $|T_k'(\\pm 1)| = k^2$.
    - Rather than silently changing initialization, we benchmarked **both** exact unscaled `paper_u01` (`49/100` converged) and `scaled_u01` (`1e-3 * U(0,1)` for position, `1e-2 * U(0,1)` for velocity costate; `92/100` converged) over 100 full seeds each.
 
 5. **Scope restriction (Sec. 4.1 Earth–Mars interplanetary only; Sec. 4.2 Mars landing out of scope):**
    - Per project specification, reproduction and benchmarking cover Sections 3.1, 3.3, and 4.1 (Earth–Mars interplanetary transfer), extended with Phase C SRP perturbations and secondary Scenario B transfer tests.
 
-6. **Independent DOP853 re-propagation validation (not reported in paper):**
+6. **Independent DOP853 re-propagation validation (not reported in the original paper):**
    - Because TFC constrained expressions satisfy boundary conditions analytically even when interior ODE residuals are nonzero, we re-propagate every solver's open-loop control $(\\delta(t), \\boldsymbol{\\alpha}(t))$ with `DOP853` (`rtol=1e-11, atol=1e-13`) and report actual terminal arrival error alongside energy balance error.
 
-7. **Preregistered held-out testing on fresh seeds (`2000..2099`, `4000..4099`, `5000+`, `6000..6029`, `7000..7099`, `8000..8099`):**
-   - Evaluated held-out seed suites with frozen settings and zero post-hoc parameter adjustments under `PREREG.md`, `PREREG_ADDENDUM.md`, and `PREREG_ADDENDUM_2.md`.
+7. **Preregistered held-out testing on fresh seeds (`2000..2099`, `4000..4099`, `5000+`, `6000..6029`, `7000..7099`, `8000..8099`, `9100..9649`):**
+   - Evaluated held-out seed suites with frozen settings and zero post-hoc parameter adjustments under `PREREG.md`, `PREREG_ADDENDUM.md`, `PREREG_ADDENDUM_2.md`, and `PREREG_ADDENDUM_3.md`.
 """
     (ROOT / "DEVIATIONS.md").write_text(deviations_md)
 

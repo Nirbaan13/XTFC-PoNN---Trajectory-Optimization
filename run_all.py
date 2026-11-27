@@ -82,6 +82,11 @@ def main():
             subprocess.run([sys.executable, "scripts/generate_tier3_deliverables.py"], check=True, env=env)
         if Path("scripts/generate_addendum2_deliverables.py").exists() and Path("results/addendum2_baselines_8000_8099.json").exists():
             subprocess.run([sys.executable, "scripts/generate_addendum2_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_addendum3_deliverables.py").exists() and (
+            Path("results/addendum3_task1_cross_case_9200_9649.json").exists()
+            or Path("results/addendum3_task2_accuracy_9100_9199.json").exists()
+        ):
+            subprocess.run([sys.executable, "scripts/generate_addendum3_deliverables.py"], check=True, env=env)
         print("ALL STORED DELIVERABLES REPRODUCED SUCCESSFULLY.", flush=True)
         return
 

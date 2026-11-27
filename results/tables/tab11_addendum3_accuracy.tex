@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Addendum~3 Task~2 fair equal-smoothing accuracy comparison on Scenario~A (fresh seeds 9100--9199, $N=100$, $A/m_0=0$). All methods are evaluated with identical event-aware exact bang-bang open-loop DOP853 integration (\texttt{rtol}=1e-11, \texttt{atol}=1e-13).}
+\label{tab:addendum3_accuracy}
+\begin{tabular}{lccccc}
+\toprule
+Method & Strict ($<10^{-2}$) [95\% CI] & Med.\ $e_{\mathrm{reprop}}$ (exact arcs) & Med.\ Fuel (kg) & Med.\ Time Strict (s) & Notes \\
+\midrule
+Indirect Shooting ($\rho=1.27\times 10^{-8}$) & 67/100 (67.0\% [57.3, 75.4]) & 7.38e-10 & 396.0598 & 34.03 & grid-2001 reprop: 6.37e-04 \\
+Indirect Shooting + Hard-Switch Polish & 67/100 (67.0\% [57.3, 75.4]) & 1.15e-14 & 396.0598 & 35.01 & exact $\delta \in \{0,1\}$ event \texttt{fsolve} \\
+Split-Domain PoNN Pipeline (5-arc) & 90/100 (90.0\% [82.6, 94.5]) & 3.40e-06 & 396.0598 & 14.02 & exact $\delta \in \{0,1\}$ Hermite CE \\
+\midrule
+\texttt{A1}: split\_domain vs shoot\_rho\_1e8 (strict rate) & $\Delta=+23.0$ pp & $p_{\mathrm{raw}}=0.0003$ & $p_{\mathrm{Holm}}=0.0062$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\texttt{A2}: split\_domain vs shoot\_rho\_1e8 (reprop\_exact\_arcs) & med diff $= +3.39e-06$ ($n=59$) & $p_{\mathrm{raw}}=2.39e-11$ & $p_{\mathrm{Holm}}=7.65e-10$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\texttt{A3}: split\_domain vs shoot\_hard\_polish (reprop\_exact\_arcs) & med diff $= +3.39e-06$ ($n=59$) & $p_{\mathrm{raw}}=2.39e-11$ & $p_{\mathrm{Holm}}=7.65e-10$ & \multicolumn{2}{c}{\textbf{CONTRADICTED}} \\
+\texttt{A4}: split\_domain vs shoot\_hard\_polish (total\_runtime\_s) & med diff $= -2.06e+01$ ($n=59$) & $p_{\mathrm{raw}}=2.39e-11$ & $p_{\mathrm{Holm}}=7.65e-10$ & \multicolumn{2}{c}{\textbf{SUPPORTED}} \\
+\bottomrule
+\end{tabular}
+\end{table*}

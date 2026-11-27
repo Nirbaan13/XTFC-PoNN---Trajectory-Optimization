@@ -1,0 +1,4674 @@
+{
+  "meta": {
+    "description": "Addendum 3 Task 2: Fair equal-smoothing accuracy comparison (seeds 9100..9199)",
+    "prereg_addendum3_commit": "792b304",
+    "seed_start": 9100,
+    "n_seeds_target": 100
+  },
+  "seeds": {
+    "9100": {
+      "seed": 9100,
+      "shoot_rho_1e8": {
+        "seed": 9100,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439214385,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.4780981326332665e-10,
+        "reprop_grid_2001": 0.0006370319483678441,
+        "reprop_exact_arcs": 4.751601605467547e-10,
+        "n_propagations": 531,
+        "runtime_s": 29.222179244010476
+      },
+      "shoot_hard_polish": {
+        "seed": 9100,
+        "success_strict": true,
+        "fuel_kg": 396.059843934156,
+        "reprop_exact_arcs": 1.46490907402937e-14,
+        "switch_times_days": [
+          46.58084514481349,
+          68.0233225854883,
+          142.71734067846697,
+          290.25411006571414
+        ],
+        "polish_runtime_s": 1.085021147999214,
+        "total_runtime_s": 30.30720039200969
+      },
+      "split_domain": {
+        "seed": 9100,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984385267834,
+        "switch_times_days": [
+          46.580845193649864,
+          68.02332262955748,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074209706e-08,
+        "reprop_exact_arcs": 3.3876877770509048e-06,
+        "ponn_runtime_s": 7.951906185000553,
+        "split_runtime_s": 18.290529774007155,
+        "total_runtime_s": 26.242435959007707
+      }
+    },
+    "9101": {
+      "seed": 9101,
+      "shoot_rho_1e8": {
+        "seed": 9101,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598434622549,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.9781104585283768e-09,
+        "reprop_grid_2001": 0.0006370413090991418,
+        "reprop_exact_arcs": 8.050430133946156e-09,
+        "n_propagations": 570,
+        "runtime_s": 31.195267662988044
+      },
+      "shoot_hard_polish": {
+        "seed": 9101,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415713,
+        "reprop_exact_arcs": 1.5204381533573602e-14,
+        "switch_times_days": [
+          46.58084514481344,
+          68.02332258548817,
+          142.7173406784673,
+          290.254110065714
+        ],
+        "polish_runtime_s": 1.44026282899722,
+        "total_runtime_s": 32.635530491985264
+      },
+      "split_domain": {
+        "seed": 9101,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984404711785,
+        "switch_times_days": [
+          46.58084519364974,
+          68.02332262955746,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074965966e-08,
+        "reprop_exact_arcs": 3.382249259483693e-06,
+        "ponn_runtime_s": 6.276957408001181,
+        "split_runtime_s": 18.928219145993353,
+        "total_runtime_s": 25.205176553994534
+      }
+    },
+    "9102": {
+      "seed": 9102,
+      "shoot_rho_1e8": {
+        "seed": 9102,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 312.50342726456347,
+        "rho_reached": null,
+        "arrival_residual": 0.4190902982380906,
+        "reprop_grid_2001": 0.4190901660390969,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3265,
+        "runtime_s": 31.957036473002518
+      },
+      "shoot_hard_polish": {
+        "seed": 9102,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.524997060187161e-06,
+        "total_runtime_s": 31.957037997999578
+      },
+      "split_domain": {
+        "seed": 9102,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843834528,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955751,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.93331107457541e-08,
+        "reprop_exact_arcs": 3.398042724728155e-06,
+        "ponn_runtime_s": 4.524203737004427,
+        "split_runtime_s": 9.42850759200519,
+        "total_runtime_s": 13.952711329009617
+      }
+    },
+    "9103": {
+      "seed": 9103,
+      "shoot_rho_1e8": {
+        "seed": 9103,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598441046661,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.749323087796738e-10,
+        "reprop_grid_2001": 0.0006370413136633701,
+        "reprop_exact_arcs": 1.938318045915508e-09,
+        "n_propagations": 657,
+        "runtime_s": 37.229173846004414
+      },
+      "shoot_hard_polish": {
+        "seed": 9103,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341543,
+        "reprop_exact_arcs": 1.4099760601503523e-14,
+        "switch_times_days": [
+          46.5808451448135,
+          68.02332258548816,
+          142.71734067846538,
+          290.25411006571346
+        ],
+        "polish_runtime_s": 1.1177657619991805,
+        "total_runtime_s": 38.346939608003595
+      },
+      "split_domain": {
+        "seed": 9103,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843904907,
+        "switch_times_days": [
+          46.5808451936498,
+          68.02332262955744,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074196248e-08,
+        "reprop_exact_arcs": 3.3798470079681394e-06,
+        "ponn_runtime_s": 4.469530890011811,
+        "split_runtime_s": 9.40500929900736,
+        "total_runtime_s": 13.874540189019172
+      }
+    },
+    "9104": {
+      "seed": 9104,
+      "shoot_rho_1e8": {
+        "seed": 9104,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984396032875,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.251356816007104e-10,
+        "reprop_grid_2001": 0.000637035906040674,
+        "reprop_exact_arcs": 7.619246057494541e-10,
+        "n_propagations": 533,
+        "runtime_s": 33.04500619698956
+      },
+      "shoot_hard_polish": {
+        "seed": 9104,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415906,
+        "reprop_exact_arcs": 2.627848848200491e-14,
+        "switch_times_days": [
+          46.580845144813956,
+          68.0233225854873,
+          142.71734067846663,
+          290.25411006571375
+        ],
+        "polish_runtime_s": 0.4506460450065788,
+        "total_runtime_s": 33.49565224199614
+      },
+      "split_domain": {
+        "seed": 9104,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438994356,
+        "switch_times_days": [
+          46.580845193649786,
+          68.02332262955737,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074467524e-08,
+        "reprop_exact_arcs": 3.3968014813763863e-06,
+        "ponn_runtime_s": 4.606347588996869,
+        "split_runtime_s": 9.586669172989787,
+        "total_runtime_s": 14.193016761986655
+      }
+    },
+    "9105": {
+      "seed": 9105,
+      "shoot_rho_1e8": {
+        "seed": 9105,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984396729525,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.4372016370130476e-10,
+        "reprop_grid_2001": 0.00063703389224394,
+        "reprop_exact_arcs": 6.551792108003165e-10,
+        "n_propagations": 693,
+        "runtime_s": 35.821382343012374
+      },
+      "shoot_hard_polish": {
+        "seed": 9105,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341561,
+        "reprop_exact_arcs": 1.2439951942417293e-14,
+        "switch_times_days": [
+          46.58084514481364,
+          68.0233225854882,
+          142.71734067846631,
+          290.2541100657135
+        ],
+        "polish_runtime_s": 1.1185343190009007,
+        "total_runtime_s": 36.939916662013275
+      },
+      "split_domain": {
+        "seed": 9105,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984374806803,
+        "switch_times_days": [
+          46.580845193649715,
+          68.02332262955748,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074185659e-08,
+        "reprop_exact_arcs": 3.378820628242963e-06,
+        "ponn_runtime_s": 4.66770108199853,
+        "split_runtime_s": 9.702718964996166,
+        "total_runtime_s": 14.370420046994695
+      }
+    },
+    "9106": {
+      "seed": 9106,
+      "shoot_rho_1e8": {
+        "seed": 9106,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 229.77942720232613,
+        "rho_reached": null,
+        "arrival_residual": 0.31204342221600273,
+        "reprop_grid_2001": 0.3120433861452148,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3231,
+        "runtime_s": 44.38425899199501
+      },
+      "shoot_hard_polish": {
+        "seed": 9106,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4069955796003342e-06,
+        "total_runtime_s": 44.38426039899059
+      },
+      "split_domain": {
+        "seed": 9106,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438612683,
+        "switch_times_days": [
+          46.58084519364981,
+          68.02332262955736,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074343325e-08,
+        "reprop_exact_arcs": 3.4260349510721542e-06,
+        "ponn_runtime_s": 10.364603397989413,
+        "split_runtime_s": 8.73577708900848,
+        "total_runtime_s": 19.100380486997892
+      }
+    },
+    "9107": {
+      "seed": 9107,
+      "shoot_rho_1e8": {
+        "seed": 9107,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439948502,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.640167007561296e-11,
+        "reprop_grid_2001": 0.0006370138515707117,
+        "reprop_exact_arcs": 4.5864499628137225e-10,
+        "n_propagations": 608,
+        "runtime_s": 32.0590230430098
+      },
+      "shoot_hard_polish": {
+        "seed": 9107,
+        "success_strict": true,
+        "fuel_kg": 396.05984393414985,
+        "reprop_exact_arcs": 3.67684820173985e-15,
+        "switch_times_days": [
+          46.58084514481284,
+          68.02332258548867,
+          142.71734067846646,
+          290.2541100657154
+        ],
+        "polish_runtime_s": 0.4874257000046782,
+        "total_runtime_s": 32.54644874301448
+      },
+      "split_domain": {
+        "seed": 9107,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437474615,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955755,
+          142.71734073980102,
+          290.25411012015525
+        ],
+        "residual_rms": 5.9333110746864255e-08,
+        "reprop_exact_arcs": 3.4082555423016724e-06,
+        "ponn_runtime_s": 5.821954088009079,
+        "split_runtime_s": 9.640387642008136,
+        "total_runtime_s": 15.462341730017215
+      }
+    },
+    "9108": {
+      "seed": 9108,
+      "shoot_rho_1e8": {
+        "seed": 9108,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984421456424,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.013854979187891e-09,
+        "reprop_grid_2001": 0.0006370302200971592,
+        "reprop_exact_arcs": 1.4499652288104057e-09,
+        "n_propagations": 1406,
+        "runtime_s": 49.043686289995094
+      },
+      "shoot_hard_polish": {
+        "seed": 9108,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341537,
+        "reprop_exact_arcs": 1.6920629732174287e-14,
+        "switch_times_days": [
+          46.580845144813,
+          68.0233225854883,
+          142.71734067846825,
+          290.25411006571585
+        ],
+        "polish_runtime_s": 1.3251681349938735,
+        "total_runtime_s": 50.36885442498897
+      },
+      "split_domain": {
+        "seed": 9108,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984395074233,
+        "switch_times_days": [
+          46.580845193649736,
+          68.02332262955751,
+          142.71734073980102,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074515394e-08,
+        "reprop_exact_arcs": 3.36988712224032e-06,
+        "ponn_runtime_s": 4.497939053995651,
+        "split_runtime_s": 8.897083038988058,
+        "total_runtime_s": 13.395022092983709
+      }
+    },
+    "9109": {
+      "seed": 9109,
+      "shoot_rho_1e8": {
+        "seed": 9109,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439020217,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.486403369583104e-10,
+        "reprop_grid_2001": 0.0006370361599481257,
+        "reprop_exact_arcs": 1.1957505402719123e-09,
+        "n_propagations": 580,
+        "runtime_s": 31.072557549006888
+      },
+      "shoot_hard_polish": {
+        "seed": 9109,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341502,
+        "reprop_exact_arcs": 1.965179680921513e-14,
+        "switch_times_days": [
+          46.58084514481461,
+          68.02332258548714,
+          142.71734067846367,
+          290.2541100657155
+        ],
+        "polish_runtime_s": 1.147803368003224,
+        "total_runtime_s": 32.22036091701011
+      },
+      "split_domain": {
+        "seed": 9109,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439714407,
+        "switch_times_days": [
+          46.58084519364973,
+          68.02332262955747,
+          142.71734073980102,
+          290.25411012015525
+        ],
+        "residual_rms": 5.9333110744080984e-08,
+        "reprop_exact_arcs": 3.390523418500185e-06,
+        "ponn_runtime_s": 11.4015873340104,
+        "split_runtime_s": 9.068592074996559,
+        "total_runtime_s": 20.47017940900696
+      }
+    },
+    "9110": {
+      "seed": 9110,
+      "shoot_rho_1e8": {
+        "seed": 9110,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440119529,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.5036067225285592e-10,
+        "reprop_grid_2001": 0.0006369764973034976,
+        "reprop_exact_arcs": 7.006908198030034e-10,
+        "n_propagations": 675,
+        "runtime_s": 33.02463140699547
+      },
+      "shoot_hard_polish": {
+        "seed": 9110,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415054,
+        "reprop_exact_arcs": 6.972455155230703e-15,
+        "switch_times_days": [
+          46.580845144813594,
+          68.02332258548807,
+          142.7173406784665,
+          290.2541100657163
+        ],
+        "polish_runtime_s": 1.077679645997705,
+        "total_runtime_s": 34.10231105299317
+      },
+      "split_domain": {
+        "seed": 9110,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437387995,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955753,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110740371026e-08,
+        "reprop_exact_arcs": 3.420672181640217e-06,
+        "ponn_runtime_s": 4.561286367999855,
+        "split_runtime_s": 9.216482638992602,
+        "total_runtime_s": 13.777769006992457
+      }
+    },
+    "9111": {
+      "seed": 9111,
+      "shoot_rho_1e8": {
+        "seed": 9111,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 253.940997915122,
+        "rho_reached": null,
+        "arrival_residual": 0.7851344237762016,
+        "reprop_grid_2001": 0.7851331895251956,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3136,
+        "runtime_s": 48.5325916820002
+      },
+      "shoot_hard_polish": {
+        "seed": 9111,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.1210067896172404e-06,
+        "total_runtime_s": 48.53259280300699
+      },
+      "split_domain": {
+        "seed": 9111,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984398291343,
+        "switch_times_days": [
+          46.58084519364983,
+          68.0233226295575,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110744942695e-08,
+        "reprop_exact_arcs": 3.409404699646873e-06,
+        "ponn_runtime_s": 4.240362398995785,
+        "split_runtime_s": 9.122027652003453,
+        "total_runtime_s": 13.362390050999238
+      }
+    },
+    "9112": {
+      "seed": 9112,
+      "shoot_rho_1e8": {
+        "seed": 9112,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984383728753,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.184140786456025e-10,
+        "reprop_grid_2001": 0.0006370359547350472,
+        "reprop_exact_arcs": 5.111017422621038e-10,
+        "n_propagations": 514,
+        "runtime_s": 29.638359306991333
+      },
+      "shoot_hard_polish": {
+        "seed": 9112,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415383,
+        "reprop_exact_arcs": 1.2262209564611475e-14,
+        "switch_times_days": [
+          46.58084514481432,
+          68.02332258548715,
+          142.7173406784657,
+          290.25411006571557
+        ],
+        "polish_runtime_s": 1.371386081998935,
+        "total_runtime_s": 31.009745388990268
+      },
+      "split_domain": {
+        "seed": 9112,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843840652,
+        "switch_times_days": [
+          46.58084519364979,
+          68.02332262955746,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110744055295e-08,
+        "reprop_exact_arcs": 3.424400437001371e-06,
+        "ponn_runtime_s": 4.493438511999557,
+        "split_runtime_s": 8.920656900008908,
+        "total_runtime_s": 13.414095412008464
+      }
+    },
+    "9113": {
+      "seed": 9113,
+      "shoot_rho_1e8": {
+        "seed": 9113,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 690.6669864758969,
+        "rho_reached": null,
+        "arrival_residual": 1.396292829771918,
+        "reprop_grid_2001": 1.3962939658274964,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3187,
+        "runtime_s": 82.4688553189917
+      },
+      "shoot_hard_polish": {
+        "seed": 9113,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2719974620267749e-06,
+        "total_runtime_s": 82.46885659098916
+      },
+      "split_domain": {
+        "seed": 9113,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438944653,
+        "switch_times_days": [
+          46.58084519364977,
+          68.0233226295575,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074035532e-08,
+        "reprop_exact_arcs": 3.380598518120821e-06,
+        "ponn_runtime_s": 4.290666568995221,
+        "split_runtime_s": 9.017649781002547,
+        "total_runtime_s": 13.308316349997767
+      }
+    },
+    "9114": {
+      "seed": 9114,
+      "shoot_rho_1e8": {
+        "seed": 9114,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440500097,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 4.6418570523716997e-10,
+        "reprop_grid_2001": 0.0006370387092505679,
+        "reprop_exact_arcs": 1.0478007949126855e-09,
+        "n_propagations": 569,
+        "runtime_s": 31.096600151999155
+      },
+      "shoot_hard_polish": {
+        "seed": 9114,
+        "success_strict": true,
+        "fuel_kg": 396.05984393414985,
+        "reprop_exact_arcs": 1.8524623290319888e-14,
+        "switch_times_days": [
+          46.580845144811086,
+          68.0233225854904,
+          142.7173406784701,
+          290.2541100657154
+        ],
+        "polish_runtime_s": 1.0295927660044981,
+        "total_runtime_s": 32.12619291800365
+      },
+      "split_domain": {
+        "seed": 9114,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984402676074,
+        "switch_times_days": [
+          46.58084519364975,
+          68.0233226295575,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074103294e-08,
+        "reprop_exact_arcs": 3.4189240313828255e-06,
+        "ponn_runtime_s": 5.928043574996991,
+        "split_runtime_s": 19.090954764993512,
+        "total_runtime_s": 25.018998339990503
+      }
+    },
+    "9115": {
+      "seed": 9115,
+      "shoot_rho_1e8": {
+        "seed": 9115,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 274.0479169537134,
+        "rho_reached": null,
+        "arrival_residual": 0.3402619573297028,
+        "reprop_grid_2001": 0.3402615810074443,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3239,
+        "runtime_s": 45.5302207749919
+      },
+      "shoot_hard_polish": {
+        "seed": 9115,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2059899745509028e-06,
+        "total_runtime_s": 45.53022198098188
+      },
+      "split_domain": {
+        "seed": 9115,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438134389,
+        "switch_times_days": [
+          46.58084519364976,
+          68.0233226295574,
+          142.71734073980102,
+          290.25411012015525
+        ],
+        "residual_rms": 5.933311074830805e-08,
+        "reprop_exact_arcs": 3.396521056789175e-06,
+        "ponn_runtime_s": 6.500914763993933,
+        "split_runtime_s": 16.1378613650013,
+        "total_runtime_s": 22.638776128995232
+      }
+    },
+    "9116": {
+      "seed": 9116,
+      "shoot_rho_1e8": {
+        "seed": 9116,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598435613083,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.639646451387593e-10,
+        "reprop_grid_2001": 0.000637021057441934,
+        "reprop_exact_arcs": 7.447090824421257e-10,
+        "n_propagations": 543,
+        "runtime_s": 34.70915644800698
+      },
+      "shoot_hard_polish": {
+        "seed": 9116,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341526,
+        "reprop_exact_arcs": 5.586663151450848e-15,
+        "switch_times_days": [
+          46.58084514481378,
+          68.02332258548788,
+          142.71734067846634,
+          290.2541100657157
+        ],
+        "polish_runtime_s": 0.8040663739957381,
+        "total_runtime_s": 35.51322282200272
+      },
+      "split_domain": {
+        "seed": 9116,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 12.637613860992133,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 12.637613860992133
+      }
+    },
+    "9117": {
+      "seed": 9117,
+      "shoot_rho_1e8": {
+        "seed": 9117,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 760.1734896691648,
+        "rho_reached": null,
+        "arrival_residual": 1.171222330457008,
+        "reprop_grid_2001": 1.1712240584120401,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3126,
+        "runtime_s": 80.85645710499375
+      },
+      "shoot_hard_polish": {
+        "seed": 9117,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4120014384388924e-06,
+        "total_runtime_s": 80.85645851699519
+      },
+      "split_domain": {
+        "seed": 9117,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 25.097615807986585,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 25.097615807986585
+      }
+    },
+    "9118": {
+      "seed": 9118,
+      "shoot_rho_1e8": {
+        "seed": 9118,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598437311688,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.86571409198532e-09,
+        "reprop_grid_2001": 0.0006370273713019699,
+        "reprop_exact_arcs": 1.6428046363557747e-09,
+        "n_propagations": 534,
+        "runtime_s": 34.58222475499497
+      },
+      "shoot_hard_polish": {
+        "seed": 9118,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415224,
+        "reprop_exact_arcs": 1.2600635643222563e-14,
+        "switch_times_days": [
+          46.58084514481241,
+          68.02332258548937,
+          142.71734067846714,
+          290.25411006571363
+        ],
+        "polish_runtime_s": 0.537885985992034,
+        "total_runtime_s": 35.120110740987
+      },
+      "split_domain": {
+        "seed": 9118,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 15.918739493004978,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 15.918739493004978
+      }
+    },
+    "9119": {
+      "seed": 9119,
+      "shoot_rho_1e8": {
+        "seed": 9119,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984403840364,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.0970544180735427e-10,
+        "reprop_grid_2001": 0.0006370269981126132,
+        "reprop_exact_arcs": 7.287105981496685e-10,
+        "n_propagations": 773,
+        "runtime_s": 35.676987166996696
+      },
+      "shoot_hard_polish": {
+        "seed": 9119,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341527,
+        "reprop_exact_arcs": 1.2014748895023568e-14,
+        "switch_times_days": [
+          46.580845144814084,
+          68.02332258548822,
+          142.71734067846572,
+          290.2541100657149
+        ],
+        "polish_runtime_s": 1.3919227500009583,
+        "total_runtime_s": 37.068909916997654
+      },
+      "split_domain": {
+        "seed": 9119,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984370472277,
+        "switch_times_days": [
+          46.58084519364978,
+          68.0233226295575,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.93331107439002e-08,
+        "reprop_exact_arcs": 3.398818189828634e-06,
+        "ponn_runtime_s": 6.13039107399527,
+        "split_runtime_s": 9.223612582005444,
+        "total_runtime_s": 15.354003656000714
+      }
+    },
+    "9120": {
+      "seed": 9120,
+      "shoot_rho_1e8": {
+        "seed": 9120,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984322844347,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.020719677163785e-09,
+        "reprop_grid_2001": 0.0006370365883926675,
+        "reprop_exact_arcs": 1.6922943928314676e-09,
+        "n_propagations": 2795,
+        "runtime_s": 63.362726115999976
+      },
+      "shoot_hard_polish": {
+        "seed": 9120,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341612,
+        "reprop_exact_arcs": 7.59221167358911e-15,
+        "switch_times_days": [
+          46.58084514481414,
+          68.02332258548742,
+          142.7173406784662,
+          290.25411006571244
+        ],
+        "polish_runtime_s": 1.0332259209972108,
+        "total_runtime_s": 64.39595203699719
+      },
+      "split_domain": {
+        "seed": 9120,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843995909,
+        "switch_times_days": [
+          46.58084519364984,
+          68.02332262955746,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074740444e-08,
+        "reprop_exact_arcs": 3.398392612983319e-06,
+        "ponn_runtime_s": 4.709140065009706,
+        "split_runtime_s": 8.928497522007092,
+        "total_runtime_s": 13.637637587016798
+      }
+    },
+    "9121": {
+      "seed": 9121,
+      "shoot_rho_1e8": {
+        "seed": 9121,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984392122605,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 3.300796166836909e-11,
+        "reprop_grid_2001": 0.0006370413546355179,
+        "reprop_exact_arcs": 3.743068854296478e-10,
+        "n_propagations": 539,
+        "runtime_s": 32.98235524700431
+      },
+      "shoot_hard_polish": {
+        "seed": 9121,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341612,
+        "reprop_exact_arcs": 2.2547952260685115e-14,
+        "switch_times_days": [
+          46.580845144814674,
+          68.02332258548729,
+          142.7173406784663,
+          290.25411006571306
+        ],
+        "polish_runtime_s": 1.0308842779922998,
+        "total_runtime_s": 34.01323952499661
+      },
+      "split_domain": {
+        "seed": 9121,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984380163557,
+        "switch_times_days": [
+          46.5808451936498,
+          68.02332262955748,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110750066437e-08,
+        "reprop_exact_arcs": 3.3437630831097997e-06,
+        "ponn_runtime_s": 4.396328685994376,
+        "split_runtime_s": 9.382555345000583,
+        "total_runtime_s": 13.77888403099496
+      }
+    },
+    "9122": {
+      "seed": 9122,
+      "shoot_rho_1e8": {
+        "seed": 9122,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 113.97668942451457,
+        "rho_reached": null,
+        "arrival_residual": 1.2355388470031943,
+        "reprop_grid_2001": 1.2355372056786742,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3155,
+        "runtime_s": 59.61762987500697
+      },
+      "shoot_hard_polish": {
+        "seed": 9122,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.100997906178236e-06,
+        "total_runtime_s": 59.617630976004875
+      },
+      "split_domain": {
+        "seed": 9122,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984403426373,
+        "switch_times_days": [
+          46.580845193649736,
+          68.02332262955744,
+          142.71734073980096,
+          290.25411012015525
+        ],
+        "residual_rms": 5.9333110744932815e-08,
+        "reprop_exact_arcs": 3.419039549878504e-06,
+        "ponn_runtime_s": 4.793704355004593,
+        "split_runtime_s": 8.824192325002514,
+        "total_runtime_s": 13.617896680007107
+      }
+    },
+    "9123": {
+      "seed": 9123,
+      "shoot_rho_1e8": {
+        "seed": 9123,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439792507,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.1266753689359663e-10,
+        "reprop_grid_2001": 0.0006369107017800462,
+        "reprop_exact_arcs": 1.0488443803744059e-09,
+        "n_propagations": 576,
+        "runtime_s": 32.621226917006425
+      },
+      "shoot_hard_polish": {
+        "seed": 9123,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341578,
+        "reprop_exact_arcs": 7.76467774795625e-15,
+        "switch_times_days": [
+          46.58084514481325,
+          68.02332258548834,
+          142.7173406784671,
+          290.25411006571295
+        ],
+        "polish_runtime_s": 1.3682137570140185,
+        "total_runtime_s": 33.98944067402044
+      },
+      "split_domain": {
+        "seed": 9123,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439956416,
+        "switch_times_days": [
+          46.58084519364981,
+          68.02332262955746,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110746481575e-08,
+        "reprop_exact_arcs": 3.3583157653402167e-06,
+        "ponn_runtime_s": 4.272066779012675,
+        "split_runtime_s": 9.116933356999652,
+        "total_runtime_s": 13.389000136012328
+      }
+    },
+    "9124": {
+      "seed": 9124,
+      "shoot_rho_1e8": {
+        "seed": 9124,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 449.2546531278971,
+        "rho_reached": null,
+        "arrival_residual": 1.0640732932644149e-07,
+        "reprop_grid_2001": 5.755001855477795e-07,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3311,
+        "runtime_s": 91.32593582899426
+      },
+      "shoot_hard_polish": {
+        "seed": 9124,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.0999938240274787e-06,
+        "total_runtime_s": 91.32593692898809
+      },
+      "split_domain": {
+        "seed": 9124,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439908848,
+        "switch_times_days": [
+          46.58084519364978,
+          68.02332262955753,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074606119e-08,
+        "reprop_exact_arcs": 3.4046687401590163e-06,
+        "ponn_runtime_s": 4.398491927990108,
+        "split_runtime_s": 8.848848239998915,
+        "total_runtime_s": 13.247340167989023
+      }
+    },
+    "9125": {
+      "seed": 9125,
+      "shoot_rho_1e8": {
+        "seed": 9125,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440218496,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.242022882434539e-11,
+        "reprop_grid_2001": 0.0006370362315094516,
+        "reprop_exact_arcs": 5.363549488572665e-10,
+        "n_propagations": 837,
+        "runtime_s": 39.32153498700063
+      },
+      "shoot_hard_polish": {
+        "seed": 9125,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341609,
+        "reprop_exact_arcs": 9.929674157504071e-15,
+        "switch_times_days": [
+          46.58084514481387,
+          68.02332258548755,
+          142.71734067846668,
+          290.2541100657126
+        ],
+        "polish_runtime_s": 1.094559967998066,
+        "total_runtime_s": 40.4160949549987
+      },
+      "split_domain": {
+        "seed": 9125,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598440519294,
+        "switch_times_days": [
+          46.5808451936497,
+          68.0233226295574,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074525769e-08,
+        "reprop_exact_arcs": 3.4312604657276468e-06,
+        "ponn_runtime_s": 4.701729295004043,
+        "split_runtime_s": 9.731098606993328,
+        "total_runtime_s": 14.43282790199737
+      }
+    },
+    "9126": {
+      "seed": 9126,
+      "shoot_rho_1e8": {
+        "seed": 9126,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 377.3254847882637,
+        "rho_reached": null,
+        "arrival_residual": 0.2643749172677464,
+        "reprop_grid_2001": 0.2643750364048252,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3281,
+        "runtime_s": 39.09768175399222
+      },
+      "shoot_hard_polish": {
+        "seed": 9126,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.348002115264535e-06,
+        "total_runtime_s": 39.097683101994335
+      },
+      "split_domain": {
+        "seed": 9126,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984388562956,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955744,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311075442647e-08,
+        "reprop_exact_arcs": 3.386839945945372e-06,
+        "ponn_runtime_s": 14.45939398399787,
+        "split_runtime_s": 16.79294296799344,
+        "total_runtime_s": 31.25233695199131
+      }
+    },
+    "9127": {
+      "seed": 9127,
+      "shoot_rho_1e8": {
+        "seed": 9127,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439623991,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.1115742397618282e-10,
+        "reprop_grid_2001": 0.0006370283534233278,
+        "reprop_exact_arcs": 3.2356885942940496e-10,
+        "n_propagations": 688,
+        "runtime_s": 34.05453910099459
+      },
+      "shoot_hard_polish": {
+        "seed": 9127,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415656,
+        "reprop_exact_arcs": 5.37822478572858e-15,
+        "switch_times_days": [
+          46.580845144812976,
+          68.02332258548842,
+          142.71734067846643,
+          290.2541100657126
+        ],
+        "polish_runtime_s": 0.9730104810005287,
+        "total_runtime_s": 35.02754958199512
+      },
+      "split_domain": {
+        "seed": 9127,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437977868,
+        "switch_times_days": [
+          46.580845193649814,
+          68.02332262955753,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110746739423e-08,
+        "reprop_exact_arcs": 3.419773706340895e-06,
+        "ponn_runtime_s": 6.26672795000195,
+        "split_runtime_s": 18.583601128993905,
+        "total_runtime_s": 24.850329078995856
+      }
+    },
+    "9128": {
+      "seed": 9128,
+      "shoot_rho_1e8": {
+        "seed": 9128,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984394463326,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.416667932459717e-10,
+        "reprop_grid_2001": 0.000637033386705628,
+        "reprop_exact_arcs": 3.889979971999121e-10,
+        "n_propagations": 1903,
+        "runtime_s": 49.561628866998944
+      },
+      "shoot_hard_polish": {
+        "seed": 9128,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341526,
+        "reprop_exact_arcs": 9.340706508347963e-15,
+        "switch_times_days": [
+          46.58084514481343,
+          68.02332258548843,
+          142.7173406784659,
+          290.25411006571426
+        ],
+        "polish_runtime_s": 1.4279927460011095,
+        "total_runtime_s": 50.989621613000054
+      },
+      "split_domain": {
+        "seed": 9128,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984381344035,
+        "switch_times_days": [
+          46.580845193649786,
+          68.02332262955744,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074614704e-08,
+        "reprop_exact_arcs": 3.398383361797423e-06,
+        "ponn_runtime_s": 6.0799582970066695,
+        "split_runtime_s": 9.230113194003934,
+        "total_runtime_s": 15.310071491010603
+      }
+    },
+    "9129": {
+      "seed": 9129,
+      "shoot_rho_1e8": {
+        "seed": 9129,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984388673255,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.1186166489249984e-10,
+        "reprop_grid_2001": 0.0006370299939834138,
+        "reprop_exact_arcs": 4.3988801963772047e-10,
+        "n_propagations": 693,
+        "runtime_s": 40.99001481800224
+      },
+      "shoot_hard_polish": {
+        "seed": 9129,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341551,
+        "reprop_exact_arcs": 1.2956200922084087e-14,
+        "switch_times_days": [
+          46.58084514481271,
+          68.02332258548921,
+          142.7173406784655,
+          290.2541100657112
+        ],
+        "polish_runtime_s": 0.461074078004458,
+        "total_runtime_s": 41.451088896006695
+      },
+      "split_domain": {
+        "seed": 9129,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439664882,
+        "switch_times_days": [
+          46.58084519364976,
+          68.0233226295575,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074386625e-08,
+        "reprop_exact_arcs": 3.4151575736484593e-06,
+        "ponn_runtime_s": 4.780282674997579,
+        "split_runtime_s": 9.582723368002917,
+        "total_runtime_s": 14.363006043000496
+      }
+    },
+    "9130": {
+      "seed": 9130,
+      "shoot_rho_1e8": {
+        "seed": 9130,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598438993725,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.598539966954512e-10,
+        "reprop_grid_2001": 0.0006370314727799214,
+        "reprop_exact_arcs": 6.234297371202435e-10,
+        "n_propagations": 566,
+        "runtime_s": 33.75360678900324
+      },
+      "shoot_hard_polish": {
+        "seed": 9130,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415963,
+        "reprop_exact_arcs": 1.3884681303048679e-14,
+        "switch_times_days": [
+          46.58084514481373,
+          68.02332258548786,
+          142.71734067846535,
+          290.2541100657115
+        ],
+        "polish_runtime_s": 1.1600391109968768,
+        "total_runtime_s": 34.91364590000012
+      },
+      "split_domain": {
+        "seed": 9130,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598435600915,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955748,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074668173e-08,
+        "reprop_exact_arcs": 3.376774485655308e-06,
+        "ponn_runtime_s": 4.68502961199556,
+        "split_runtime_s": 9.337838823004859,
+        "total_runtime_s": 14.022868435000419
+      }
+    },
+    "9131": {
+      "seed": 9131,
+      "shoot_rho_1e8": {
+        "seed": 9131,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439984283,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 3.74979349987504e-10,
+        "reprop_grid_2001": 0.0006370376553223752,
+        "reprop_exact_arcs": 2.409363466140905e-10,
+        "n_propagations": 652,
+        "runtime_s": 32.5496459499991
+      },
+      "shoot_hard_polish": {
+        "seed": 9131,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415326,
+        "reprop_exact_arcs": 3.226649252564807e-14,
+        "switch_times_days": [
+          46.580845144811526,
+          68.02332258549028,
+          142.71734067846842,
+          290.25411006571284
+        ],
+        "polish_runtime_s": 0.9695434519962873,
+        "total_runtime_s": 33.51918940199539
+      },
+      "split_domain": {
+        "seed": 9131,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437597331,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955748,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110744031783e-08,
+        "reprop_exact_arcs": 3.391060149113865e-06,
+        "ponn_runtime_s": 8.352465255986317,
+        "split_runtime_s": 9.727845375993638,
+        "total_runtime_s": 18.080310631979955
+      }
+    },
+    "9132": {
+      "seed": 9132,
+      "shoot_rho_1e8": {
+        "seed": 9132,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 767.9728455642017,
+        "rho_reached": null,
+        "arrival_residual": 1.2440456282100458,
+        "reprop_grid_2001": 1.2440465450033227,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3143,
+        "runtime_s": 89.00201278699387
+      },
+      "shoot_hard_polish": {
+        "seed": 9132,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.114007318392396e-06,
+        "total_runtime_s": 89.00201390100119
+      },
+      "split_domain": {
+        "seed": 9132,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437866904,
+        "switch_times_days": [
+          46.58084519364981,
+          68.0233226295575,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074460993e-08,
+        "reprop_exact_arcs": 3.4056212968273896e-06,
+        "ponn_runtime_s": 4.496348932996625,
+        "split_runtime_s": 8.8405702309974,
+        "total_runtime_s": 13.336919163994025
+      }
+    },
+    "9133": {
+      "seed": 9133,
+      "shoot_rho_1e8": {
+        "seed": 9133,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440405373,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.079465789046237e-10,
+        "reprop_grid_2001": 0.0006370407726988115,
+        "reprop_exact_arcs": 6.3571768427848e-10,
+        "n_propagations": 539,
+        "runtime_s": 35.947081721998984
+      },
+      "shoot_hard_polish": {
+        "seed": 9133,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341504,
+        "reprop_exact_arcs": 2.984432587521012e-15,
+        "switch_times_days": [
+          46.58084514481313,
+          68.02332258548844,
+          142.71734067846688,
+          290.25411006571596
+        ],
+        "polish_runtime_s": 0.5833307990105823,
+        "total_runtime_s": 36.530412521009566
+      },
+      "split_domain": {
+        "seed": 9133,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439398739,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955747,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110745440055e-08,
+        "reprop_exact_arcs": 3.3984779898858015e-06,
+        "ponn_runtime_s": 4.2734225199965294,
+        "split_runtime_s": 9.202325328005827,
+        "total_runtime_s": 13.475747848002356
+      }
+    },
+    "9134": {
+      "seed": 9134,
+      "shoot_rho_1e8": {
+        "seed": 9134,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 753.6821088513061,
+        "rho_reached": null,
+        "arrival_residual": 1.284711328267321,
+        "reprop_grid_2001": 1.2847115025749019,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3137,
+        "runtime_s": 88.97214046200679
+      },
+      "shoot_hard_polish": {
+        "seed": 9134,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2429954949766397e-06,
+        "total_runtime_s": 88.97214170500229
+      },
+      "split_domain": {
+        "seed": 9134,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438757065,
+        "switch_times_days": [
+          46.580845193649786,
+          68.02332262955741,
+          142.71734073980096,
+          290.25411012015525
+        ],
+        "residual_rms": 5.933311074793557e-08,
+        "reprop_exact_arcs": 3.400363550995265e-06,
+        "ponn_runtime_s": 5.32794771999761,
+        "split_runtime_s": 9.15089951500704,
+        "total_runtime_s": 14.47884723500465
+      }
+    },
+    "9135": {
+      "seed": 9135,
+      "shoot_rho_1e8": {
+        "seed": 9135,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439325943,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.5174130674459544e-10,
+        "reprop_grid_2001": 0.0006370256412682887,
+        "reprop_exact_arcs": 4.532859096733832e-10,
+        "n_propagations": 623,
+        "runtime_s": 33.06209198200668
+      },
+      "shoot_hard_polish": {
+        "seed": 9135,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415486,
+        "reprop_exact_arcs": 1.3469974151724341e-14,
+        "switch_times_days": [
+          46.58084514481368,
+          68.02332258548836,
+          142.71734067846626,
+          290.2541100657139
+        ],
+        "polish_runtime_s": 1.7363919750059722,
+        "total_runtime_s": 34.79848395701265
+      },
+      "split_domain": {
+        "seed": 9135,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984395457983,
+        "switch_times_days": [
+          46.58084519364979,
+          68.02332262955754,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110747646225e-08,
+        "reprop_exact_arcs": 3.410198165790724e-06,
+        "ponn_runtime_s": 4.47244001099898,
+        "split_runtime_s": 9.269479202004732,
+        "total_runtime_s": 13.741919213003712
+      }
+    },
+    "9136": {
+      "seed": 9136,
+      "shoot_rho_1e8": {
+        "seed": 9136,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984395292967,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.058723073052098e-10,
+        "reprop_grid_2001": 0.0006370404914246733,
+        "reprop_exact_arcs": 3.2567951688459327e-10,
+        "n_propagations": 624,
+        "runtime_s": 36.26319739599421
+      },
+      "shoot_hard_polish": {
+        "seed": 9136,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341517,
+        "reprop_exact_arcs": 4.2130866786774485e-15,
+        "switch_times_days": [
+          46.58084514481339,
+          68.02332258548843,
+          142.71734067846674,
+          290.2541100657154
+        ],
+        "polish_runtime_s": 0.9721126350050326,
+        "total_runtime_s": 37.235310030999244
+      },
+      "split_domain": {
+        "seed": 9136,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 14.16655984899262,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 14.16655984899262
+      }
+    },
+    "9137": {
+      "seed": 9137,
+      "shoot_rho_1e8": {
+        "seed": 9137,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 202.3744918546828,
+        "rho_reached": null,
+        "arrival_residual": 0.939256036555745,
+        "reprop_grid_2001": 0.9392541241272758,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3139,
+        "runtime_s": 55.60842413500359
+      },
+      "shoot_hard_polish": {
+        "seed": 9137,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.224005245603621e-06,
+        "total_runtime_s": 55.608425359008834
+      },
+      "split_domain": {
+        "seed": 9137,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984390777655,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955743,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110749600416e-08,
+        "reprop_exact_arcs": 3.398998559756437e-06,
+        "ponn_runtime_s": 5.66875875700498,
+        "split_runtime_s": 14.92668581099133,
+        "total_runtime_s": 20.59544456799631
+      }
+    },
+    "9138": {
+      "seed": 9138,
+      "shoot_rho_1e8": {
+        "seed": 9138,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984416023216,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 3.007516794088439e-10,
+        "reprop_grid_2001": 0.0006370492980610712,
+        "reprop_exact_arcs": 1.1025744182204536e-09,
+        "n_propagations": 562,
+        "runtime_s": 32.41290659099468
+      },
+      "shoot_hard_polish": {
+        "seed": 9138,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415577,
+        "reprop_exact_arcs": 1.377135317307218e-14,
+        "switch_times_days": [
+          46.5808451448138,
+          68.02332258548783,
+          142.71734067846666,
+          290.2541100657145
+        ],
+        "polish_runtime_s": 1.4808875099988654,
+        "total_runtime_s": 33.893794100993546
+      },
+      "split_domain": {
+        "seed": 9138,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438873885,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955744,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074466483e-08,
+        "reprop_exact_arcs": 3.409459484456231e-06,
+        "ponn_runtime_s": 4.820635044001392,
+        "split_runtime_s": 16.71535681000387,
+        "total_runtime_s": 21.53599185400526
+      }
+    },
+    "9139": {
+      "seed": 9139,
+      "shoot_rho_1e8": {
+        "seed": 9139,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439897699,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.531548708081569e-10,
+        "reprop_grid_2001": 0.0006370037562533646,
+        "reprop_exact_arcs": 1.8344004689694587e-09,
+        "n_propagations": 503,
+        "runtime_s": 28.657407193008112
+      },
+      "shoot_hard_polish": {
+        "seed": 9139,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415883,
+        "reprop_exact_arcs": 1.27606598774159e-14,
+        "switch_times_days": [
+          46.58084514481455,
+          68.0233225854867,
+          142.7173406784655,
+          290.25411006571386
+        ],
+        "polish_runtime_s": 1.0684663639985956,
+        "total_runtime_s": 29.725873557006707
+      },
+      "split_domain": {
+        "seed": 9139,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439540214,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955743,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074112561e-08,
+        "reprop_exact_arcs": 3.391155586463787e-06,
+        "ponn_runtime_s": 4.622991415992146,
+        "split_runtime_s": 11.503178379003657,
+        "total_runtime_s": 16.126169794995803
+      }
+    },
+    "9140": {
+      "seed": 9140,
+      "shoot_rho_1e8": {
+        "seed": 9140,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 510.8849819052008,
+        "rho_reached": null,
+        "arrival_residual": 0.6384235778439421,
+        "reprop_grid_2001": 0.6384233383789336,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3206,
+        "runtime_s": 38.719722378009465
+      },
+      "shoot_hard_polish": {
+        "seed": 9140,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.3319950085133314e-06,
+        "total_runtime_s": 38.71972371000447
+      },
+      "split_domain": {
+        "seed": 9140,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439595793,
+        "switch_times_days": [
+          46.580845193649814,
+          68.02332262955747,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311073854674e-08,
+        "reprop_exact_arcs": 3.4043298122767717e-06,
+        "ponn_runtime_s": 4.656660724998801,
+        "split_runtime_s": 9.417901414999506,
+        "total_runtime_s": 14.074562139998307
+      }
+    },
+    "9141": {
+      "seed": 9141,
+      "shoot_rho_1e8": {
+        "seed": 9141,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984395156986,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 3.92474702080587e-10,
+        "reprop_grid_2001": 0.0006370127995810722,
+        "reprop_exact_arcs": 9.589574120959239e-10,
+        "n_propagations": 560,
+        "runtime_s": 30.39377173599496
+      },
+      "shoot_hard_polish": {
+        "seed": 9141,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341387,
+        "reprop_exact_arcs": 1.592873861755362e-14,
+        "switch_times_days": [
+          46.58084514481083,
+          68.02332258548995,
+          142.71734067846938,
+          290.25411006572006
+        ],
+        "polish_runtime_s": 1.0163915090088267,
+        "total_runtime_s": 31.410163245003787
+      },
+      "split_domain": {
+        "seed": 9141,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 27.230327729004784,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 27.230327729004784
+      }
+    },
+    "9142": {
+      "seed": 9142,
+      "shoot_rho_1e8": {
+        "seed": 9142,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 563.862555811527,
+        "rho_reached": null,
+        "arrival_residual": 0.43363467453457066,
+        "reprop_grid_2001": 0.43363430348244564,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3152,
+        "runtime_s": 41.04179400400608
+      },
+      "shoot_hard_polish": {
+        "seed": 9142,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.1550000635907054e-06,
+        "total_runtime_s": 41.04179515900614
+      },
+      "split_domain": {
+        "seed": 9142,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438439963,
+        "switch_times_days": [
+          46.58084519364975,
+          68.02332262955747,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110749802784e-08,
+        "reprop_exact_arcs": 3.3836707251142596e-06,
+        "ponn_runtime_s": 4.854064710001694,
+        "split_runtime_s": 9.5188756770076,
+        "total_runtime_s": 14.372940387009294
+      }
+    },
+    "9143": {
+      "seed": 9143,
+      "shoot_rho_1e8": {
+        "seed": 9143,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 83.35358490580927,
+        "rho_reached": null,
+        "arrival_residual": 1.751887177057452,
+        "reprop_grid_2001": 1.7518872021483185,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3158,
+        "runtime_s": 57.676018676997046
+      },
+      "shoot_hard_polish": {
+        "seed": 9143,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.057996996678412e-06,
+        "total_runtime_s": 57.67601973499404
+      },
+      "split_domain": {
+        "seed": 9143,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 15.451770487008616,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 15.451770487008616
+      }
+    },
+    "9144": {
+      "seed": 9144,
+      "shoot_rho_1e8": {
+        "seed": 9144,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984395251187,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.0527721490135013e-10,
+        "reprop_grid_2001": 0.0006370301229198718,
+        "reprop_exact_arcs": 5.685669275784448e-10,
+        "n_propagations": 536,
+        "runtime_s": 34.83564384900092
+      },
+      "shoot_hard_polish": {
+        "seed": 9144,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341542,
+        "reprop_exact_arcs": 1.0492626634857604e-14,
+        "switch_times_days": [
+          46.58084514481351,
+          68.02332258548857,
+          142.71734067846532,
+          290.2541100657129
+        ],
+        "polish_runtime_s": 1.337914809002541,
+        "total_runtime_s": 36.17355865800346
+      },
+      "split_domain": {
+        "seed": 9144,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438108108,
+        "switch_times_days": [
+          46.58084519364985,
+          68.02332262955748,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110740953824e-08,
+        "reprop_exact_arcs": 3.4011059670577178e-06,
+        "ponn_runtime_s": 4.3736634670058265,
+        "split_runtime_s": 9.35238117199333,
+        "total_runtime_s": 13.726044638999156
+      }
+    },
+    "9145": {
+      "seed": 9145,
+      "shoot_rho_1e8": {
+        "seed": 9145,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 252.02450708724598,
+        "rho_reached": null,
+        "arrival_residual": 0.3088152944478456,
+        "reprop_grid_2001": 0.3088153356880397,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3117,
+        "runtime_s": 41.54907252099656
+      },
+      "shoot_hard_polish": {
+        "seed": 9145,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.30099942907691e-06,
+        "total_runtime_s": 41.54907382199599
+      },
+      "split_domain": {
+        "seed": 9145,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843810948,
+        "switch_times_days": [
+          46.58084519364978,
+          68.02332262955754,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074763791e-08,
+        "reprop_exact_arcs": 3.3667702582173525e-06,
+        "ponn_runtime_s": 4.385913267004071,
+        "split_runtime_s": 9.558124722010689,
+        "total_runtime_s": 13.94403798901476
+      }
+    },
+    "9146": {
+      "seed": 9146,
+      "shoot_rho_1e8": {
+        "seed": 9146,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598438161728,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 9.138759483543594e-11,
+        "reprop_grid_2001": 0.0006370203885793999,
+        "reprop_exact_arcs": 5.094326560275036e-10,
+        "n_propagations": 551,
+        "runtime_s": 34.23143538599834
+      },
+      "shoot_hard_polish": {
+        "seed": 9146,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341543,
+        "reprop_exact_arcs": 9.617388461196102e-15,
+        "switch_times_days": [
+          46.580845144812905,
+          68.02332258548856,
+          142.71734067846768,
+          290.2541100657146
+        ],
+        "polish_runtime_s": 1.414493748001405,
+        "total_runtime_s": 35.64592913399974
+      },
+      "split_domain": {
+        "seed": 9146,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984377978655,
+        "switch_times_days": [
+          46.58084519364979,
+          68.0233226295574,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110743848414e-08,
+        "reprop_exact_arcs": 3.392189448794751e-06,
+        "ponn_runtime_s": 4.598312595000607,
+        "split_runtime_s": 9.615045830010786,
+        "total_runtime_s": 14.213358425011393
+      }
+    },
+    "9147": {
+      "seed": 9147,
+      "shoot_rho_1e8": {
+        "seed": 9147,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439551252,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.7708118219416255e-10,
+        "reprop_grid_2001": 0.000637030734295978,
+        "reprop_exact_arcs": 7.648804062013917e-10,
+        "n_propagations": 571,
+        "runtime_s": 31.838965328002814
+      },
+      "shoot_hard_polish": {
+        "seed": 9147,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415383,
+        "reprop_exact_arcs": 1.7172855080732588e-14,
+        "switch_times_days": [
+          46.58084514481301,
+          68.02332258548923,
+          142.7173406784653,
+          290.25411006571204
+        ],
+        "polish_runtime_s": 1.0471551929949783,
+        "total_runtime_s": 32.88612052099779
+      },
+      "split_domain": {
+        "seed": 9147,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984400534794,
+        "switch_times_days": [
+          46.58084519364972,
+          68.02332262955747,
+          142.71734073980102,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110743767694e-08,
+        "reprop_exact_arcs": 3.3785850324545145e-06,
+        "ponn_runtime_s": 4.313356600003317,
+        "split_runtime_s": 9.423684585999581,
+        "total_runtime_s": 13.737041186002898
+      }
+    },
+    "9148": {
+      "seed": 9148,
+      "shoot_rho_1e8": {
+        "seed": 9148,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 727.992010595188,
+        "rho_reached": null,
+        "arrival_residual": 0.8019100986828684,
+        "reprop_grid_2001": 0.801909094153311,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3092,
+        "runtime_s": 82.3643197830097
+      },
+      "shoot_hard_polish": {
+        "seed": 9148,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4999968698248267e-06,
+        "total_runtime_s": 82.36432128300657
+      },
+      "split_domain": {
+        "seed": 9148,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439873412,
+        "switch_times_days": [
+          46.5808451936498,
+          68.02332262955751,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311073960438e-08,
+        "reprop_exact_arcs": 3.4024171372756504e-06,
+        "ponn_runtime_s": 4.323740004008869,
+        "split_runtime_s": 8.897884318008437,
+        "total_runtime_s": 13.221624322017306
+      }
+    },
+    "9149": {
+      "seed": 9149,
+      "shoot_rho_1e8": {
+        "seed": 9149,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 304.8816599055716,
+        "rho_reached": null,
+        "arrival_residual": 0.4575908406550502,
+        "reprop_grid_2001": 0.45759017423222986,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3124,
+        "runtime_s": 44.53431324601115
+      },
+      "shoot_hard_polish": {
+        "seed": 9149,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2289965525269508e-06,
+        "total_runtime_s": 44.534314475007704
+      },
+      "split_domain": {
+        "seed": 9149,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439021586,
+        "switch_times_days": [
+          46.58084519364978,
+          68.02332262955753,
+          142.717340739801,
+          290.25411012015525
+        ],
+        "residual_rms": 5.9333110747018124e-08,
+        "reprop_exact_arcs": 3.395212719539881e-06,
+        "ponn_runtime_s": 4.450501500003156,
+        "split_runtime_s": 9.195139104995178,
+        "total_runtime_s": 13.645640604998334
+      }
+    },
+    "9150": {
+      "seed": 9150,
+      "shoot_rho_1e8": {
+        "seed": 9150,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984387819,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.6626508709342808e-10,
+        "reprop_grid_2001": 0.0006370094502867491,
+        "reprop_exact_arcs": 7.564764833463392e-10,
+        "n_propagations": 516,
+        "runtime_s": 31.826829107987578
+      },
+      "shoot_hard_polish": {
+        "seed": 9150,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341528,
+        "reprop_exact_arcs": 1.4081467028856937e-14,
+        "switch_times_days": [
+          46.58084514481256,
+          68.02332258548866,
+          142.71734067846666,
+          290.25411006571375
+        ],
+        "polish_runtime_s": 1.0313622980029322,
+        "total_runtime_s": 32.85819140599051
+      },
+      "split_domain": {
+        "seed": 9150,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984375603407,
+        "switch_times_days": [
+          46.58084519364984,
+          68.02332262955743,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074595131e-08,
+        "reprop_exact_arcs": 3.4347566304259717e-06,
+        "ponn_runtime_s": 6.114477449009428,
+        "split_runtime_s": 16.460471843005507,
+        "total_runtime_s": 22.574949292014935
+      }
+    },
+    "9151": {
+      "seed": 9151,
+      "shoot_rho_1e8": {
+        "seed": 9151,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439574252,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 4.022099452319002e-10,
+        "reprop_grid_2001": 0.0006370362567317459,
+        "reprop_exact_arcs": 2.334336351923684e-09,
+        "n_propagations": 2536,
+        "runtime_s": 56.63238950200321
+      },
+      "shoot_hard_polish": {
+        "seed": 9151,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415395,
+        "reprop_exact_arcs": 1.6233755558788218e-14,
+        "switch_times_days": [
+          46.58084514481367,
+          68.0233225854881,
+          142.71734067846714,
+          290.25411006571557
+        ],
+        "polish_runtime_s": 1.6069446239998797,
+        "total_runtime_s": 58.23933412600309
+      },
+      "split_domain": {
+        "seed": 9151,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437359249,
+        "switch_times_days": [
+          46.580845193649694,
+          68.02332262955743,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074706381e-08,
+        "reprop_exact_arcs": 3.4032187540233658e-06,
+        "ponn_runtime_s": 7.503104689007159,
+        "split_runtime_s": 14.686123411011067,
+        "total_runtime_s": 22.189228100018227
+      }
+    },
+    "9152": {
+      "seed": 9152,
+      "shoot_rho_1e8": {
+        "seed": 9152,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439916531,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.747345001816541e-10,
+        "reprop_grid_2001": 0.0006370404130561829,
+        "reprop_exact_arcs": 8.238261670985626e-10,
+        "n_propagations": 743,
+        "runtime_s": 36.92471341700002
+      },
+      "shoot_hard_polish": {
+        "seed": 9152,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341543,
+        "reprop_exact_arcs": 2.3881764523927318e-14,
+        "switch_times_days": [
+          46.58084514481403,
+          68.02332258548735,
+          142.71734067846558,
+          290.254110065715
+        ],
+        "polish_runtime_s": 1.1633558140019886,
+        "total_runtime_s": 38.08806923100201
+      },
+      "split_domain": {
+        "seed": 9152,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984397582495,
+        "switch_times_days": [
+          46.58084519364981,
+          68.02332262955753,
+          142.71734073980102,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074828363e-08,
+        "reprop_exact_arcs": 3.385503660967688e-06,
+        "ponn_runtime_s": 4.396258947002934,
+        "split_runtime_s": 9.492588717010221,
+        "total_runtime_s": 13.888847664013156
+      }
+    },
+    "9153": {
+      "seed": 9153,
+      "shoot_rho_1e8": {
+        "seed": 9153,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 265.55067973997575,
+        "rho_reached": null,
+        "arrival_residual": 0.6858622387406246,
+        "reprop_grid_2001": 0.6858610241905272,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3139,
+        "runtime_s": 48.889095821999945
+      },
+      "shoot_hard_polish": {
+        "seed": 9153,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.3090029824525118e-06,
+        "total_runtime_s": 48.88909713100293
+      },
+      "split_domain": {
+        "seed": 9153,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438421499,
+        "switch_times_days": [
+          46.580845193649715,
+          68.0233226295575,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074609689e-08,
+        "reprop_exact_arcs": 3.4125501001943686e-06,
+        "ponn_runtime_s": 4.631606349998037,
+        "split_runtime_s": 8.802344806987094,
+        "total_runtime_s": 13.433951156985131
+      }
+    },
+    "9154": {
+      "seed": 9154,
+      "shoot_rho_1e8": {
+        "seed": 9154,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439192404,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 9.207205819537612e-11,
+        "reprop_grid_2001": 0.0006370366032613035,
+        "reprop_exact_arcs": 7.907353022687103e-10,
+        "n_propagations": 555,
+        "runtime_s": 35.06313805699756
+      },
+      "shoot_hard_polish": {
+        "seed": 9154,
+        "success_strict": true,
+        "fuel_kg": 396.05984393414724,
+        "reprop_exact_arcs": 1.6840287109194946e-14,
+        "switch_times_days": [
+          46.580845144812145,
+          68.02332258548897,
+          142.71734067846913,
+          290.25411006571807
+        ],
+        "polish_runtime_s": 1.0148782939941157,
+        "total_runtime_s": 36.078016350991675
+      },
+      "split_domain": {
+        "seed": 9154,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 16.49822097599099,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 16.49822097599099
+      }
+    },
+    "9155": {
+      "seed": 9155,
+      "shoot_rho_1e8": {
+        "seed": 9155,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439159302,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.034781322374191e-10,
+        "reprop_grid_2001": 0.0006370372317370671,
+        "reprop_exact_arcs": 3.2753548589707073e-09,
+        "n_propagations": 3281,
+        "runtime_s": 58.16691062999598
+      },
+      "shoot_hard_polish": {
+        "seed": 9155,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415076,
+        "reprop_exact_arcs": 1.7339630515667742e-14,
+        "switch_times_days": [
+          46.58084514481311,
+          68.02332258548837,
+          142.71734067846728,
+          290.2541100657163
+        ],
+        "polish_runtime_s": 1.34660186500696,
+        "total_runtime_s": 59.51351249500294
+      },
+      "split_domain": {
+        "seed": 9155,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439957648,
+        "switch_times_days": [
+          46.580845193649814,
+          68.02332262955751,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074356092e-08,
+        "reprop_exact_arcs": 3.3742867975929488e-06,
+        "ponn_runtime_s": 4.998815166996792,
+        "split_runtime_s": 8.838193410992972,
+        "total_runtime_s": 13.837008577989764
+      }
+    },
+    "9156": {
+      "seed": 9156,
+      "shoot_rho_1e8": {
+        "seed": 9156,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439164047,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.355887377561466e-11,
+        "reprop_grid_2001": 0.0006370378815815406,
+        "reprop_exact_arcs": 5.312811865532326e-10,
+        "n_propagations": 640,
+        "runtime_s": 36.786600227002054
+      },
+      "shoot_hard_polish": {
+        "seed": 9156,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415315,
+        "reprop_exact_arcs": 5.175709800383093e-15,
+        "switch_times_days": [
+          46.58084514481293,
+          68.02332258548854,
+          142.71734067846705,
+          290.2541100657145
+        ],
+        "polish_runtime_s": 0.5360024140099995,
+        "total_runtime_s": 37.322602641012054
+      },
+      "split_domain": {
+        "seed": 9156,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984386854095,
+        "switch_times_days": [
+          46.58084519364976,
+          68.02332262955748,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.93331107423395e-08,
+        "reprop_exact_arcs": 3.4228846425179067e-06,
+        "ponn_runtime_s": 4.514657527994132,
+        "split_runtime_s": 9.97430637900834,
+        "total_runtime_s": 14.488963907002471
+      }
+    },
+    "9157": {
+      "seed": 9157,
+      "shoot_rho_1e8": {
+        "seed": 9157,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439736127,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.388729972346398e-10,
+        "reprop_grid_2001": 0.0006370309860150257,
+        "reprop_exact_arcs": 1.5812958315629408e-09,
+        "n_propagations": 700,
+        "runtime_s": 36.972643046989106
+      },
+      "shoot_hard_polish": {
+        "seed": 9157,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341537,
+        "reprop_exact_arcs": 6.22051643153531e-15,
+        "switch_times_days": [
+          46.58084514481371,
+          68.02332258548776,
+          142.7173406784663,
+          290.2541100657152
+        ],
+        "polish_runtime_s": 1.063075284997467,
+        "total_runtime_s": 38.03571833198657
+      },
+      "split_domain": {
+        "seed": 9157,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437034141,
+        "switch_times_days": [
+          46.58084519364976,
+          68.02332262955741,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311073782024e-08,
+        "reprop_exact_arcs": 3.4126024847477766e-06,
+        "ponn_runtime_s": 4.528031558002112,
+        "split_runtime_s": 9.734590120991925,
+        "total_runtime_s": 14.262621678994037
+      }
+    },
+    "9158": {
+      "seed": 9158,
+      "shoot_rho_1e8": {
+        "seed": 9158,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 275.0905096287173,
+        "rho_reached": null,
+        "arrival_residual": 0.4265922008841434,
+        "reprop_grid_2001": 0.4265921087424031,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3181,
+        "runtime_s": 41.05882362999546
+      },
+      "shoot_hard_polish": {
+        "seed": 9158,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4160032151266932e-06,
+        "total_runtime_s": 41.058825045998674
+      },
+      "split_domain": {
+        "seed": 9158,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984386160765,
+        "switch_times_days": [
+          46.58084519364982,
+          68.02332262955751,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110744194096e-08,
+        "reprop_exact_arcs": 3.3899817190343116e-06,
+        "ponn_runtime_s": 4.5327491569914855,
+        "split_runtime_s": 9.425397111001075,
+        "total_runtime_s": 13.95814626799256
+      }
+    },
+    "9159": {
+      "seed": 9159,
+      "shoot_rho_1e8": {
+        "seed": 9159,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984397486543,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.3081401460520655e-10,
+        "reprop_grid_2001": 0.0006370364282886423,
+        "reprop_exact_arcs": 4.5271451532653346e-10,
+        "n_propagations": 1429,
+        "runtime_s": 37.91221165699244
+      },
+      "shoot_hard_polish": {
+        "seed": 9159,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415577,
+        "reprop_exact_arcs": 5.564962155737111e-15,
+        "switch_times_days": [
+          46.58084514481342,
+          68.02332258548824,
+          142.7173406784666,
+          290.2541100657138
+        ],
+        "polish_runtime_s": 0.9533182260056492,
+        "total_runtime_s": 38.86552988299809
+      },
+      "split_domain": {
+        "seed": 9159,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598436593842,
+        "switch_times_days": [
+          46.58084519364979,
+          68.02332262955753,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311075360928e-08,
+        "reprop_exact_arcs": 3.395150255808951e-06,
+        "ponn_runtime_s": 4.574676349002402,
+        "split_runtime_s": 9.237573350997991,
+        "total_runtime_s": 13.812249700000393
+      }
+    },
+    "9160": {
+      "seed": 9160,
+      "shoot_rho_1e8": {
+        "seed": 9160,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984404172534,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 3.3723794684314024e-10,
+        "reprop_grid_2001": 0.0006370428789796627,
+        "reprop_exact_arcs": 5.968377225021535e-10,
+        "n_propagations": 521,
+        "runtime_s": 28.411388681997778
+      },
+      "shoot_hard_polish": {
+        "seed": 9160,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415076,
+        "reprop_exact_arcs": 1.0204325107580943e-14,
+        "switch_times_days": [
+          46.58084514481371,
+          68.02332258548779,
+          142.71734067846745,
+          290.2541100657175
+        ],
+        "polish_runtime_s": 1.0917728200001875,
+        "total_runtime_s": 29.503161501997965
+      },
+      "split_domain": {
+        "seed": 9160,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439991054,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955744,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074734935e-08,
+        "reprop_exact_arcs": 3.4056689261053277e-06,
+        "ponn_runtime_s": 4.458870976988692,
+        "split_runtime_s": 9.560634873996605,
+        "total_runtime_s": 14.019505850985297
+      }
+    },
+    "9161": {
+      "seed": 9161,
+      "shoot_rho_1e8": {
+        "seed": 9161,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439692028,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.975926484409066e-11,
+        "reprop_grid_2001": 0.000637028526682347,
+        "reprop_exact_arcs": 6.112738185705213e-10,
+        "n_propagations": 645,
+        "runtime_s": 33.135181105011725
+      },
+      "shoot_hard_polish": {
+        "seed": 9161,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341546,
+        "reprop_exact_arcs": 2.35782188125903e-14,
+        "switch_times_days": [
+          46.58084514481318,
+          68.02332258548826,
+          142.71734067846617,
+          290.2541100657137
+        ],
+        "polish_runtime_s": 1.449006594993989,
+        "total_runtime_s": 34.584187700005714
+      },
+      "split_domain": {
+        "seed": 9161,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843758527,
+        "switch_times_days": [
+          46.58084519364977,
+          68.0233226295575,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110745595426e-08,
+        "reprop_exact_arcs": 3.4176527158090478e-06,
+        "ponn_runtime_s": 4.622949165990576,
+        "split_runtime_s": 9.784658400007174,
+        "total_runtime_s": 14.40760756599775
+      }
+    },
+    "9162": {
+      "seed": 9162,
+      "shoot_rho_1e8": {
+        "seed": 9162,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984391861057,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 7.043980370182579e-11,
+        "reprop_grid_2001": 0.0006370384596299344,
+        "reprop_exact_arcs": 9.226133862840267e-10,
+        "n_propagations": 497,
+        "runtime_s": 31.9087298969971
+      },
+      "shoot_hard_polish": {
+        "seed": 9162,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341544,
+        "reprop_exact_arcs": 9.500444158414596e-15,
+        "switch_times_days": [
+          46.58084514481362,
+          68.02332258548819,
+          142.71734067846566,
+          290.25411006571375
+        ],
+        "polish_runtime_s": 1.4937167470052373,
+        "total_runtime_s": 33.40244664400234
+      },
+      "split_domain": {
+        "seed": 9162,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984400213924,
+        "switch_times_days": [
+          46.58084519364978,
+          68.02332262955748,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074264918e-08,
+        "reprop_exact_arcs": 3.4288319938085666e-06,
+        "ponn_runtime_s": 6.2031867199984845,
+        "split_runtime_s": 9.56212234699342,
+        "total_runtime_s": 15.765309066991904
+      }
+    },
+    "9163": {
+      "seed": 9163,
+      "shoot_rho_1e8": {
+        "seed": 9163,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440635481,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.6815225756070514e-10,
+        "reprop_grid_2001": 0.0006370358438367509,
+        "reprop_exact_arcs": 8.508423533982637e-10,
+        "n_propagations": 796,
+        "runtime_s": 40.51100429298822
+      },
+      "shoot_hard_polish": {
+        "seed": 9163,
+        "success_strict": true,
+        "fuel_kg": 396.059843934156,
+        "reprop_exact_arcs": 5.775863882695064e-15,
+        "switch_times_days": [
+          46.580845144813,
+          68.02332258548863,
+          142.7173406784671,
+          290.25411006571323
+        ],
+        "polish_runtime_s": 1.5220789160084678,
+        "total_runtime_s": 42.033083208996686
+      },
+      "split_domain": {
+        "seed": 9163,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984383665145,
+        "switch_times_days": [
+          46.580845193649736,
+          68.02332262955748,
+          142.717340739801,
+          290.25411012015525
+        ],
+        "residual_rms": 5.93331107430958e-08,
+        "reprop_exact_arcs": 3.40105153994691e-06,
+        "ponn_runtime_s": 11.494307897999533,
+        "split_runtime_s": 9.436478998002713,
+        "total_runtime_s": 20.930786896002246
+      }
+    },
+    "9164": {
+      "seed": 9164,
+      "shoot_rho_1e8": {
+        "seed": 9164,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 739.5475418974411,
+        "rho_reached": null,
+        "arrival_residual": 1.1200099328974051,
+        "reprop_grid_2001": 1.1200080654524491,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3157,
+        "runtime_s": 86.3899841090024
+      },
+      "shoot_hard_polish": {
+        "seed": 9164,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4739925973117352e-06,
+        "total_runtime_s": 86.389985582995
+      },
+      "split_domain": {
+        "seed": 9164,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439433643,
+        "switch_times_days": [
+          46.58084519364979,
+          68.0233226295574,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074649659e-08,
+        "reprop_exact_arcs": 3.4090275314591142e-06,
+        "ponn_runtime_s": 5.707793306995882,
+        "split_runtime_s": 14.45555151499866,
+        "total_runtime_s": 20.163344821994542
+      }
+    },
+    "9165": {
+      "seed": 9165,
+      "shoot_rho_1e8": {
+        "seed": 9165,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439509497,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.3660700090657716e-10,
+        "reprop_grid_2001": 0.0006368691819466195,
+        "reprop_exact_arcs": 2.689227633786348e-09,
+        "n_propagations": 581,
+        "runtime_s": 34.7591712299909
+      },
+      "shoot_hard_polish": {
+        "seed": 9165,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415326,
+        "reprop_exact_arcs": 7.81653983748893e-15,
+        "switch_times_days": [
+          46.58084514481419,
+          68.02332258548749,
+          142.71734067846484,
+          290.2541100657147
+        ],
+        "polish_runtime_s": 0.9019980549928732,
+        "total_runtime_s": 35.66116928498377
+      },
+      "split_domain": {
+        "seed": 9165,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984394024836,
+        "switch_times_days": [
+          46.58084519364979,
+          68.02332262955747,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074771657e-08,
+        "reprop_exact_arcs": 3.3889387183340346e-06,
+        "ponn_runtime_s": 5.7764762500009965,
+        "split_runtime_s": 16.208228252988192,
+        "total_runtime_s": 21.98470450298919
+      }
+    },
+    "9166": {
+      "seed": 9166,
+      "shoot_rho_1e8": {
+        "seed": 9166,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984360156503,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.184704544225188e-10,
+        "reprop_grid_2001": 0.0006370391546636556,
+        "reprop_exact_arcs": 1.2886238368356725e-09,
+        "n_propagations": 829,
+        "runtime_s": 35.00609543900646
+      },
+      "shoot_hard_polish": {
+        "seed": 9166,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415645,
+        "reprop_exact_arcs": 1.0997366765897813e-14,
+        "switch_times_days": [
+          46.58084514481217,
+          68.02332258548962,
+          142.71734067846774,
+          290.2541100657119
+        ],
+        "polish_runtime_s": 0.46583283599466085,
+        "total_runtime_s": 35.47192827500112
+      },
+      "split_domain": {
+        "seed": 9166,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439806631,
+        "switch_times_days": [
+          46.580845193649736,
+          68.02332262955748,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074419154e-08,
+        "reprop_exact_arcs": 3.383706248354604e-06,
+        "ponn_runtime_s": 9.836192093993304,
+        "split_runtime_s": 9.947803221002687,
+        "total_runtime_s": 19.78399531499599
+      }
+    },
+    "9167": {
+      "seed": 9167,
+      "shoot_rho_1e8": {
+        "seed": 9167,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439277518,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.2870484942202657e-10,
+        "reprop_grid_2001": 0.0006370361955592449,
+        "reprop_exact_arcs": 5.016356369413198e-10,
+        "n_propagations": 2477,
+        "runtime_s": 56.68281230000139
+      },
+      "shoot_hard_polish": {
+        "seed": 9167,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415235,
+        "reprop_exact_arcs": 1.3421179189548557e-14,
+        "switch_times_days": [
+          46.58084514481389,
+          68.02332258548839,
+          142.71734067846555,
+          290.25411006571454
+        ],
+        "polish_runtime_s": 1.0466728620085632,
+        "total_runtime_s": 57.72948516200995
+      },
+      "split_domain": {
+        "seed": 9167,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984387002286,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955755,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074097197e-08,
+        "reprop_exact_arcs": 3.3907567494696488e-06,
+        "ponn_runtime_s": 4.642619920006837,
+        "split_runtime_s": 8.802169197995681,
+        "total_runtime_s": 13.444789118002518
+      }
+    },
+    "9168": {
+      "seed": 9168,
+      "shoot_rho_1e8": {
+        "seed": 9168,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 503.29294792848,
+        "rho_reached": null,
+        "arrival_residual": 0.7026973664164448,
+        "reprop_grid_2001": 0.7026968835725635,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3131,
+        "runtime_s": 43.97645886000828
+      },
+      "shoot_hard_polish": {
+        "seed": 9168,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.367006916552782e-06,
+        "total_runtime_s": 43.976460227015195
+      },
+      "split_domain": {
+        "seed": 9168,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598440003116,
+        "switch_times_days": [
+          46.580845193649786,
+          68.02332262955747,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074836929e-08,
+        "reprop_exact_arcs": 3.3557228845671215e-06,
+        "ponn_runtime_s": 6.415887350012781,
+        "split_runtime_s": 8.981305449997308,
+        "total_runtime_s": 15.397192800010089
+      }
+    },
+    "9169": {
+      "seed": 9169,
+      "shoot_rho_1e8": {
+        "seed": 9169,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439230266,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.152916712599861e-10,
+        "reprop_grid_2001": 0.0006370105716465662,
+        "reprop_exact_arcs": 1.0311654026868858e-09,
+        "n_propagations": 509,
+        "runtime_s": 31.329530973001965
+      },
+      "shoot_hard_polish": {
+        "seed": 9169,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341429,
+        "reprop_exact_arcs": 1.0318254454735839e-14,
+        "switch_times_days": [
+          46.580845144811505,
+          68.02332258548965,
+          142.71734067846722,
+          290.2541100657167
+        ],
+        "polish_runtime_s": 0.4902383420121623,
+        "total_runtime_s": 31.819769315014128
+      },
+      "split_domain": {
+        "seed": 9169,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 15.97398221300682,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 15.97398221300682
+      }
+    },
+    "9170": {
+      "seed": 9170,
+      "shoot_rho_1e8": {
+        "seed": 9170,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439357518,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.3963046059031173e-10,
+        "reprop_grid_2001": 0.0006370328132257147,
+        "reprop_exact_arcs": 4.826511540854995e-10,
+        "n_propagations": 533,
+        "runtime_s": 35.18902982499276
+      },
+      "shoot_hard_polish": {
+        "seed": 9170,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341485,
+        "reprop_exact_arcs": 1.1395508237262082e-14,
+        "switch_times_days": [
+          46.58084514481168,
+          68.02332258548957,
+          142.71734067846822,
+          290.2541100657155
+        ],
+        "polish_runtime_s": 1.104928923989064,
+        "total_runtime_s": 36.29395874898182
+      },
+      "split_domain": {
+        "seed": 9170,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439658032,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955747,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074081717e-08,
+        "reprop_exact_arcs": 3.4003078357828452e-06,
+        "ponn_runtime_s": 4.674468475001049,
+        "split_runtime_s": 9.73598924500402,
+        "total_runtime_s": 14.41045772000507
+      }
+    },
+    "9171": {
+      "seed": 9171,
+      "shoot_rho_1e8": {
+        "seed": 9171,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439332408,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 8.361290848941575e-11,
+        "reprop_grid_2001": 0.0006370050383515513,
+        "reprop_exact_arcs": 5.58579339614405e-10,
+        "n_propagations": 620,
+        "runtime_s": 35.687948229999165
+      },
+      "shoot_hard_polish": {
+        "seed": 9171,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341526,
+        "reprop_exact_arcs": 1.0146634662749603e-14,
+        "switch_times_days": [
+          46.5808451448135,
+          68.02332258548805,
+          142.71734067846523,
+          290.25411006571414
+        ],
+        "polish_runtime_s": 1.0887575109954923,
+        "total_runtime_s": 36.77670574099466
+      },
+      "split_domain": {
+        "seed": 9171,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438212568,
+        "switch_times_days": [
+          46.58084519364984,
+          68.02332262955746,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074484285e-08,
+        "reprop_exact_arcs": 3.381378622066651e-06,
+        "ponn_runtime_s": 4.477572705989587,
+        "split_runtime_s": 9.535131269993144,
+        "total_runtime_s": 14.012703975982731
+      }
+    },
+    "9172": {
+      "seed": 9172,
+      "shoot_rho_1e8": {
+        "seed": 9172,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 768.251339650745,
+        "rho_reached": null,
+        "arrival_residual": 0.972238088099276,
+        "reprop_grid_2001": 0.972234770371191,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3036,
+        "runtime_s": 85.62656910200894
+      },
+      "shoot_hard_polish": {
+        "seed": 9172,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2310047168284655e-06,
+        "total_runtime_s": 85.62657033301366
+      },
+      "split_domain": {
+        "seed": 9172,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984310868257,
+        "switch_times_days": [
+          46.58084519364973,
+          68.02332262955746,
+          142.717340739801,
+          290.25411012015525
+        ],
+        "residual_rms": 5.933311074443717e-08,
+        "reprop_exact_arcs": 3.3702361028669618e-06,
+        "ponn_runtime_s": 4.487804082993534,
+        "split_runtime_s": 9.00879688099667,
+        "total_runtime_s": 13.496600963990204
+      }
+    },
+    "9173": {
+      "seed": 9173,
+      "shoot_rho_1e8": {
+        "seed": 9173,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 569.8122622587098,
+        "rho_reached": null,
+        "arrival_residual": 0.7891970454254142,
+        "reprop_grid_2001": 0.78919669801545,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3202,
+        "runtime_s": 45.35722498000541
+      },
+      "shoot_hard_polish": {
+        "seed": 9173,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.1840020306408405e-06,
+        "total_runtime_s": 45.35722616400744
+      },
+      "split_domain": {
+        "seed": 9173,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984398495343,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955751,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110743846396e-08,
+        "reprop_exact_arcs": 3.3959979210627386e-06,
+        "ponn_runtime_s": 5.602885612999671,
+        "split_runtime_s": 9.185035789996618,
+        "total_runtime_s": 14.78792140299629
+      }
+    },
+    "9174": {
+      "seed": 9174,
+      "shoot_rho_1e8": {
+        "seed": 9174,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 744.4871172775202,
+        "rho_reached": null,
+        "arrival_residual": 2.5498252640276857,
+        "reprop_grid_2001": 2.5498229826074765,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3187,
+        "runtime_s": 86.5839241109934
+      },
+      "shoot_hard_polish": {
+        "seed": 9174,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.3980024959892035e-06,
+        "total_runtime_s": 86.58392550899589
+      },
+      "split_domain": {
+        "seed": 9174,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984388461354,
+        "switch_times_days": [
+          46.580845193649694,
+          68.02332262955746,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110740367545e-08,
+        "reprop_exact_arcs": 3.3935453245182485e-06,
+        "ponn_runtime_s": 4.558054560999153,
+        "split_runtime_s": 8.8795504180016,
+        "total_runtime_s": 13.437604979000753
+      }
+    },
+    "9175": {
+      "seed": 9175,
+      "shoot_rho_1e8": {
+        "seed": 9175,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598438421125,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.1829855447571913e-10,
+        "reprop_grid_2001": 0.0006370386405700422,
+        "reprop_exact_arcs": 7.306135486827598e-10,
+        "n_propagations": 542,
+        "runtime_s": 32.4396895730024
+      },
+      "shoot_hard_polish": {
+        "seed": 9175,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341562,
+        "reprop_exact_arcs": 3.114810367098834e-15,
+        "switch_times_days": [
+          46.58084514481406,
+          68.02332258548765,
+          142.7173406784661,
+          290.2541100657142
+        ],
+        "polish_runtime_s": 0.45854807399155106,
+        "total_runtime_s": 32.89823764699395
+      },
+      "split_domain": {
+        "seed": 9175,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=0)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 13.438240745992516,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 13.438240745992516
+      }
+    },
+    "9176": {
+      "seed": 9176,
+      "shoot_rho_1e8": {
+        "seed": 9176,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 759.4629489062613,
+        "rho_reached": null,
+        "arrival_residual": 1.189863373005927,
+        "reprop_grid_2001": 1.1898655267252833,
+        "reprop_exact_arcs": null,
+        "n_propagations": 2989,
+        "runtime_s": 76.11204760299006
+      },
+      "shoot_hard_polish": {
+        "seed": 9176,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2150121619924903e-06,
+        "total_runtime_s": 76.11204881800222
+      },
+      "split_domain": {
+        "seed": 9176,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439998395,
+        "switch_times_days": [
+          46.580845193649786,
+          68.0233226295575,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110746111064e-08,
+        "reprop_exact_arcs": 3.4009316585676037e-06,
+        "ponn_runtime_s": 5.619213932994171,
+        "split_runtime_s": 14.640348625005572,
+        "total_runtime_s": 20.259562557999743
+      }
+    },
+    "9177": {
+      "seed": 9177,
+      "shoot_rho_1e8": {
+        "seed": 9177,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 146.00593413205752,
+        "rho_reached": null,
+        "arrival_residual": 0.9424102094759362,
+        "reprop_grid_2001": 0.9424093365350498,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3211,
+        "runtime_s": 32.723936123002204
+      },
+      "shoot_hard_polish": {
+        "seed": 9177,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.4700053725391626e-06,
+        "total_runtime_s": 32.72393759300758
+      },
+      "split_domain": {
+        "seed": 9177,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598440055129,
+        "switch_times_days": [
+          46.58084519364973,
+          68.02332262955746,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110741325996e-08,
+        "reprop_exact_arcs": 3.406935860888069e-06,
+        "ponn_runtime_s": 5.865033366004354,
+        "split_runtime_s": 15.779340933004278,
+        "total_runtime_s": 21.644374299008632
+      }
+    },
+    "9178": {
+      "seed": 9178,
+      "shoot_rho_1e8": {
+        "seed": 9178,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984415212095,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.2966862397117489e-09,
+        "reprop_grid_2001": 0.0006370391816524104,
+        "reprop_exact_arcs": 5.780537864189009e-09,
+        "n_propagations": 564,
+        "runtime_s": 31.386658233997878
+      },
+      "shoot_hard_polish": {
+        "seed": 9178,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341542,
+        "reprop_exact_arcs": 1.6464830509268883e-14,
+        "switch_times_days": [
+          46.580845144814624,
+          68.02332258548687,
+          142.71734067846606,
+          290.2541100657165
+        ],
+        "polish_runtime_s": 1.059272732003592,
+        "total_runtime_s": 32.44593096600147
+      },
+      "split_domain": {
+        "seed": 9178,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984380842403,
+        "switch_times_days": [
+          46.58084519364979,
+          68.0233226295575,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110751877e-08,
+        "reprop_exact_arcs": 3.392952622677158e-06,
+        "ponn_runtime_s": 6.218514555992442,
+        "split_runtime_s": 9.739695639000274,
+        "total_runtime_s": 15.958210194992716
+      }
+    },
+    "9179": {
+      "seed": 9179,
+      "shoot_rho_1e8": {
+        "seed": 9179,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598438894093,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.6197966302102365e-10,
+        "reprop_grid_2001": 0.0006370356640374761,
+        "reprop_exact_arcs": 4.710089364195811e-10,
+        "n_propagations": 555,
+        "runtime_s": 31.15824324399
+      },
+      "shoot_hard_polish": {
+        "seed": 9179,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415577,
+        "reprop_exact_arcs": 2.972140403738056e-14,
+        "switch_times_days": [
+          46.58084514481322,
+          68.02332258548834,
+          142.7173406784666,
+          290.25411006571346
+        ],
+        "polish_runtime_s": 1.290111929003615,
+        "total_runtime_s": 32.448355172993615
+      },
+      "split_domain": {
+        "seed": 9179,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438226099,
+        "switch_times_days": [
+          46.58084519364975,
+          68.02332262955744,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074127546e-08,
+        "reprop_exact_arcs": 3.376874408669784e-06,
+        "ponn_runtime_s": 4.462726867001038,
+        "split_runtime_s": 9.68349004999618,
+        "total_runtime_s": 14.146216916997219
+      }
+    },
+    "9180": {
+      "seed": 9180,
+      "shoot_rho_1e8": {
+        "seed": 9180,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 742.7695338912381,
+        "rho_reached": null,
+        "arrival_residual": 1.3103134185148415,
+        "reprop_grid_2001": 1.3103144777520828,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3238,
+        "runtime_s": 85.18829753699538
+      },
+      "shoot_hard_polish": {
+        "seed": 9180,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.0689982445910573e-06,
+        "total_runtime_s": 85.18829860599362
+      },
+      "split_domain": {
+        "seed": 9180,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984380463974,
+        "switch_times_days": [
+          46.58084519364979,
+          68.02332262955741,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074731013e-08,
+        "reprop_exact_arcs": 3.387269741017778e-06,
+        "ponn_runtime_s": 4.334684542991454,
+        "split_runtime_s": 8.581216406004387,
+        "total_runtime_s": 12.91590094899584
+      }
+    },
+    "9181": {
+      "seed": 9181,
+      "shoot_rho_1e8": {
+        "seed": 9181,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 768.2513396516463,
+        "rho_reached": null,
+        "arrival_residual": 1.0138715565951202,
+        "reprop_grid_2001": 1.0138711349884824,
+        "reprop_exact_arcs": null,
+        "n_propagations": 2716,
+        "runtime_s": 72.76311909098877
+      },
+      "shoot_hard_polish": {
+        "seed": 9181,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.1970114428550005e-06,
+        "total_runtime_s": 72.76312028800021
+      },
+      "split_domain": {
+        "seed": 9181,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984382876704,
+        "switch_times_days": [
+          46.58084519364976,
+          68.02332262955744,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074186374e-08,
+        "reprop_exact_arcs": 3.3989449116330137e-06,
+        "ponn_runtime_s": 4.345987973996671,
+        "split_runtime_s": 9.003394120998564,
+        "total_runtime_s": 13.349382094995235
+      }
+    },
+    "9182": {
+      "seed": 9182,
+      "shoot_rho_1e8": {
+        "seed": 9182,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 135.3450181249401,
+        "rho_reached": null,
+        "arrival_residual": 0.5108365491810097,
+        "reprop_grid_2001": 0.5108361046937981,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3264,
+        "runtime_s": 49.12660215899814
+      },
+      "shoot_hard_polish": {
+        "seed": 9182,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2200034689158201e-06,
+        "total_runtime_s": 49.12660337900161
+      },
+      "split_domain": {
+        "seed": 9182,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984390571814,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955747,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110750135734e-08,
+        "reprop_exact_arcs": 3.41090276891884e-06,
+        "ponn_runtime_s": 4.7378362660092534,
+        "split_runtime_s": 9.521597497005132,
+        "total_runtime_s": 14.259433763014385
+      }
+    },
+    "9183": {
+      "seed": 9183,
+      "shoot_rho_1e8": {
+        "seed": 9183,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984388806326,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.7617295362241706e-11,
+        "reprop_grid_2001": 0.0006370409807967542,
+        "reprop_exact_arcs": 3.9651399386292183e-10,
+        "n_propagations": 1162,
+        "runtime_s": 42.52116611300153
+      },
+      "shoot_hard_polish": {
+        "seed": 9183,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341535,
+        "reprop_exact_arcs": 2.2737277706375502e-14,
+        "switch_times_days": [
+          46.5808451448139,
+          68.0233225854872,
+          142.71734067846518,
+          290.2541100657148
+        ],
+        "polish_runtime_s": 1.0052810519991908,
+        "total_runtime_s": 43.52644716500072
+      },
+      "split_domain": {
+        "seed": 9183,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439654259,
+        "switch_times_days": [
+          46.58084519364981,
+          68.02332262955747,
+          142.7173407398009,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074525061e-08,
+        "reprop_exact_arcs": 3.3936834966719018e-06,
+        "ponn_runtime_s": 4.342024893994676,
+        "split_runtime_s": 9.238680487003876,
+        "total_runtime_s": 13.580705380998552
+      }
+    },
+    "9184": {
+      "seed": 9184,
+      "shoot_rho_1e8": {
+        "seed": 9184,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 763.9137619311448,
+        "rho_reached": null,
+        "arrival_residual": 1.1829414313273587,
+        "reprop_grid_2001": 1.182943187321372,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3163,
+        "runtime_s": 82.31309700000565
+      },
+      "shoot_hard_polish": {
+        "seed": 9184,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.277992851100862e-06,
+        "total_runtime_s": 82.3130982779985
+      },
+      "split_domain": {
+        "seed": 9184,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984383797227,
+        "switch_times_days": [
+          46.5808451936498,
+          68.02332262955747,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074645891e-08,
+        "reprop_exact_arcs": 3.3597037971054318e-06,
+        "ponn_runtime_s": 4.3635291359969415,
+        "split_runtime_s": 8.608766812991234,
+        "total_runtime_s": 12.972295948988176
+      }
+    },
+    "9185": {
+      "seed": 9185,
+      "shoot_rho_1e8": {
+        "seed": 9185,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439974242,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.647008576105612e-10,
+        "reprop_grid_2001": 0.0006370356402889446,
+        "reprop_exact_arcs": 7.376921602976866e-10,
+        "n_propagations": 570,
+        "runtime_s": 35.489362324995454
+      },
+      "shoot_hard_polish": {
+        "seed": 9185,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415304,
+        "reprop_exact_arcs": 5.1153511512895355e-15,
+        "switch_times_days": [
+          46.580845144813395,
+          68.02332258548844,
+          142.71734067846694,
+          290.25411006571517
+        ],
+        "polish_runtime_s": 0.8112390000023879,
+        "total_runtime_s": 36.30060132499784
+      },
+      "split_domain": {
+        "seed": 9185,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438171394,
+        "switch_times_days": [
+          46.58084519364972,
+          68.02332262955746,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311075093914e-08,
+        "reprop_exact_arcs": 3.4163289617004066e-06,
+        "ponn_runtime_s": 4.4135891719924984,
+        "split_runtime_s": 8.991797434995533,
+        "total_runtime_s": 13.405386606988031
+      }
+    },
+    "9186": {
+      "seed": 9186,
+      "shoot_rho_1e8": {
+        "seed": 9186,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598437139787,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.2632115365852282e-10,
+        "reprop_grid_2001": 0.0006370414235522799,
+        "reprop_exact_arcs": 9.845469245485177e-10,
+        "n_propagations": 565,
+        "runtime_s": 32.933791734001716
+      },
+      "shoot_hard_polish": {
+        "seed": 9186,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415736,
+        "reprop_exact_arcs": 7.144775794432414e-15,
+        "switch_times_days": [
+          46.58084514481503,
+          68.0233225854873,
+          142.7173406784653,
+          290.2541100657141
+        ],
+        "polish_runtime_s": 1.0925530340027763,
+        "total_runtime_s": 34.02634476800449
+      },
+      "split_domain": {
+        "seed": 9186,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.059843793509,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955744,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110748555475e-08,
+        "reprop_exact_arcs": 3.389670810232808e-06,
+        "ponn_runtime_s": 5.622199206991354,
+        "split_runtime_s": 9.101825876001385,
+        "total_runtime_s": 14.724025082992739
+      }
+    },
+    "9187": {
+      "seed": 9187,
+      "shoot_rho_1e8": {
+        "seed": 9187,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984391499476,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 6.688020205131535e-10,
+        "reprop_grid_2001": 0.0006370288373830444,
+        "reprop_exact_arcs": 2.347922817387145e-10,
+        "n_propagations": 484,
+        "runtime_s": 28.08692275598878
+      },
+      "shoot_hard_polish": {
+        "seed": 9187,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341545,
+        "reprop_exact_arcs": 9.439318121898233e-15,
+        "switch_times_days": [
+          46.580845144813864,
+          68.0233225854879,
+          142.71734067846504,
+          290.2541100657136
+        ],
+        "polish_runtime_s": 1.0307260809931904,
+        "total_runtime_s": 29.11764883698197
+      },
+      "split_domain": {
+        "seed": 9187,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984389651167,
+        "switch_times_days": [
+          46.58084519364982,
+          68.02332262955744,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110747084014e-08,
+        "reprop_exact_arcs": 3.3929004720807843e-06,
+        "ponn_runtime_s": 4.714131253000232,
+        "split_runtime_s": 9.185125570002128,
+        "total_runtime_s": 13.89925682300236
+      }
+    },
+    "9188": {
+      "seed": 9188,
+      "shoot_rho_1e8": {
+        "seed": 9188,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439039759,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.1181992544953226e-10,
+        "reprop_grid_2001": 0.0006370351196384235,
+        "reprop_exact_arcs": 5.353063269825273e-10,
+        "n_propagations": 514,
+        "runtime_s": 29.430583348992513
+      },
+      "shoot_hard_polish": {
+        "seed": 9188,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415395,
+        "reprop_exact_arcs": 9.483295913085288e-15,
+        "switch_times_days": [
+          46.580845144812265,
+          68.02332258548999,
+          142.71734067846688,
+          290.2541100657118
+        ],
+        "polish_runtime_s": 0.4847861419984838,
+        "total_runtime_s": 29.915369490990997
+      },
+      "split_domain": {
+        "seed": 9188,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439184256,
+        "switch_times_days": [
+          46.580845193649736,
+          68.02332262955751,
+          142.717340739801,
+          290.25411012015513
+        ],
+        "residual_rms": 5.9333110744077e-08,
+        "reprop_exact_arcs": 3.378168246932743e-06,
+        "ponn_runtime_s": 5.804711513992515,
+        "split_runtime_s": 18.02817398199113,
+        "total_runtime_s": 23.832885495983646
+      }
+    },
+    "9189": {
+      "seed": 9189,
+      "shoot_rho_1e8": {
+        "seed": 9189,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598487650399,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.989636057701821e-09,
+        "reprop_grid_2001": 0.0006370253091010557,
+        "reprop_exact_arcs": 1.897036263083584e-08,
+        "n_propagations": 623,
+        "runtime_s": 33.646065484004794
+      },
+      "shoot_hard_polish": {
+        "seed": 9189,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341542,
+        "reprop_exact_arcs": 6.292291375879897e-15,
+        "switch_times_days": [
+          46.580845144813374,
+          68.02332258548779,
+          142.71734067846583,
+          290.25411006571403
+        ],
+        "polish_runtime_s": 0.5458306670043385,
+        "total_runtime_s": 34.19189615100913
+      },
+      "split_domain": {
+        "seed": 9189,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439059286,
+        "switch_times_days": [
+          46.5808451936498,
+          68.02332262955751,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110749333945e-08,
+        "reprop_exact_arcs": 3.391363281474651e-06,
+        "ponn_runtime_s": 10.303771785009303,
+        "split_runtime_s": 16.427623798997956,
+        "total_runtime_s": 26.73139558400726
+      }
+    },
+    "9190": {
+      "seed": 9190,
+      "shoot_rho_1e8": {
+        "seed": 9190,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984396932297,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 4.586436851371819e-11,
+        "reprop_grid_2001": 0.0006370395193778178,
+        "reprop_exact_arcs": 5.8850755046435e-10,
+        "n_propagations": 1403,
+        "runtime_s": 44.43005174899008
+      },
+      "shoot_hard_polish": {
+        "seed": 9190,
+        "success_strict": true,
+        "fuel_kg": 396.059843934151,
+        "reprop_exact_arcs": 6.399424190083446e-15,
+        "switch_times_days": [
+          46.580845144813615,
+          68.02332258548796,
+          142.7173406784666,
+          290.25411006571653
+        ],
+        "polish_runtime_s": 1.3975257580023026,
+        "total_runtime_s": 45.827577506992384
+      },
+      "split_domain": {
+        "seed": 9190,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984399404883,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955748,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110743344635e-08,
+        "reprop_exact_arcs": 3.378588439818622e-06,
+        "ponn_runtime_s": 4.373052191993338,
+        "split_runtime_s": 8.673766545005492,
+        "total_runtime_s": 13.04681873699883
+      }
+    },
+    "9191": {
+      "seed": 9191,
+      "shoot_rho_1e8": {
+        "seed": 9191,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598440128982,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.562232344922922e-11,
+        "reprop_grid_2001": 0.0006370292087221907,
+        "reprop_exact_arcs": 6.365627284290825e-10,
+        "n_propagations": 571,
+        "runtime_s": 31.18336212199938
+      },
+      "shoot_hard_polish": {
+        "seed": 9191,
+        "success_strict": true,
+        "fuel_kg": 396.059843934157,
+        "reprop_exact_arcs": 6.532361705498234e-15,
+        "switch_times_days": [
+          46.58084514481444,
+          68.02332258548806,
+          142.71734067846597,
+          290.25411006571375
+        ],
+        "polish_runtime_s": 0.9275533449981594,
+        "total_runtime_s": 32.11091546699754
+      },
+      "split_domain": {
+        "seed": 9191,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598440126689,
+        "switch_times_days": [
+          46.58084519364978,
+          68.0233226295575,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074880607e-08,
+        "reprop_exact_arcs": 3.3882110582421584e-06,
+        "ponn_runtime_s": 4.145688285003416,
+        "split_runtime_s": 9.120512935012812,
+        "total_runtime_s": 13.266201220016228
+      }
+    },
+    "9192": {
+      "seed": 9192,
+      "shoot_rho_1e8": {
+        "seed": 9192,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984399813315,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.235466821677238e-10,
+        "reprop_grid_2001": 0.0006370387945650594,
+        "reprop_exact_arcs": 7.756039229562332e-10,
+        "n_propagations": 598,
+        "runtime_s": 30.91697873499652
+      },
+      "shoot_hard_polish": {
+        "seed": 9192,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341469,
+        "reprop_exact_arcs": 6.894836093553757e-15,
+        "switch_times_days": [
+          46.580845144812834,
+          68.0233225854884,
+          142.71734067846666,
+          290.2541100657171
+        ],
+        "polish_runtime_s": 1.024972166007501,
+        "total_runtime_s": 31.94195090100402
+      },
+      "split_domain": {
+        "seed": 9192,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598437467994,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955743,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074485394e-08,
+        "reprop_exact_arcs": 3.394886287333568e-06,
+        "ponn_runtime_s": 4.089554901991505,
+        "split_runtime_s": 9.25996326499444,
+        "total_runtime_s": 13.349518166985945
+      }
+    },
+    "9193": {
+      "seed": 9193,
+      "shoot_rho_1e8": {
+        "seed": 9193,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984390607364,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 4.93032554952959e-11,
+        "reprop_grid_2001": 0.0006370167166420038,
+        "reprop_exact_arcs": 7.479852629096196e-10,
+        "n_propagations": 552,
+        "runtime_s": 34.02734538599907
+      },
+      "shoot_hard_polish": {
+        "seed": 9193,
+        "success_strict": true,
+        "fuel_kg": 396.05984393414974,
+        "reprop_exact_arcs": 2.196914690201754e-14,
+        "switch_times_days": [
+          46.58084514481155,
+          68.02332258549038,
+          142.71734067846754,
+          290.2541100657133
+        ],
+        "polish_runtime_s": 0.9817080719949445,
+        "total_runtime_s": 35.009053457994014
+      },
+      "split_domain": {
+        "seed": 9193,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984378373375,
+        "switch_times_days": [
+          46.580845193649786,
+          68.02332262955746,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074770139e-08,
+        "reprop_exact_arcs": 3.3851229457215667e-06,
+        "ponn_runtime_s": 4.460413438995602,
+        "split_runtime_s": 9.396873552002944,
+        "total_runtime_s": 13.857286990998546
+      }
+    },
+    "9194": {
+      "seed": 9194,
+      "shoot_rho_1e8": {
+        "seed": 9194,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 376.194920003294,
+        "rho_reached": null,
+        "arrival_residual": 0.21246327330342216,
+        "reprop_grid_2001": 0.21246350946903372,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3210,
+        "runtime_s": 41.012922181995236
+      },
+      "shoot_hard_polish": {
+        "seed": 9194,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.167994923889637e-06,
+        "total_runtime_s": 41.01292334999016
+      },
+      "split_domain": {
+        "seed": 9194,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438428933,
+        "switch_times_days": [
+          46.580845193649765,
+          68.02332262955748,
+          142.717340739801,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074242706e-08,
+        "reprop_exact_arcs": 3.3886051137124054e-06,
+        "ponn_runtime_s": 4.5277283920004265,
+        "split_runtime_s": 9.069644442992285,
+        "total_runtime_s": 13.597372834992711
+      }
+    },
+    "9195": {
+      "seed": 9195,
+      "shoot_rho_1e8": {
+        "seed": 9195,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598439464768,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.4642330091372013e-10,
+        "reprop_grid_2001": 0.0006370234114676096,
+        "reprop_exact_arcs": 7.266061137159314e-10,
+        "n_propagations": 537,
+        "runtime_s": 31.757396015993436
+      },
+      "shoot_hard_polish": {
+        "seed": 9195,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341512,
+        "reprop_exact_arcs": 4.721876594063073e-15,
+        "switch_times_days": [
+          46.58084514481323,
+          68.023322585488,
+          142.7173406784664,
+          290.25411006571557
+        ],
+        "polish_runtime_s": 1.591216180997435,
+        "total_runtime_s": 33.34861219699087
+      },
+      "split_domain": {
+        "seed": 9195,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598438712382,
+        "switch_times_days": [
+          46.58084519364986,
+          68.02332262955754,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.933311074088452e-08,
+        "reprop_exact_arcs": 3.389603222349014e-06,
+        "ponn_runtime_s": 4.276929849002045,
+        "split_runtime_s": 9.060397580004064,
+        "total_runtime_s": 13.337327429006109
+      }
+    },
+    "9196": {
+      "seed": 9196,
+      "shoot_rho_1e8": {
+        "seed": 9196,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984417058903,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 1.9045671084272433e-10,
+        "reprop_grid_2001": 0.0006370338086129733,
+        "reprop_exact_arcs": 9.775031794890816e-10,
+        "n_propagations": 1689,
+        "runtime_s": 45.677443350999965
+      },
+      "shoot_hard_polish": {
+        "seed": 9196,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415497,
+        "reprop_exact_arcs": 1.1549572720106067e-14,
+        "switch_times_days": [
+          46.580845144812834,
+          68.02332258548905,
+          142.71734067846688,
+          290.2541100657129
+        ],
+        "polish_runtime_s": 1.1313937079976313,
+        "total_runtime_s": 46.8088370589976
+      },
+      "split_domain": {
+        "seed": 9196,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984392548226,
+        "switch_times_days": [
+          46.5808451936497,
+          68.02332262955747,
+          142.71734073980105,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110747294806e-08,
+        "reprop_exact_arcs": 3.4256917617604634e-06,
+        "ponn_runtime_s": 4.281267411002773,
+        "split_runtime_s": 8.680043197993655,
+        "total_runtime_s": 12.961310608996428
+      }
+    },
+    "9197": {
+      "seed": 9197,
+      "shoot_rho_1e8": {
+        "seed": 9197,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.05984390414494,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 2.292217255911521e-09,
+        "reprop_grid_2001": 0.0006370369620945803,
+        "reprop_exact_arcs": 4.1631905084857706e-09,
+        "n_propagations": 703,
+        "runtime_s": 33.39396900999418
+      },
+      "shoot_hard_polish": {
+        "seed": 9197,
+        "success_strict": true,
+        "fuel_kg": 396.05984393415474,
+        "reprop_exact_arcs": 1.276881700475263e-14,
+        "switch_times_days": [
+          46.58084514481445,
+          68.0233225854871,
+          142.71734067846586,
+          290.25411006571557
+        ],
+        "polish_runtime_s": 1.3543755150021752,
+        "total_runtime_s": 34.748344524996355
+      },
+      "split_domain": {
+        "seed": 9197,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.05984391324023,
+        "switch_times_days": [
+          46.58084519364978,
+          68.02332262955746,
+          142.71734073980096,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110747460136e-08,
+        "reprop_exact_arcs": 3.385674103209785e-06,
+        "ponn_runtime_s": 4.158937446001801,
+        "split_runtime_s": 9.153007241999148,
+        "total_runtime_s": 13.311944688000949
+      }
+    },
+    "9198": {
+      "seed": 9198,
+      "shoot_rho_1e8": {
+        "seed": 9198,
+        "success_loose": false,
+        "success_strict": false,
+        "fuel_kg": 768.2513396521356,
+        "rho_reached": null,
+        "arrival_residual": 1.9610518297429878,
+        "reprop_grid_2001": 1.9610517271824774,
+        "reprop_exact_arcs": null,
+        "n_propagations": 3213,
+        "runtime_s": 55.83255774900317
+      },
+      "shoot_hard_polish": {
+        "seed": 9198,
+        "success_strict": false,
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "switch_times_days": [],
+        "polish_runtime_s": 1.2160016922280192e-06,
+        "total_runtime_s": 55.832558965004864
+      },
+      "split_domain": {
+        "seed": 9198,
+        "success_loose": true,
+        "success_strict": true,
+        "status": "converged",
+        "fuel_kg": 396.0598439412779,
+        "switch_times_days": [
+          46.58084519364977,
+          68.02332262955744,
+          142.71734073980093,
+          290.2541101201552
+        ],
+        "residual_rms": 5.9333110744710475e-08,
+        "reprop_exact_arcs": 3.397969405514519e-06,
+        "ponn_runtime_s": 4.317018108005868,
+        "split_runtime_s": 8.581624818994896,
+        "total_runtime_s": 12.898642927000765
+      }
+    },
+    "9199": {
+      "seed": 9199,
+      "shoot_rho_1e8": {
+        "seed": 9199,
+        "success_loose": true,
+        "success_strict": true,
+        "fuel_kg": 396.0598443614458,
+        "rho_reached": 1.2742749857031347e-08,
+        "arrival_residual": 5.374356835374519e-10,
+        "reprop_grid_2001": 0.0006370316651586093,
+        "reprop_exact_arcs": 1.9777600004862937e-09,
+        "n_propagations": 1057,
+        "runtime_s": 36.15485457300383
+      },
+      "shoot_hard_polish": {
+        "seed": 9199,
+        "success_strict": true,
+        "fuel_kg": 396.0598439341576,
+        "reprop_exact_arcs": 1.2051166008760439e-14,
+        "switch_times_days": [
+          46.5808451448129,
+          68.02332258548846,
+          142.71734067846828,
+          290.25411006571386
+        ],
+        "polish_runtime_s": 0.49012481499812566,
+        "total_runtime_s": 36.64497938800196
+      },
+      "split_domain": {
+        "seed": 9199,
+        "success_loose": false,
+        "success_strict": false,
+        "status": "ponn_coarse_switch_mismatch (n_sw=2)",
+        "fuel_kg": null,
+        "reprop_exact_arcs": null,
+        "ponn_runtime_s": 15.282999798000674,
+        "split_runtime_s": 0.0,
+        "total_runtime_s": 15.282999798000674
+      }
+    }
+  },
+  "summary": {
+    "n_seeds": 100,
+    "arms": {
+      "shoot_rho_1e8": {
+        "n_seeds": 100,
+        "n_strict": 67,
+        "rate_strict": 0.67,
+        "ci_strict": [
+          0.5730534379509052,
+          0.7543687726587197
+        ],
+        "reprop_exact_strict": {
+          "n": 67,
+          "mean": 1.3835503355212053e-09,
+          "std": 2.5177979452077902e-09,
+          "median": 7.376921602976866e-10,
+          "q25": 5.211914644076681e-10,
+          "q75": 1.0757093992974296e-09,
+          "min": 2.347922817387145e-10,
+          "max": 1.897036263083584e-08
+        },
+        "fuel_strict_kg": {
+          "n": 67,
+          "mean": 396.0598440071676,
+          "std": 6.111613895004528e-07,
+          "median": 396.05984395156986,
+          "q25": 396.0598439051093,
+          "q75": 396.05984399777867,
+          "min": 396.05984322844347,
+          "max": 396.0598487650399
+        },
+        "time_all_s": {
+          "n": 100,
+          "mean": 44.079893726139126,
+          "std": 17.366237377912306,
+          "median": 36.05096814750141,
+          "q25": 32.69825882150326,
+          "q75": 48.62171771700014,
+          "min": 28.08692275598878,
+          "max": 91.32593582899426
+        },
+        "time_strict_s": {
+          "n": 67,
+          "mean": 35.99695860834205,
+          "std": 7.246204851383425,
+          "median": 34.02734538599907,
+          "q25": 31.832897217995196,
+          "q75": 36.52489881149813,
+          "min": 28.08692275598878,
+          "max": 63.362726115999976
+        },
+        "reprop_grid_2001_strict": {
+          "n": 67,
+          "mean": 0.0006370269512228815,
+          "std": 2.7047497962702202e-08,
+          "median": 0.0006370351196384235,
+          "q25": 0.0006370278623626488,
+          "q75": 0.0006370381706057376,
+          "min": 0.0006368691819466195,
+          "max": 0.0006370492980610712
+        }
+      },
+      "shoot_hard_polish": {
+        "n_seeds": 100,
+        "n_strict": 67,
+        "rate_strict": 0.67,
+        "ci_strict": [
+          0.5730534379509052,
+          0.7543687726587197
+        ],
+        "reprop_exact_strict": {
+          "n": 67,
+          "mean": 1.2296226945055563e-14,
+          "std": 6.430994841812242e-15,
+          "median": 1.1549572720106067e-14,
+          "q25": 7.058615474831559e-15,
+          "q75": 1.556656007556361e-14,
+          "min": 2.984432587521012e-15,
+          "max": 3.226649252564807e-14
+        },
+        "fuel_strict_kg": {
+          "n": 67,
+          "mean": 396.0598439341538,
+          "std": 3.822527009613679e-12,
+          "median": 396.05984393415395,
+          "q25": 396.0598439341523,
+          "q75": 396.0598439341559,
+          "min": 396.0598439341387,
+          "max": 396.0598439341612
+        },
+        "time_all_s": {
+          "n": 100,
+          "mean": 44.78598024416962,
+          "std": 17.05662910540131,
+          "median": 37.004413289505464,
+          "q25": 33.80014292624401,
+          "q75": 48.621718885005976,
+          "min": 29.11764883698197,
+          "max": 91.32593692898809
+        },
+        "time_strict_s": {
+          "n": 67,
+          "mean": 37.05081845823816,
+          "std": 7.310519292307354,
+          "median": 35.009053457994014,
+          "q25": 32.87215596349415,
+          "q75": 37.27895633600565,
+          "min": 29.11764883698197,
+          "max": 64.39595203699719
+        }
+      },
+      "split_domain": {
+        "n_seeds": 100,
+        "n_strict": 90,
+        "rate_strict": 0.9,
+        "ci_strict": [
+          0.8256343384950865,
+          0.9447708629393249
+        ],
+        "reprop_exact_strict": {
+          "n": 90,
+          "mean": 3.395935730418656e-06,
+          "std": 1.7391230579999442e-08,
+          "median": 3.39560532030131e-06,
+          "q25": 3.3859655638936816e-06,
+          "q75": 3.406619127192384e-06,
+          "min": 3.3437630831097997e-06,
+          "max": 3.4347566304259717e-06
+        },
+        "fuel_strict_kg": {
+          "n": 90,
+          "mean": 396.0598438746181,
+          "std": 1.277193913136389e-07,
+          "median": 396.05984388650904,
+          "q25": 396.0598438115707,
+          "q75": 396.059843966317,
+          "min": 396.05984310868257,
+          "max": 396.0598440519294
+        },
+        "time_all_s": {
+          "n": 100,
+          "mean": 16.088393895969492,
+          "std": 4.1070719442292445,
+          "median": 14.156388382994919,
+          "q25": 13.491387684993242,
+          "q75": 16.012029108504066,
+          "min": 12.637613860992133,
+          "max": 31.25233695199131
+        },
+        "time_strict_s": {
+          "n": 90,
+          "mean": 15.968259095966317,
+          "std": 4.021626721935274,
+          "median": 14.021187142992858,
+          "q25": 13.480961126999318,
+          "q75": 15.909984912992513,
+          "min": 12.898642927000765,
+          "max": 31.25233695199131
+        }
+      }
+    },
+    "tests": {
+      "A1": {
+        "comparison": "split_domain vs shoot_rho_1e8 (strict rate)",
+        "type": "mcnemar",
+        "delta_pp": 23.0,
+        "a_only": 31,
+        "b_only": 8,
+        "p_raw": 0.0002940768754342571
+      },
+      "A2": {
+        "comparison": "split_domain vs shoot_rho_1e8 (reprop_exact_arcs)",
+        "type": "wilcoxon",
+        "n_paired": 59,
+        "median_a": 3.392952622677158e-06,
+        "median_b": 7.266061137159314e-10,
+        "median_diff": 3.3926656797990454e-06,
+        "p_raw": 2.3900953516978203e-11
+      },
+      "A3": {
+        "comparison": "split_domain vs shoot_hard_polish (reprop_exact_arcs)",
+        "type": "wilcoxon",
+        "n_paired": 59,
+        "median_a": 3.392952622677158e-06,
+        "median_b": 1.1549572720106067e-14,
+        "median_diff": 3.3929526062123276e-06,
+        "p_raw": 2.3900953516978203e-11
+      },
+      "A4": {
+        "comparison": "split_domain vs shoot_hard_polish (total_runtime_s)",
+        "type": "wilcoxon",
+        "n_paired": 59,
+        "median_a": 14.193016761986655,
+        "median_b": 34.91364590000012,
+        "median_diff": -20.600440538008115,
+        "p_raw": 2.3900953516978203e-11
+      }
+    }
+  }
+}

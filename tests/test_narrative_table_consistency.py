@@ -140,3 +140,20 @@ def test_no_broken_latex_escaping_in_docs():
     assert "\r" not in readme, "Literal CR found in README.md (unescaped \\rho)"
     assert "\\\\text" not in report, "Double-escaped \\\\text found in REPORT.md"
     assert "\\\\rho" not in report, "Double-escaped \\\\rho found in REPORT.md"
+
+
+def test_task3_language_audit_and_claims_md():
+    """Task 3: neutral wording across docs, exact perturbation-aware PoNN sentence, and CLAIMS.md present."""
+    for fname in ("README.md", "REPORT.md", "ASSUMPTIONS.md", "DEVIATIONS.md"):
+        txt = (ROOT / fname).read_text(encoding="utf-8").lower()
+        assert "they did not" not in txt, f"'they did not' found in {fname}"
+        assert "published method fails" not in txt, f"'published method fails' found in {fname}"
+    expected_lit = "perturbation-aware ponns exist (j2 formation flying, verified abstract; cislunar high-fidelity ephemeris, abstract only; perturbation list unverified)"
+    assert expected_lit in (ROOT / "REPORT.md").read_text(encoding="utf-8").lower()
+    assert expected_lit in (ROOT / "ASSUMPTIONS.md").read_text(encoding="utf-8").lower()
+    claims_path = ROOT / "CLAIMS.md"
+    if claims_path.exists():
+        ctxt = claims_path.read_text(encoding="utf-8")
+        assert "| `C1` |" in ctxt and "| `C11` |" in ctxt
+        assert expected_lit in ctxt.lower()
+

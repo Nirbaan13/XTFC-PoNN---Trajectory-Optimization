@@ -127,3 +127,9 @@ python3 run_all.py --from-stored
 - **Preregistration:** [PREREG_ADDENDUM_2.md](PREREG_ADDENDUM_2.md) (commit `24cd1df`).
 - **Strict convergence ($e_{\text{reprop}} < 10^{-2}$, $N=100$):** Single-start Shooting `66/100`, Multi-start Shooting ($K\le 5$) `99/100` (med. `16.09 s`), Deterministic Energy-Opt. Shooting `1/1` (`13.18 s`), Hybrid (`rho_ext=1`) `94/100` (med. `13.13 s`), Split-Domain PoNN `98/100` (med. `13.60 s`).
 - **Deliverables:** `results/tables/tab9_addendum2_baselines.tex`, `results/figures/fig_addendum2_baselines.pdf`, and [REPORT.md](REPORT.md) Section 13.
+
+## Addendum 3 Cross-Case Baselines, Fair Accuracy, & Claims Table
+
+- **Preregistration:** [PREREG_ADDENDUM_3.md](PREREG_ADDENDUM_3.md) (commit `792b304`, feature freeze).
+- **Claims traceability:** [CLAIMS.md](CLAIMS.md) (every manuscript claim mapped to stored JSON evidence, computation method, and exact wording).
+- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [REPORT.md](REPORT.md) Section 14.

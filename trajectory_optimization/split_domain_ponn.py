@@ -133,7 +133,7 @@ class SplitDomainPoNN:
 
     def _build_jax(self) -> None:
         M, K, L, n = self.M, self.K, self.L, self.n
-        mu = float(self.prob.mu)
+        mu = float(self.prob.mu - (self.prob.k_srp if self.prob.srp_mode == "radial" else 0.0))
         tmax = float(self.prob.t_max)
         c = float(self.prob.c)
         tf = float(self.prob.tf)
