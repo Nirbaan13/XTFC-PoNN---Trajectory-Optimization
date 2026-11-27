@@ -1,0 +1,5371 @@
+{
+  "meta": {
+    "description": "Task 5: Fair deterministic spanning tanh-ELM ablation on Scenario A (A4(b) seeds 1000..1009)",
+    "seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ],
+    "formula": "w_q = w, b_q = w * (-1 + 2*(q-1)/(L-1)), q=1..L; beta ~ U(-0.5, 0.5) (plus scaled_u01 check at w=5.2)"
+  },
+  "configs": {
+    "tanh_spanning_w5.2_cgl_u05": {
+      "w": 5.2,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 931.9949637271867,
+            "final_mass_kg": 68.00503627281329,
+            "residual_rms": 0.03658353575830652,
+            "reprop_arrival_residual": 1.5846731104933043,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.22013585200466,
+              312.65450088303237
+            ],
+            "runtime_s": 11.53212599598919,
+            "nfev": 377,
+            "njev": 235
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 931.9949637271867,
+            "final_mass_kg": 68.00503627281329,
+            "residual_rms": 0.03658353575830652,
+            "reprop_arrival_residual": 1.5846731104933043,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.22013585200466,
+              312.65450088303237
+            ],
+            "runtime_s": 11.53212599598919,
+            "nfev": 377,
+            "njev": 235,
+            "total_runtime_s": 11.53212599598919
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 961.9784000387199,
+            "final_mass_kg": 38.021599961280074,
+            "residual_rms": 0.03511398655659978,
+            "reprop_arrival_residual": 2.7080958994882605,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71168406110456,
+              315.023124398468
+            ],
+            "runtime_s": 5.220026789000258,
+            "nfev": 180,
+            "njev": 133
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 961.9784000387199,
+            "final_mass_kg": 38.021599961280074,
+            "residual_rms": 0.03511398655659978,
+            "reprop_arrival_residual": 2.7080958994882605,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71168406110456,
+              315.023124398468
+            ],
+            "runtime_s": 5.220026789000258,
+            "nfev": 180,
+            "njev": 133,
+            "total_runtime_s": 5.220026789000258
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 933.6554403144121,
+            "final_mass_kg": 66.34455968558794,
+            "residual_rms": 0.040152787596799196,
+            "reprop_arrival_residual": 1.1621963285162917,
+            "n_switches": 2,
+            "switch_times_days": [
+              303.4446788255638,
+              305.1327094298853
+            ],
+            "runtime_s": 11.4349521890108,
+            "nfev": 465,
+            "njev": 207
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 933.6554403144121,
+            "final_mass_kg": 66.34455968558794,
+            "residual_rms": 0.040152787596799196,
+            "reprop_arrival_residual": 1.1621963285162917,
+            "n_switches": 2,
+            "switch_times_days": [
+              303.4446788255638,
+              305.1327094298853
+            ],
+            "runtime_s": 11.4349521890108,
+            "nfev": 465,
+            "njev": 207,
+            "total_runtime_s": 11.4349521890108
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 398.17304561873357,
+            "final_mass_kg": 601.8269543812664,
+            "residual_rms": 0.005518622315036042,
+            "reprop_arrival_residual": 0.014607461148446759,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007317909540156,
+              66.54488983111659,
+              141.09937414497625,
+              291.2873186239793
+            ],
+            "runtime_s": 16.992258818994742,
+            "nfev": 341,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.4551885263936,
+            "final_mass_kg": 599.5448114736064,
+            "residual_rms": 0.0066759563556505605,
+            "reprop_arrival_residual": 0.05305789915993078,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.358209937285515,
+              68.59384396060504,
+              140.42390748989217,
+              290.55463791460613
+            ],
+            "runtime_s": 34.235933152987855,
+            "nfev": 499,
+            "njev": 437,
+            "total_runtime_s": 51.228191971982596
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.6930611732996,
+            "final_mass_kg": 602.3069388267004,
+            "residual_rms": 0.005060156727590625,
+            "reprop_arrival_residual": 0.012259396586743784,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731802052928,
+              66.54488644808693,
+              141.099373912877,
+              291.28731933342436
+            ],
+            "runtime_s": 21.92091792699648,
+            "nfev": 268,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.9943630260532,
+            "final_mass_kg": 600.0056369739468,
+            "residual_rms": 0.006662629250472678,
+            "reprop_arrival_residual": 0.0631135717714692,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005422587971665,
+              68.59382568247777,
+              139.77675737611955,
+              290.55463795652526
+            ],
+            "runtime_s": 38.41391773399664,
+            "nfev": 425,
+            "njev": 413,
+            "total_runtime_s": 60.33483566099312
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.85043983988544,
+            "final_mass_kg": 602.1495601601146,
+            "residual_rms": 0.005086599262025493,
+            "reprop_arrival_residual": 0.012657172097207011,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731793348433,
+              66.54488981103079,
+              141.09937406220735,
+              291.28731913838624
+            ],
+            "runtime_s": 19.087083557009464,
+            "nfev": 320,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.1054673276485,
+            "final_mass_kg": 599.8945326723515,
+            "residual_rms": 0.006660778780667619,
+            "reprop_arrival_residual": 0.06077579386889845,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005423219500244,
+              68.59382529231856,
+              139.77675768366979,
+              290.55463789201247
+            ],
+            "runtime_s": 35.506349997012876,
+            "nfev": 477,
+            "njev": 437,
+            "total_runtime_s": 54.59343355402234
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 398.20334534977064,
+            "final_mass_kg": 601.7966546502294,
+            "residual_rms": 0.0055182252603576225,
+            "reprop_arrival_residual": 0.014757013339954505,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731788809189,
+              66.54488975067706,
+              141.09937417807737,
+              291.28731859154624
+            ],
+            "runtime_s": 17.473882282996783,
+            "nfev": 343,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.4654716636651,
+            "final_mass_kg": 599.5345283363349,
+            "residual_rms": 0.006680955833770659,
+            "reprop_arrival_residual": 0.05298285076011284,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.35820999432022,
+              68.59384392370153,
+              140.42390753504924,
+              290.5546379135029
+            ],
+            "runtime_s": 33.92537657098728,
+            "nfev": 499,
+            "njev": 437,
+            "total_runtime_s": 51.399258853984065
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 935.2632140309003,
+            "final_mass_kg": 64.73678596909971,
+            "residual_rms": 0.04079699969584219,
+            "reprop_arrival_residual": 1.2058075771972137,
+            "n_switches": 2,
+            "switch_times_days": [
+              309.2866842322541,
+              310.21303440111336
+            ],
+            "runtime_s": 12.244483710994245,
+            "nfev": 484,
+            "njev": 235
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 935.2632140309003,
+            "final_mass_kg": 64.73678596909971,
+            "residual_rms": 0.04079699969584219,
+            "reprop_arrival_residual": 1.2058075771972137,
+            "n_switches": 2,
+            "switch_times_days": [
+              309.2866842322541,
+              310.21303440111336
+            ],
+            "runtime_s": 12.244483710994245,
+            "nfev": 484,
+            "njev": 235,
+            "total_runtime_s": 12.244483710994245
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 398.0183384068994,
+            "final_mass_kg": 601.9816615931006,
+            "residual_rms": 0.005123289163182174,
+            "reprop_arrival_residual": 0.013664608151623467,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731791397176,
+              66.54488983171186,
+              141.09937410797815,
+              291.2873188214639
+            ],
+            "runtime_s": 17.91854725498706,
+            "nfev": 330,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.1802482025596,
+            "final_mass_kg": 599.8197517974404,
+            "residual_rms": 0.006671118415626034,
+            "reprop_arrival_residual": 0.05853812480365366,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00542370059086,
+              68.59382482245562,
+              139.77675774132922,
+              290.55463783805806
+            ],
+            "runtime_s": 34.34476252098102,
+            "nfev": 484,
+            "njev": 437,
+            "total_runtime_s": 52.26330977596808
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 279.71797084055083,
+            "final_mass_kg": 720.2820291594492,
+            "residual_rms": 0.015438351041290996,
+            "reprop_arrival_residual": 2.3846961548252295,
+            "n_switches": 4,
+            "switch_times_days": [
+              33.771866794527455,
+              139.47705455729417,
+              141.05695318136918,
+              275.9467218334918
+            ],
+            "runtime_s": 26.020365839998703,
+            "nfev": 987,
+            "njev": 518
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 279.71797084055083,
+            "final_mass_kg": 720.2820291594492,
+            "residual_rms": 0.015438351041290996,
+            "reprop_arrival_residual": 2.3846961548252295,
+            "n_switches": 4,
+            "switch_times_days": [
+              33.771866794527455,
+              139.47705455729417,
+              141.05695318136918,
+              275.9467218334918
+            ],
+            "runtime_s": 26.020365839998703,
+            "nfev": 987,
+            "njev": 518,
+            "total_runtime_s": 26.020365839998703
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.6126549501438805,
+        "median_rms_all": 0.011059653437530827,
+        "median_total_runtime_s": 38.62427890599065
+      }
+    },
+    "tanh_spanning_w5.2_uni_u05": {
+      "w": 5.2,
+      "grid_type": "uniform",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 976.906119591348,
+            "final_mass_kg": 23.093880408652012,
+            "residual_rms": 0.01715350682187176,
+            "reprop_arrival_residual": 0.4507686663811021,
+            "n_switches": 2,
+            "switch_times_days": [
+              306.13903561102785,
+              308.6438999952987
+            ],
+            "runtime_s": 18.766659325978253,
+            "nfev": 666,
+            "njev": 386
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 976.906119591348,
+            "final_mass_kg": 23.093880408652012,
+            "residual_rms": 0.01715350682187176,
+            "reprop_arrival_residual": 0.4507686663811021,
+            "n_switches": 2,
+            "switch_times_days": [
+              306.13903561102785,
+              308.6438999952987
+            ],
+            "runtime_s": 18.766659325978253,
+            "nfev": 666,
+            "njev": 386,
+            "total_runtime_s": 18.766659325978253
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 978.3696544044167,
+            "final_mass_kg": 21.6303455955833,
+            "residual_rms": 0.01745334886659946,
+            "reprop_arrival_residual": 0.4836832221312136,
+            "n_switches": 2,
+            "switch_times_days": [
+              311.1572113934744,
+              313.65959009425245
+            ],
+            "runtime_s": 16.628514109004755,
+            "nfev": 648,
+            "njev": 331
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 978.3696544044167,
+            "final_mass_kg": 21.6303455955833,
+            "residual_rms": 0.01745334886659946,
+            "reprop_arrival_residual": 0.4836832221312136,
+            "n_switches": 2,
+            "switch_times_days": [
+              311.1572113934744,
+              313.65959009425245
+            ],
+            "runtime_s": 16.628514109004755,
+            "nfev": 648,
+            "njev": 331,
+            "total_runtime_s": 16.628514109004755
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 941.1968395251283,
+            "final_mass_kg": 58.80316047487166,
+            "residual_rms": 0.03751754092394086,
+            "reprop_arrival_residual": 2.5660072351630103,
+            "n_switches": 2,
+            "switch_times_days": [
+              293.21627021702875,
+              293.57121858373006
+            ],
+            "runtime_s": 11.147470035997685,
+            "nfev": 454,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 941.1968395251283,
+            "final_mass_kg": 58.80316047487166,
+            "residual_rms": 0.03751754092394086,
+            "reprop_arrival_residual": 2.5660072351630103,
+            "n_switches": 2,
+            "switch_times_days": [
+              293.21627021702875,
+              293.57121858373006
+            ],
+            "runtime_s": 11.147470035997685,
+            "nfev": 454,
+            "njev": 215,
+            "total_runtime_s": 11.147470035997685
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 404.93771424723946,
+            "final_mass_kg": 595.0622857527605,
+            "residual_rms": 0.0050322828200860745,
+            "reprop_arrival_residual": 0.03560292532202503,
+            "n_switches": 4,
+            "switch_times_days": [
+              52.695964594101966,
+              67.75117812988336,
+              143.03100695983744,
+              291.0807074663322
+            ],
+            "runtime_s": 21.273122416983824,
+            "nfev": 315,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 400.826691506154,
+            "final_mass_kg": 599.173308493846,
+            "residual_rms": 0.0064837356419140645,
+            "reprop_arrival_residual": 0.04811100820510538,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.35820984241719,
+              68.59384341710718,
+              140.4239078061867,
+              290.5546377412869
+            ],
+            "runtime_s": 37.643591564992676,
+            "nfev": 469,
+            "njev": 437,
+            "total_runtime_s": 58.9167139819765
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 400.2647918503044,
+            "final_mass_kg": 599.7352081496956,
+            "residual_rms": 0.0050913981545469295,
+            "reprop_arrival_residual": 0.036324893375731415,
+            "n_switches": 4,
+            "switch_times_days": [
+              52.6959659993219,
+              67.7511839985632,
+              140.52166622854764,
+              291.08070757573057
+            ],
+            "runtime_s": 23.675925244024256,
+            "nfev": 293,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.73277804458485,
+            "final_mass_kg": 599.2672219554152,
+            "residual_rms": 0.006509742333963277,
+            "reprop_arrival_residual": 0.0503668010933196,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.35820980084131,
+              68.59384352805627,
+              140.42390765623432,
+              290.55463780582454
+            ],
+            "runtime_s": 39.87440028402489,
+            "nfev": 447,
+            "njev": 437,
+            "total_runtime_s": 63.55032552804914
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 405.0997877776581,
+            "final_mass_kg": 594.9002122223419,
+            "residual_rms": 0.0051812529519523216,
+            "reprop_arrival_residual": 0.03562293345443876,
+            "n_switches": 4,
+            "switch_times_days": [
+              52.69596434720865,
+              67.75117795833665,
+              143.0310070987639,
+              291.0807073460094
+            ],
+            "runtime_s": 17.333781099005137,
+            "nfev": 333,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 402.1514783789826,
+            "final_mass_kg": 597.8485216210174,
+            "residual_rms": 0.00651976314799913,
+            "reprop_arrival_residual": 0.039774259437651525,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.35820899812563,
+              68.59384195295661,
+              141.07104740049573,
+              290.5546376109128
+            ],
+            "runtime_s": 33.86580361000961,
+            "nfev": 491,
+            "njev": 437,
+            "total_runtime_s": 51.199584709014744
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 404.89258663126293,
+            "final_mass_kg": 595.1074133687371,
+            "residual_rms": 0.005002148983064521,
+            "reprop_arrival_residual": 0.03564609387708324,
+            "n_switches": 4,
+            "switch_times_days": [
+              52.695964863721386,
+              67.75117781222289,
+              143.03100687851602,
+              291.0807075005738
+            ],
+            "runtime_s": 22.15973386299447,
+            "nfev": 305,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 400.7821698328371,
+            "final_mass_kg": 599.2178301671629,
+            "residual_rms": 0.0064870514422250515,
+            "reprop_arrival_residual": 0.04918922379018581,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.358209819007904,
+              68.59384349113398,
+              140.42390774272235,
+              290.55463777163146
+            ],
+            "runtime_s": 38.4959400939988,
+            "nfev": 459,
+            "njev": 437,
+            "total_runtime_s": 60.65567395699327
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 956.0799459740164,
+            "final_mass_kg": 43.920054025983646,
+            "residual_rms": 0.08486739136986138,
+            "reprop_arrival_residual": 3.454892438277636,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 15.368920031003654,
+            "nfev": 572,
+            "njev": 258
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 956.0799459740164,
+            "final_mass_kg": 43.920054025983646,
+            "residual_rms": 0.08486739136986138,
+            "reprop_arrival_residual": 3.454892438277636,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 15.368920031003654,
+            "nfev": 572,
+            "njev": 258,
+            "total_runtime_s": 15.368920031003654
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 400.2729106371419,
+            "final_mass_kg": 599.7270893628581,
+            "residual_rms": 0.005495306783937313,
+            "reprop_arrival_residual": 0.036175425659493575,
+            "n_switches": 4,
+            "switch_times_days": [
+              52.69596598620917,
+              67.75118396694134,
+              140.52166624440227,
+              291.0807075719551
+            ],
+            "runtime_s": 24.487597030994948,
+            "nfev": 298,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.73992208681375,
+            "final_mass_kg": 599.2600779131863,
+            "residual_rms": 0.006480878088638929,
+            "reprop_arrival_residual": 0.050195138697933434,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.35820982749303,
+              68.59384353119337,
+              140.42390767208573,
+              290.55463780148193
+            ],
+            "runtime_s": 41.9111436859821,
+            "nfev": 452,
+            "njev": 437,
+            "total_runtime_s": 66.39874071697704
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 407.30299061456776,
+            "final_mass_kg": 592.6970093854322,
+            "residual_rms": 0.005342488178509311,
+            "reprop_arrival_residual": 0.06759394860236799,
+            "n_switches": 4,
+            "switch_times_days": [
+              50.18668268536904,
+              67.75124811246006,
+              145.54029475417548,
+              291.0807068749862
+            ],
+            "runtime_s": 11.710396971990122,
+            "nfev": 369,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 405.4030728161706,
+            "final_mass_kg": 594.5969271838294,
+            "residual_rms": 0.00666489969567653,
+            "reprop_arrival_residual": 0.03947696468962567,
+            "n_switches": 4,
+            "switch_times_days": [
+              53.7106017331073,
+              67.94669005318853,
+              142.3652392722674,
+              290.55463718590323
+            ],
+            "runtime_s": 28.449657294986537,
+            "nfev": 529,
+            "njev": 437,
+            "total_runtime_s": 40.16005426697666
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 4,
+        "rate_loose": 0.4,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": 401.4890849425683,
+        "median_reprop_loose": 0.04394263382137845,
+        "median_reprop_all": 0.05028096989562651,
+        "median_rms_all": 0.00659233142183783,
+        "median_total_runtime_s": 45.6798194879957
+      }
+    },
+    "tanh_spanning_w5.2_cgl_scaled": {
+      "w": 5.2,
+      "grid_type": "cgl",
+      "init_mode": "scaled_u01",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.70574010657356,
+            "final_mass_kg": 602.2942598934264,
+            "residual_rms": 0.0054865166182295816,
+            "reprop_arrival_residual": 0.01207967255448396,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007317919438584,
+              66.544890039498,
+              141.0993739434145,
+              291.2873194138523
+            ],
+            "runtime_s": 22.492449340003077,
+            "nfev": 310,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.0401445123316,
+            "final_mass_kg": 599.9598554876684,
+            "residual_rms": 0.006651726480585025,
+            "reprop_arrival_residual": 0.06262535152986386,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005423478079,
+              68.5938248502408,
+              139.77675704595532,
+              290.55463793893364
+            ],
+            "runtime_s": 40.01897750000353,
+            "nfev": 470,
+            "njev": 437,
+            "total_runtime_s": 62.51142684000661
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.73452422257094,
+            "final_mass_kg": 602.2654757774291,
+            "residual_rms": 0.004796341783055074,
+            "reprop_arrival_residual": 0.012355690747522859,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731807733743,
+              66.54488628648305,
+              141.09937392944246,
+              291.28731925671934
+            ],
+            "runtime_s": 20.23402834200533,
+            "nfev": 282,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.9923720712104,
+            "final_mass_kg": 600.0076279287896,
+            "residual_rms": 0.006645171575736861,
+            "reprop_arrival_residual": 0.06293888796308326,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00542244605888,
+              68.59382598932571,
+              139.7767573209068,
+              290.5546379371767
+            ],
+            "runtime_s": 38.06234259001212,
+            "nfev": 442,
+            "njev": 413,
+            "total_runtime_s": 58.29637093201745
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.740892526258,
+            "final_mass_kg": 602.259107473742,
+            "residual_rms": 0.004955097544344572,
+            "reprop_arrival_residual": 0.01223545046783025,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731789787398,
+              66.54489000994818,
+              141.0993740408601,
+              291.2873193220131
+            ],
+            "runtime_s": 20.793928586004768,
+            "nfev": 314,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.04625017809303,
+            "final_mass_kg": 599.953749821907,
+            "residual_rms": 0.006651421777650378,
+            "reprop_arrival_residual": 0.06245089762859484,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00542289721232,
+              68.59382542174734,
+              139.77675739079473,
+              290.5546379426392
+            ],
+            "runtime_s": 37.822450537991244,
+            "nfev": 468,
+            "njev": 437,
+            "total_runtime_s": 58.61637912399601
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 468.54576643178245,
+            "final_mass_kg": 531.4542335682175,
+            "residual_rms": 0.018123338621910654,
+            "reprop_arrival_residual": 0.8486785384256,
+            "n_switches": 10,
+            "switch_times_days": [
+              43.6610364768733,
+              46.29736121193377,
+              168.48921443355778,
+              169.94116940408347,
+              172.42250942566838,
+              228.56664378101436,
+              230.52821210355913,
+              299.78782315888395,
+              302.4943766509807,
+              305.1323665039828
+            ],
+            "runtime_s": 30.691736962995492,
+            "nfev": 1107,
+            "njev": 580
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 468.54576643178245,
+            "final_mass_kg": 531.4542335682175,
+            "residual_rms": 0.018123338621910654,
+            "reprop_arrival_residual": 0.8486785384256,
+            "n_switches": 10,
+            "switch_times_days": [
+              43.6610364768733,
+              46.29736121193377,
+              168.48921443355778,
+              169.94116940408347,
+              172.42250942566838,
+              228.56664378101436,
+              230.52821210355913,
+              299.78782315888395,
+              302.4943766509807,
+              305.1323665039828
+            ],
+            "runtime_s": 30.691736962995492,
+            "nfev": 1107,
+            "njev": 580,
+            "total_runtime_s": 30.691736962995492
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -5.343281372915953e-12,
+            "final_mass_kg": 1000.0000000000053,
+            "residual_rms": 0.025542815333854153,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.167044281988638,
+            "nfev": 434,
+            "njev": 153
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -5.343281372915953e-12,
+            "final_mass_kg": 1000.0000000000053,
+            "residual_rms": 0.025542815333854153,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.167044281988638,
+            "nfev": 434,
+            "njev": 153,
+            "total_runtime_s": 10.167044281988638
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -6.0254023992456496e-12,
+            "final_mass_kg": 1000.000000000006,
+            "residual_rms": 0.02554281533325268,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.173581052018562,
+            "nfev": 425,
+            "njev": 155
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -6.0254023992456496e-12,
+            "final_mass_kg": 1000.000000000006,
+            "residual_rms": 0.02554281533325268,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.173581052018562,
+            "nfev": 425,
+            "njev": 155,
+            "total_runtime_s": 10.173581052018562
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 1.3049839253653772e-07,
+            "final_mass_kg": 999.9999998695016,
+            "residual_rms": 0.025542815401846934,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.743545531004202,
+            "nfev": 459,
+            "njev": 151
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 1.3049839253653772e-07,
+            "final_mass_kg": 999.9999998695016,
+            "residual_rms": 0.025542815401846934,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.743545531004202,
+            "nfev": 459,
+            "njev": 151,
+            "total_runtime_s": 10.743545531004202
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -2.4215296434704214e-11,
+            "final_mass_kg": 1000.0000000000242,
+            "residual_rms": 0.025542815375674117,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.091430325002875,
+            "nfev": 428,
+            "njev": 154
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -2.4215296434704214e-11,
+            "final_mass_kg": 1000.0000000000242,
+            "residual_rms": 0.025542815375674117,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 10.091430325002875,
+            "nfev": 428,
+            "njev": 154,
+            "total_runtime_s": 10.091430325002875
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.7377858622049,
+            "final_mass_kg": 602.2622141377951,
+            "residual_rms": 0.005207751604774239,
+            "reprop_arrival_residual": 0.012252197570915831,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007318088775634,
+              66.54488667258154,
+              141.09937392039262,
+              291.2873193543546
+            ],
+            "runtime_s": 18.570523854985368,
+            "nfev": 281,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.0246982332101,
+            "final_mass_kg": 599.9753017667899,
+            "residual_rms": 0.006673473966596868,
+            "reprop_arrival_residual": 0.06270357887592928,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005422840810375,
+              68.59382565472708,
+              139.77675745519863,
+              290.55463794681236
+            ],
+            "runtime_s": 35.45208746698336,
+            "nfev": 443,
+            "njev": 413,
+            "total_runtime_s": 54.022611321968725
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -2.8421709430404007e-12,
+            "final_mass_kg": 1000.0000000000028,
+            "residual_rms": 0.025542815330434367,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 9.863561904989183,
+            "nfev": 424,
+            "njev": 154
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": -2.8421709430404007e-12,
+            "final_mass_kg": 1000.0000000000028,
+            "residual_rms": 0.025542815330434367,
+            "reprop_arrival_residual": 1.4863717977501127,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 9.863561904989183,
+            "nfev": 424,
+            "njev": 154,
+            "total_runtime_s": 9.863561904989183
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 1.1675251680878564,
+        "median_rms_all": 0.02183307697617251,
+        "median_total_runtime_s": 20.717641246999847
+      }
+    },
+    "tanh_spanning_w1.0_cgl_u05": {
+      "w": 1.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 429.7401490903212,
+            "final_mass_kg": 570.2598509096788,
+            "residual_rms": 0.011668447767097436,
+            "reprop_arrival_residual": 0.12558923590810012,
+            "n_switches": 6,
+            "switch_times_days": [
+              122.62300405895107,
+              125.77346167613187,
+              133.41515048643578,
+              137.2383074196661,
+              144.97007072678656,
+              288.33241910171347
+            ],
+            "runtime_s": 20.731764135998674,
+            "nfev": 624,
+            "njev": 474
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.2870207876549,
+            "final_mass_kg": 564.7129792123451,
+            "residual_rms": 0.013846359506710003,
+            "reprop_arrival_residual": 0.13867716593339524,
+            "n_switches": 6,
+            "switch_times_days": [
+              130.68586752613479,
+              131.68181139065834,
+              134.7778521527724,
+              135.20657178816575,
+              141.9856635478425,
+              288.0902249415883
+            ],
+            "runtime_s": 54.31479681498604,
+            "nfev": 1171,
+            "njev": 837,
+            "total_runtime_s": 75.04656095098471
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 429.91073575285554,
+            "final_mass_kg": 570.0892642471445,
+            "residual_rms": 0.011594345310299311,
+            "reprop_arrival_residual": 0.1308777844417857,
+            "n_switches": 6,
+            "switch_times_days": [
+              122.4017550091883,
+              125.77920354353097,
+              133.53900249631081,
+              137.17725917813195,
+              144.9747287539658,
+              288.3324190510237
+            ],
+            "runtime_s": 19.357635651977034,
+            "nfev": 599,
+            "njev": 457
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.6247212135713,
+            "final_mass_kg": 564.3752787864287,
+            "residual_rms": 0.013924619691834226,
+            "reprop_arrival_residual": 0.13047030836033105,
+            "n_switches": 6,
+            "switch_times_days": [
+              130.24873584957703,
+              130.63611343623458,
+              135.44656613161837,
+              135.73402293867477,
+              141.9854567725669,
+              288.0902249186069
+            ],
+            "runtime_s": 50.819162860978395,
+            "nfev": 1113,
+            "njev": 796,
+            "total_runtime_s": 70.17679851295543
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 430.117106679063,
+            "final_mass_kg": 569.882893320937,
+            "residual_rms": 0.011369838458970449,
+            "reprop_arrival_residual": 0.11039128724267473,
+            "n_switches": 6,
+            "switch_times_days": [
+              122.01095125996873,
+              125.77931779322302,
+              136.13999094989776,
+              137.23777700577043,
+              144.9745558887857,
+              288.3324184482799
+            ],
+            "runtime_s": 23.497610154998256,
+            "nfev": 659,
+            "njev": 484
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.0457555374305,
+            "final_mass_kg": 564.9542444625695,
+            "residual_rms": 0.014021700166748011,
+            "reprop_arrival_residual": 0.13962408107389931,
+            "n_switches": 6,
+            "switch_times_days": [
+              131.46326135475582,
+              131.97360085242514,
+              134.96621698190538,
+              135.23808173626247,
+              141.06981481571555,
+              287.9660999516972
+            ],
+            "runtime_s": 70.18681185998139,
+            "nfev": 1208,
+            "njev": 845,
+            "total_runtime_s": 93.68442201497965
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 899.2806472730308,
+            "final_mass_kg": 100.71935272696919,
+            "residual_rms": 0.025912777858369318,
+            "reprop_arrival_residual": 0.3809675865033052,
+            "n_switches": 2,
+            "switch_times_days": [
+              248.79487129575114,
+              279.1249554074205
+            ],
+            "runtime_s": 17.186218992021168,
+            "nfev": 634,
+            "njev": 362
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 899.2806472730308,
+            "final_mass_kg": 100.71935272696919,
+            "residual_rms": 0.025912777858369318,
+            "reprop_arrival_residual": 0.3809675865033052,
+            "n_switches": 2,
+            "switch_times_days": [
+              248.79487129575114,
+              279.1249554074205
+            ],
+            "runtime_s": 17.186218992021168,
+            "nfev": 634,
+            "njev": 362,
+            "total_runtime_s": 17.186218992021168
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 430.0011251343676,
+            "final_mass_kg": 569.9988748656324,
+            "residual_rms": 0.010973018979378076,
+            "reprop_arrival_residual": 0.10023703745025757,
+            "n_switches": 4,
+            "switch_times_days": [
+              137.23958160912514,
+              141.09909698466626,
+              144.97382612473785,
+              288.3324185296245
+            ],
+            "runtime_s": 22.133925520000048,
+            "nfev": 650,
+            "njev": 486
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.5258103023516,
+            "final_mass_kg": 564.4741896976484,
+            "residual_rms": 0.01382178977508708,
+            "reprop_arrival_residual": 0.1342161061431369,
+            "n_switches": 4,
+            "switch_times_days": [
+              130.69054842632735,
+              131.68928751142684,
+              141.9855419377144,
+              288.09022492264677
+            ],
+            "runtime_s": 55.57570749000297,
+            "nfev": 1195,
+            "njev": 847,
+            "total_runtime_s": 77.70963301000302
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 272.13259818927327,
+            "final_mass_kg": 727.8674018107267,
+            "residual_rms": 0.016217727740385525,
+            "reprop_arrival_residual": 2.3898103330020155,
+            "n_switches": 2,
+            "switch_times_days": [
+              38.57626829806431,
+              272.71660131434095
+            ],
+            "runtime_s": 11.70539783500135,
+            "nfev": 397,
+            "njev": 289
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 272.13259818927327,
+            "final_mass_kg": 727.8674018107267,
+            "residual_rms": 0.016217727740385525,
+            "reprop_arrival_residual": 2.3898103330020155,
+            "n_switches": 2,
+            "switch_times_days": [
+              38.57626829806431,
+              272.71660131434095
+            ],
+            "runtime_s": 11.70539783500135,
+            "nfev": 397,
+            "njev": 289,
+            "total_runtime_s": 11.70539783500135
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 429.9555456591406,
+            "final_mass_kg": 570.0444543408594,
+            "residual_rms": 0.011655007311096073,
+            "reprop_arrival_residual": 0.12499227837282413,
+            "n_switches": 6,
+            "switch_times_days": [
+              122.52561501708495,
+              125.7374657429079,
+              133.4917504142396,
+              137.1992468821872,
+              144.9747437037522,
+              288.3324190521872
+            ],
+            "runtime_s": 20.388575905992184,
+            "nfev": 603,
+            "njev": 452
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.65407667847467,
+            "final_mass_kg": 564.3459233215253,
+            "residual_rms": 0.013848218802431473,
+            "reprop_arrival_residual": 0.1351998509214729,
+            "n_switches": 6,
+            "switch_times_days": [
+              130.6813357596377,
+              131.66602848736014,
+              134.8510488107847,
+              135.07331361949116,
+              141.98535932685613,
+              288.09022490522057
+            ],
+            "runtime_s": 52.24893698000233,
+            "nfev": 1126,
+            "njev": 800,
+            "total_runtime_s": 72.63751288599451
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 430.2326651968542,
+            "final_mass_kg": 569.7673348031458,
+            "residual_rms": 0.011629744273636111,
+            "reprop_arrival_residual": 0.11969754551996872,
+            "n_switches": 6,
+            "switch_times_days": [
+              122.01363966150059,
+              125.77408223773593,
+              134.93206626201427,
+              137.22190799426636,
+              144.9746722125244,
+              288.3324187901719
+            ],
+            "runtime_s": 22.5855291869957,
+            "nfev": 667,
+            "njev": 490
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 435.5521161414799,
+            "final_mass_kg": 564.4478838585201,
+            "residual_rms": 0.013884973991612306,
+            "reprop_arrival_residual": 0.14158855850864363,
+            "n_switches": 6,
+            "switch_times_days": [
+              130.6777457995704,
+              131.33789673166712,
+              134.76852801200215,
+              135.77554236959836,
+              141.9853005913772,
+              288.0902248934305
+            ],
+            "runtime_s": 56.362828167009866,
+            "nfev": 1228,
+            "njev": 856,
+            "total_runtime_s": 78.94835735400557
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 933.2346723749652,
+            "final_mass_kg": 66.76532762503484,
+            "residual_rms": 0.022399038649375064,
+            "reprop_arrival_residual": 0.30470206280930207,
+            "n_switches": 2,
+            "switch_times_days": [
+              279.12756849539545,
+              282.24575237444105
+            ],
+            "runtime_s": 24.58506986699649,
+            "nfev": 503,
+            "njev": 307
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 933.2346723749652,
+            "final_mass_kg": 66.76532762503484,
+            "residual_rms": 0.022399038649375064,
+            "reprop_arrival_residual": 0.30470206280930207,
+            "n_switches": 2,
+            "switch_times_days": [
+              279.12756849539545,
+              282.24575237444105
+            ],
+            "runtime_s": 24.58506986699649,
+            "nfev": 503,
+            "njev": 307,
+            "total_runtime_s": 24.58506986699649
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 429.934213730121,
+            "final_mass_kg": 570.065786269879,
+            "residual_rms": 0.010945290275230071,
+            "reprop_arrival_residual": 0.10017350924472129,
+            "n_switches": 4,
+            "switch_times_days": [
+              137.23975763474633,
+              141.09906810165973,
+              144.97382547757059,
+              288.33241854636316
+            ],
+            "runtime_s": 21.91905316899647,
+            "nfev": 669,
+            "njev": 503
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 434.681679368623,
+            "final_mass_kg": 565.318320631377,
+            "residual_rms": 0.01405609896898657,
+            "reprop_arrival_residual": 0.14544841313863333,
+            "n_switches": 6,
+            "switch_times_days": [
+              131.42925772708873,
+              132.02070874354848,
+              135.47304648464615,
+              135.5140262529774,
+              140.42145268787067,
+              287.9661000081943
+            ],
+            "runtime_s": 67.02591273898724,
+            "nfev": 1219,
+            "njev": 867,
+            "total_runtime_s": 88.94496590798371
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.14060631979127147,
+        "median_rms_all": 0.013973159929291119,
+        "median_total_runtime_s": 73.84203691848961
+      }
+    },
+    "tanh_spanning_w2.0_cgl_u05": {
+      "w": 2.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 929.5003016566694,
+            "final_mass_kg": 70.49969834333058,
+            "residual_rms": 0.08782033057092706,
+            "reprop_arrival_residual": 2.799186158591315,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 11.518192180985352,
+            "nfev": 473,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 929.5003016566694,
+            "final_mass_kg": 70.49969834333058,
+            "residual_rms": 0.08782033057092706,
+            "reprop_arrival_residual": 2.799186158591315,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 11.518192180985352,
+            "nfev": 473,
+            "njev": 215,
+            "total_runtime_s": 11.518192180985352
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.95725665175087,
+            "final_mass_kg": 590.0427433482491,
+            "residual_rms": 0.006402486885609695,
+            "reprop_arrival_residual": 0.10474724881292947,
+            "n_switches": 6,
+            "switch_times_days": [
+              100.74582925924894,
+              101.21169644504079,
+              129.57748487903012,
+              133.39774856763592,
+              137.23836479135298,
+              291.2872706288113
+            ],
+            "runtime_s": 28.067126082023606,
+            "nfev": 478,
+            "njev": 388
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.7133383689834,
+            "final_mass_kg": 585.2866616310166,
+            "residual_rms": 0.008918169135137384,
+            "reprop_arrival_residual": 0.1140946267795707,
+            "n_switches": 4,
+            "switch_times_days": [
+              133.75708859198227,
+              135.81659738552702,
+              136.83359892525218,
+              290.1479577369499
+            ],
+            "runtime_s": 56.187631255044835,
+            "nfev": 934,
+            "njev": 690,
+            "total_runtime_s": 84.25475733706844
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 9.130496658971461,
+            "reprop_arrival_residual": 2.418948854698165,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 14.667119638004806,
+            "nfev": 541,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 9.130496658971461,
+            "reprop_arrival_residual": 2.418948854698165,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 14.667119638004806,
+            "nfev": 541,
+            "njev": 215,
+            "total_runtime_s": 14.667119638004806
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 410.01944100196397,
+            "final_mass_kg": 589.980558998036,
+            "residual_rms": 0.006388990149621402,
+            "reprop_arrival_residual": 0.10289505288920513,
+            "n_switches": 6,
+            "switch_times_days": [
+              100.59123320747825,
+              101.5876535288637,
+              129.57748234829594,
+              133.39778928897036,
+              137.23834518175204,
+              291.28727046759997
+            ],
+            "runtime_s": 28.893868390994612,
+            "nfev": 491,
+            "njev": 393
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.70685106833116,
+            "final_mass_kg": 585.2931489316688,
+            "residual_rms": 0.009100325746592313,
+            "reprop_arrival_residual": 0.11904976411607779,
+            "n_switches": 6,
+            "switch_times_days": [
+              133.7570155821453,
+              135.81688836898695,
+              136.8053401248796,
+              161.60353006755975,
+              162.55759949698245,
+              290.147957715343
+            ],
+            "runtime_s": 56.09486480397754,
+            "nfev": 922,
+            "njev": 673,
+            "total_runtime_s": 84.98873319497216
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.87076331731487,
+            "final_mass_kg": 590.1292366826851,
+            "residual_rms": 0.006417582272124811,
+            "reprop_arrival_residual": 0.10510277248950184,
+            "n_switches": 6,
+            "switch_times_days": [
+              100.52480775098988,
+              102.45527921392389,
+              129.5774833532523,
+              133.39774430278356,
+              137.23834863345346,
+              291.2872704765239
+            ],
+            "runtime_s": 28.215425616013817,
+            "nfev": 485,
+            "njev": 395
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.74922687689286,
+            "final_mass_kg": 585.2507731231071,
+            "residual_rms": 0.009383189008284418,
+            "reprop_arrival_residual": 0.11745635021530389,
+            "n_switches": 4,
+            "switch_times_days": [
+              133.75713025656088,
+              135.45274100545305,
+              136.8167114284013,
+              290.14795761298274
+            ],
+            "runtime_s": 54.213787706015864,
+            "nfev": 907,
+            "njev": 674,
+            "total_runtime_s": 82.42921332202968
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 313.65040032616776,
+            "final_mass_kg": 686.3495996738322,
+            "residual_rms": 0.01992799233563461,
+            "reprop_arrival_residual": 0.8267348738141818,
+            "n_switches": 5,
+            "switch_times_days": [
+              148.87156375206587,
+              152.7743458718403,
+              156.6877833841899,
+              217.73498087312598,
+              219.2173976413243
+            ],
+            "runtime_s": 30.522005891019944,
+            "nfev": 1130,
+            "njev": 578
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 313.65040032616776,
+            "final_mass_kg": 686.3495996738322,
+            "residual_rms": 0.01992799233563461,
+            "reprop_arrival_residual": 0.8267348738141818,
+            "n_switches": 5,
+            "switch_times_days": [
+              148.87156375206587,
+              152.7743458718403,
+              156.6877833841899,
+              217.73498087312598,
+              219.2173976413243
+            ],
+            "runtime_s": 30.522005891019944,
+            "nfev": 1130,
+            "njev": 578,
+            "total_runtime_s": 30.522005891019944
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.6594895815997,
+            "final_mass_kg": 590.3405104184003,
+            "residual_rms": 0.0064031588944976,
+            "reprop_arrival_residual": 0.11150491516950259,
+            "n_switches": 4,
+            "switch_times_days": [
+              129.5774800595493,
+              133.3977541499152,
+              137.238348636778,
+              291.287269556019
+            ],
+            "runtime_s": 28.2536161649914,
+            "nfev": 527,
+            "njev": 412
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.74086615994565,
+            "final_mass_kg": 585.2591338400543,
+            "residual_rms": 0.009100681918859417,
+            "reprop_arrival_residual": 0.11559895584584301,
+            "n_switches": 6,
+            "switch_times_days": [
+              133.7570303441021,
+              135.81718854395015,
+              136.70885834728278,
+              161.7753738491421,
+              162.55194871891433,
+              290.1479576149222
+            ],
+            "runtime_s": 55.85126724798465,
+            "nfev": 987,
+            "njev": 707,
+            "total_runtime_s": 84.10488341297605
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 429.8822072466919,
+            "final_mass_kg": 570.1177927533081,
+            "residual_rms": 0.009409935553791429,
+            "reprop_arrival_residual": 0.4238648185106402,
+            "n_switches": 8,
+            "switch_times_days": [
+              76.52277036117849,
+              79.35843121780592,
+              89.11350877924487,
+              89.33767571331619,
+              137.54469766823038,
+              141.0993422178005,
+              144.6937055665667,
+              291.2872691485185
+            ],
+            "runtime_s": 17.13214844299364,
+            "nfev": 587,
+            "njev": 393
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 424.94121909567184,
+            "final_mass_kg": 575.0587809043282,
+            "residual_rms": 0.011185858756515876,
+            "reprop_arrival_residual": 0.6296224455663614,
+            "n_switches": 2,
+            "switch_times_days": [
+              140.95849971463693,
+              291.1768327072971
+            ],
+            "runtime_s": 44.88411469699349,
+            "nfev": 991,
+            "njev": 718,
+            "total_runtime_s": 62.01626313998713
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.54893512071067,
+            "final_mass_kg": 590.4510648792893,
+            "residual_rms": 0.0065102783513055285,
+            "reprop_arrival_residual": 0.11118507981485679,
+            "n_switches": 4,
+            "switch_times_days": [
+              129.57747433831793,
+              133.39779265296266,
+              137.23839954083124,
+              291.2872696149116
+            ],
+            "runtime_s": 28.733787369012134,
+            "nfev": 504,
+            "njev": 409
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.7731572338671,
+            "final_mass_kg": 585.2268427661329,
+            "residual_rms": 0.009100129841577721,
+            "reprop_arrival_residual": 0.11743112183741382,
+            "n_switches": 6,
+            "switch_times_days": [
+              133.75699792321845,
+              135.81683095034248,
+              136.7491937740921,
+              161.65571389546326,
+              162.54837836794488,
+              290.1479576726983
+            ],
+            "runtime_s": 51.129823840019526,
+            "nfev": 868,
+            "njev": 656,
+            "total_runtime_s": 79.86361120903166
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.92784614422817,
+            "final_mass_kg": 590.0721538557718,
+            "residual_rms": 0.00637715351501934,
+            "reprop_arrival_residual": 0.10984349503683673,
+            "n_switches": 4,
+            "switch_times_days": [
+              129.57747781423586,
+              133.39777616325333,
+              137.23834035422533,
+              291.2872702798804
+            ],
+            "runtime_s": 27.510022153001046,
+            "nfev": 449,
+            "njev": 377
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.7405748108213,
+            "final_mass_kg": 585.2594251891787,
+            "residual_rms": 0.00893115278819205,
+            "reprop_arrival_residual": 0.11366945074967985,
+            "n_switches": 4,
+            "switch_times_days": [
+              133.7569926930121,
+              135.8167118701152,
+              136.8334380532415,
+              290.14795773485275
+            ],
+            "runtime_s": 54.04802135701175,
+            "nfev": 893,
+            "njev": 665,
+            "total_runtime_s": 81.5580435100128
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.11825305716569084,
+        "median_rms_all": 0.009241935463571917,
+        "median_total_runtime_s": 80.71082735952223
+      }
+    },
+    "tanh_spanning_w3.0_cgl_u05": {
+      "w": 3.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 955.7938517892829,
+            "final_mass_kg": 44.20614821071711,
+            "residual_rms": 0.07346716919838557,
+            "reprop_arrival_residual": 3.3545183391700912,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 11.316755046020262,
+            "nfev": 456,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 955.7938517892829,
+            "final_mass_kg": 44.20614821071711,
+            "residual_rms": 0.07346716919838557,
+            "reprop_arrival_residual": 3.3545183391700912,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 11.316755046020262,
+            "nfev": 456,
+            "njev": 215,
+            "total_runtime_s": 11.316755046020262
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 958.9873657366333,
+            "final_mass_kg": 41.01263426336676,
+            "residual_rms": 0.05714071293626719,
+            "reprop_arrival_residual": 0.8342038213758717,
+            "n_switches": 2,
+            "switch_times_days": [
+              298.90835574050556,
+              299.78729276890544
+            ],
+            "runtime_s": 11.684527211007662,
+            "nfev": 481,
+            "njev": 212
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 958.9873657366333,
+            "final_mass_kg": 41.01263426336676,
+            "residual_rms": 0.05714071293626719,
+            "reprop_arrival_residual": 0.8342038213758717,
+            "n_switches": 2,
+            "switch_times_days": [
+              298.90835574050556,
+              299.78729276890544
+            ],
+            "runtime_s": 11.684527211007662,
+            "nfev": 481,
+            "njev": 212,
+            "total_runtime_s": 11.684527211007662
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 399.3383505876409,
+            "final_mass_kg": 600.6616494123591,
+            "residual_rms": 0.00645841792054064,
+            "reprop_arrival_residual": 0.04669584028071491,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.612846631561794,
+              69.6695978484852,
+              141.09937532784014,
+              291.2873132757469
+            ],
+            "runtime_s": 19.97710920800455,
+            "nfev": 313,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 423.35311496299255,
+            "final_mass_kg": 576.6468850370075,
+            "residual_rms": 0.010064443574303835,
+            "reprop_arrival_residual": 0.5745850496287904,
+            "n_switches": 2,
+            "switch_times_days": [
+              139.12984827544477,
+              289.2603118018332
+            ],
+            "runtime_s": 52.39385629000026,
+            "nfev": 637,
+            "njev": 558,
+            "total_runtime_s": 72.37096549800481
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 416.86619884603715,
+            "final_mass_kg": 583.1338011539628,
+            "residual_rms": 0.005397932459753545,
+            "reprop_arrival_residual": 0.1907720403174466,
+            "n_switches": 4,
+            "switch_times_days": [
+              60.46469599994603,
+              63.41123944919664,
+              141.09937472752264,
+              291.2873147250521
+            ],
+            "runtime_s": 23.37837564002257,
+            "nfev": 459,
+            "njev": 345
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.11925589603925,
+            "final_mass_kg": 600.8807441039608,
+            "residual_rms": 0.009709024966285468,
+            "reprop_arrival_residual": 0.14009515049582427,
+            "n_switches": 8,
+            "switch_times_days": [
+              58.64772287685967,
+              81.28448363828855,
+              83.34172025972059,
+              84.36161828928716,
+              141.99332618397293,
+              143.01557374848636,
+              145.0707776419268,
+              289.1190906297392
+            ],
+            "runtime_s": 57.877514153020456,
+            "nfev": 982,
+            "njev": 725,
+            "total_runtime_s": 81.25588979304302
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 391.8034610691734,
+            "final_mass_kg": 608.1965389308266,
+            "residual_rms": 0.0058393745843787525,
+            "reprop_arrival_residual": 0.16466431380522464,
+            "n_switches": 4,
+            "switch_times_days": [
+              51.77875927722198,
+              72.84804837950296,
+              141.09937346878607,
+              291.2873139352608
+            ],
+            "runtime_s": 21.79679436198785,
+            "nfev": 295,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 422.9828458646807,
+            "final_mass_kg": 577.0171541353193,
+            "residual_rms": 0.010196454942035945,
+            "reprop_arrival_residual": 0.6259958092475962,
+            "n_switches": 4,
+            "switch_times_days": [
+              140.32116711693476,
+              140.40926074280992,
+              141.70713652795595,
+              289.2603114967725
+            ],
+            "runtime_s": 57.24093159296899,
+            "nfev": 661,
+            "njev": 582,
+            "total_runtime_s": 79.03772595495684
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 391.8482937808676,
+            "final_mass_kg": 608.1517062191324,
+            "residual_rms": 0.005707965327775143,
+            "reprop_arrival_residual": 0.16393786183812512,
+            "n_switches": 4,
+            "switch_times_days": [
+              51.77875907066784,
+              72.84804907881991,
+              141.09937352787003,
+              291.2873138352592
+            ],
+            "runtime_s": 19.46172702498734,
+            "nfev": 312,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 423.24587439361494,
+            "final_mass_kg": 576.7541256063851,
+            "residual_rms": 0.010084782001186454,
+            "reprop_arrival_residual": 0.5778210328096103,
+            "n_switches": 2,
+            "switch_times_days": [
+              139.1298452987076,
+              289.2603116784262
+            ],
+            "runtime_s": 51.5005771839933,
+            "nfev": 643,
+            "njev": 558,
+            "total_runtime_s": 70.96230420898064
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 399.3768948412253,
+            "final_mass_kg": 600.6231051587747,
+            "residual_rms": 0.006253070805066857,
+            "reprop_arrival_residual": 0.04560489132159087,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.61284672088921,
+              69.66959726890406,
+              141.09937542382843,
+              291.2873131641492
+            ],
+            "runtime_s": 18.822862394998083,
+            "nfev": 319,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 421.9333410046602,
+            "final_mass_kg": 578.0666589953398,
+            "residual_rms": 0.010230876589288278,
+            "reprop_arrival_residual": 0.5958188456761992,
+            "n_switches": 2,
+            "switch_times_days": [
+              139.1298328129326,
+              289.26031075817514
+            ],
+            "runtime_s": 51.53843739099102,
+            "nfev": 666,
+            "njev": 560,
+            "total_runtime_s": 70.3612997859891
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 416.0626803620744,
+            "final_mass_kg": 583.9373196379256,
+            "residual_rms": 0.005423045754932229,
+            "reprop_arrival_residual": 0.2777839348388112,
+            "n_switches": 4,
+            "switch_times_days": [
+              60.4933284930188,
+              60.61059113074316,
+              141.0993750286271,
+              291.28731591653167
+            ],
+            "runtime_s": 21.710532238997985,
+            "nfev": 440,
+            "njev": 323
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 422.91410930556594,
+            "final_mass_kg": 577.085890694434,
+            "residual_rms": 0.010066075123017906,
+            "reprop_arrival_residual": 0.5871178298925118,
+            "n_switches": 2,
+            "switch_times_days": [
+              138.90146070397225,
+              289.11909134257024
+            ],
+            "runtime_s": 44.737188704981236,
+            "nfev": 779,
+            "njev": 598,
+            "total_runtime_s": 66.44772094397922
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 393.9721149779416,
+            "final_mass_kg": 606.0278850220584,
+            "residual_rms": 0.005845746124022606,
+            "reprop_arrival_residual": 0.1789799204509704,
+            "n_switches": 4,
+            "switch_times_days": [
+              51.77875882379944,
+              72.84805030885296,
+              141.09937298187347,
+              288.3324822839831
+            ],
+            "runtime_s": 23.00590072502382,
+            "nfev": 294,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 423.36666508253984,
+            "final_mass_kg": 576.6333349174602,
+            "residual_rms": 0.010006163161461445,
+            "reprop_arrival_residual": 0.5630471394682711,
+            "n_switches": 4,
+            "switch_times_days": [
+              70.57325883424669,
+              71.1514154874131,
+              139.1296582518674,
+              289.2603132012344
+            ],
+            "runtime_s": 54.22193541302113,
+            "nfev": 625,
+            "njev": 546,
+            "total_runtime_s": 77.22783613804495
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 395.46806505677523,
+            "final_mass_kg": 604.5319349432248,
+            "residual_rms": 0.005987693697055741,
+            "reprop_arrival_residual": 0.14164148546531466,
+            "n_switches": 4,
+            "switch_times_days": [
+              54.612796217376584,
+              72.84800203890701,
+              141.09937402156666,
+              291.2873118326175
+            ],
+            "runtime_s": 21.312126767006703,
+            "nfev": 298,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 422.6257961809097,
+            "final_mass_kg": 577.3742038190903,
+            "residual_rms": 0.01021590079696506,
+            "reprop_arrival_residual": 0.6000169510107428,
+            "n_switches": 2,
+            "switch_times_days": [
+              139.77696222155322,
+              289.2603118206535
+            ],
+            "runtime_s": 53.98077386699151,
+            "nfev": 643,
+            "njev": 558,
+            "total_runtime_s": 75.29290063399822
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.5914683377843555,
+        "median_rms_all": 0.010140618471611199,
+        "median_total_runtime_s": 71.66663485349272
+      }
+    },
+    "tanh_spanning_w4.0_cgl_u05": {
+      "w": 4.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.162943953982,
+            "final_mass_kg": 603.837056046018,
+            "residual_rms": 0.004623198121469979,
+            "reprop_arrival_residual": 0.022717299846001144,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007318475303805,
+              66.544886179694,
+              141.09937462325004,
+              291.2873180411148
+            ],
+            "runtime_s": 20.243022073991597,
+            "nfev": 318,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.59500666059466,
+            "final_mass_kg": 602.4049933394053,
+            "residual_rms": 0.007218709761661963,
+            "reprop_arrival_residual": 0.1365091653403928,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529830738496,
+              71.8296363334452,
+              140.42390555234246,
+              289.90748273532034
+            ],
+            "runtime_s": 36.99243008499616,
+            "nfev": 472,
+            "njev": 437,
+            "total_runtime_s": 57.235452158987755
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 3.748105102399842,
+            "reprop_arrival_residual": 2.6924503740718935,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 8.660874533990864,
+            "nfev": 396,
+            "njev": 129
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 3.748105102399842,
+            "reprop_arrival_residual": 2.6924503740718935,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 8.660874533990864,
+            "nfev": 396,
+            "njev": 129,
+            "total_runtime_s": 8.660874533990864
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 867.41887010212,
+            "final_mass_kg": 132.58112989788006,
+            "residual_rms": 0.026133032310458854,
+            "reprop_arrival_residual": 2.5580339422595078,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71180419948985,
+              312.6562006909657
+            ],
+            "runtime_s": 13.39086468401365,
+            "nfev": 483,
+            "njev": 291
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 867.41887010212,
+            "final_mass_kg": 132.58112989788006,
+            "residual_rms": 0.026133032310458854,
+            "reprop_arrival_residual": 2.5580339422595078,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71180419948985,
+              312.6562006909657
+            ],
+            "runtime_s": 13.39086468401365,
+            "nfev": 483,
+            "njev": 291,
+            "total_runtime_s": 13.39086468401365
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.1377451740873,
+            "final_mass_kg": 603.8622548259127,
+            "residual_rms": 0.004489318388989407,
+            "reprop_arrival_residual": 0.022466876535413377,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731847109557,
+              66.54488621621041,
+              141.09937462100197,
+              291.2873180762674
+            ],
+            "runtime_s": 22.590660421992652,
+            "nfev": 311,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.5963336924906,
+            "final_mass_kg": 602.4036663075094,
+            "residual_rms": 0.0072138987764607245,
+            "reprop_arrival_residual": 0.1364967306930521,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529830009948,
+              71.82963631450671,
+              140.4239055595434,
+              289.9074827366767
+            ],
+            "runtime_s": 39.96202063999954,
+            "nfev": 465,
+            "njev": 437,
+            "total_runtime_s": 62.55268106199219
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.0513767165139,
+            "final_mass_kg": 603.9486232834861,
+            "residual_rms": 0.0044659745551777486,
+            "reprop_arrival_residual": 0.021631653144574263,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007318467828306,
+              66.54488647435008,
+              141.0993746025424,
+              291.2873181865742
+            ],
+            "runtime_s": 24.268381053989287,
+            "nfev": 283,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.6066804120819,
+            "final_mass_kg": 602.3933195879181,
+            "residual_rms": 0.007204031048912109,
+            "reprop_arrival_residual": 0.13629698311679697,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529823594261,
+              71.82963632522966,
+              140.4239055876532,
+              289.90748272541003
+            ],
+            "runtime_s": 40.732199473975925,
+            "nfev": 437,
+            "njev": 437,
+            "total_runtime_s": 65.00058052796521
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.16308453730653,
+            "final_mass_kg": 603.8369154626935,
+            "residual_rms": 0.004503463291755641,
+            "reprop_arrival_residual": 0.022715644700586766,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731847496996,
+              66.54488614928485,
+              141.09937463032063,
+              291.28731804185117
+            ],
+            "runtime_s": 20.115556528995512,
+            "nfev": 317,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.5949545124422,
+            "final_mass_kg": 602.4050454875578,
+            "residual_rms": 0.007217959477199717,
+            "reprop_arrival_residual": 0.13651595573694061,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005298324043615,
+              71.82963632293469,
+              140.42390555887482,
+              289.9074827353938
+            ],
+            "runtime_s": 36.76262415299425,
+            "nfev": 475,
+            "njev": 437,
+            "total_runtime_s": 56.87818068198976
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.13404088163406,
+            "final_mass_kg": 603.8659591183659,
+            "residual_rms": 0.004551609162781623,
+            "reprop_arrival_residual": 0.02242908615649729,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731848652765,
+              66.54488624530563,
+              141.09937462443372,
+              291.28731807970115
+            ],
+            "runtime_s": 21.138219101005234,
+            "nfev": 311,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.5967227925139,
+            "final_mass_kg": 602.4032772074861,
+            "residual_rms": 0.007212624049523424,
+            "reprop_arrival_residual": 0.13648905463806352,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529829182539,
+              71.82963632836858,
+              140.4239055642158,
+              289.90748273372833
+            ],
+            "runtime_s": 37.794646146008745,
+            "nfev": 465,
+            "njev": 437,
+            "total_runtime_s": 58.93286524701398
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.1814342872003,
+            "final_mass_kg": 603.8185657127997,
+            "residual_rms": 0.004508650809859745,
+            "reprop_arrival_residual": 0.02289799333324581,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731846796632,
+              66.54488613597658,
+              141.09937463007972,
+              291.28731801553016
+            ],
+            "runtime_s": 19.353421982988948,
+            "nfev": 317,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.5944941839771,
+            "final_mass_kg": 602.4055058160229,
+            "residual_rms": 0.007225494395063852,
+            "reprop_arrival_residual": 0.13650781452543276,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529833833374,
+              71.82963632196814,
+              140.42390555570788,
+              289.9074827331441
+            ],
+            "runtime_s": 35.950115511979675,
+            "nfev": 471,
+            "njev": 437,
+            "total_runtime_s": 55.30353749496862
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.18142995527705,
+            "final_mass_kg": 603.818570044723,
+            "residual_rms": 0.004614599647718568,
+            "reprop_arrival_residual": 0.022900136734550693,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731848713812,
+              66.54488614032529,
+              141.09937462955327,
+              291.28731801442365
+            ],
+            "runtime_s": 19.762897792999865,
+            "nfev": 317,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.59421857661437,
+            "final_mass_kg": 602.4057814233856,
+            "residual_rms": 0.007219904386869956,
+            "reprop_arrival_residual": 0.13651006359846365,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005298340133955,
+              71.82963632248759,
+              140.42390555553035,
+              289.90748273095227
+            ],
+            "runtime_s": 36.75819897299516,
+            "nfev": 471,
+            "njev": 437,
+            "total_runtime_s": 56.521096765995026
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.1336774269739,
+            "final_mass_kg": 603.8663225730261,
+            "residual_rms": 0.004544407086377145,
+            "reprop_arrival_residual": 0.022424927246702194,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007318472669965,
+              66.54488625282526,
+              141.09937462567714,
+              291.2873180782987
+            ],
+            "runtime_s": 21.587787094991654,
+            "nfev": 306,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 397.59705789583677,
+            "final_mass_kg": 602.4029421041632,
+            "residual_rms": 0.007215561958393193,
+            "reprop_arrival_residual": 0.13648434689774697,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00529828421155,
+              71.82963634613395,
+              140.42390556736822,
+              289.90748273695283
+            ],
+            "runtime_s": 39.174762740993174,
+            "nfev": 460,
+            "njev": 437,
+            "total_runtime_s": 60.76254983598483
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.13650848993291279,
+        "median_rms_all": 0.00721833461943084,
+        "median_total_runtime_s": 57.05681642048876
+      }
+    },
+    "tanh_spanning_w5.0_cgl_u05": {
+      "w": 5.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 970.8825878090688,
+            "final_mass_kg": 29.117412190931226,
+            "residual_rms": 0.0617996778673981,
+            "reprop_arrival_residual": 3.3952674826968154,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 12.356662116973894,
+            "nfev": 448,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 970.8825878090688,
+            "final_mass_kg": 29.117412190931226,
+            "residual_rms": 0.0617996778673981,
+            "reprop_arrival_residual": 3.3952674826968154,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 12.356662116973894,
+            "nfev": 448,
+            "njev": 215,
+            "total_runtime_s": 12.356662116973894
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.31734276017505,
+            "final_mass_kg": 602.682657239825,
+            "residual_rms": 0.004691854790437197,
+            "reprop_arrival_residual": 0.013503115005516682,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.007317993779274,
+              66.54488814067439,
+              141.09937370703454,
+              291.28731935473155
+            ],
+            "runtime_s": 20.531548770988593,
+            "nfev": 328,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.2294244098957,
+            "final_mass_kg": 600.7705755901043,
+            "residual_rms": 0.0066462762068047266,
+            "reprop_arrival_residual": 0.07905866483793117,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00538309334912,
+              69.24126183203028,
+              139.77675454128138,
+              290.55463787164325
+            ],
+            "runtime_s": 38.434301982983015,
+            "nfev": 486,
+            "njev": 437,
+            "total_runtime_s": 58.96585075397161
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 934.7929133269434,
+            "final_mass_kg": 65.20708667305652,
+            "residual_rms": 0.04290325554684923,
+            "reprop_arrival_residual": 1.6627253684787522,
+            "n_switches": 2,
+            "switch_times_days": [
+              309.7095955190595,
+              312.65457166066074
+            ],
+            "runtime_s": 11.800825925020035,
+            "nfev": 465,
+            "njev": 206
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 934.7929133269434,
+            "final_mass_kg": 65.20708667305652,
+            "residual_rms": 0.04290325554684923,
+            "reprop_arrival_residual": 1.6627253684787522,
+            "n_switches": 2,
+            "switch_times_days": [
+              309.7095955190595,
+              312.65457166066074
+            ],
+            "runtime_s": 11.800825925020035,
+            "nfev": 465,
+            "njev": 206,
+            "total_runtime_s": 11.800825925020035
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.4442476161357,
+            "final_mass_kg": 602.5557523838643,
+            "residual_rms": 0.0047624184444798575,
+            "reprop_arrival_residual": 0.014248306107907933,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731802533647,
+              66.5448880410464,
+              141.09937374724075,
+              291.2873191671735
+            ],
+            "runtime_s": 18.678148125007283,
+            "nfev": 332,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.27159158469294,
+            "final_mass_kg": 600.7284084153071,
+            "residual_rms": 0.006661340602182018,
+            "reprop_arrival_residual": 0.07789281999712928,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.0053831555742,
+              69.24126177027799,
+              139.77675461973755,
+              290.554637848254
+            ],
+            "runtime_s": 35.89004597600433,
+            "nfev": 486,
+            "njev": 437,
+            "total_runtime_s": 54.56819410101161
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.13018358230556,
+            "final_mass_kg": 602.8698164176944,
+            "residual_rms": 0.004724681250661603,
+            "reprop_arrival_residual": 0.012860872160190006,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731814057556,
+              66.54488543075149,
+              141.09937361071985,
+              291.2873195579007
+            ],
+            "runtime_s": 23.034603277017595,
+            "nfev": 261,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.1327202602406,
+            "final_mass_kg": 600.8672797397594,
+            "residual_rms": 0.006646542055606921,
+            "reprop_arrival_residual": 0.08190462664757935,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005383170586285,
+              69.24126195366472,
+              139.77675412872128,
+              290.55463792021976
+            ],
+            "runtime_s": 40.218930617003934,
+            "nfev": 419,
+            "njev": 413,
+            "total_runtime_s": 63.25353389402153
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.64219185121874,
+            "final_mass_kg": 602.3578081487813,
+            "residual_rms": 0.004701879459871139,
+            "reprop_arrival_residual": 0.015514776600481171,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731800669631,
+              66.54488806255773,
+              141.09937381336147,
+              291.2873189183404
+            ],
+            "runtime_s": 15.995161964994622,
+            "nfev": 341,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.52667598229164,
+            "final_mass_kg": 599.4733240177084,
+            "residual_rms": 0.006694794177794233,
+            "reprop_arrival_residual": 0.06687335176601583,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00538133225472,
+              69.24126164195334,
+              140.4239048094039,
+              290.5546377921164
+            ],
+            "runtime_s": 33.26981646899367,
+            "nfev": 504,
+            "njev": 437,
+            "total_runtime_s": 49.26497843398829
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.2659350400818,
+            "final_mass_kg": 602.7340649599182,
+            "residual_rms": 0.004989317585440487,
+            "reprop_arrival_residual": 0.013257980236098987,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731798631461,
+              66.54488821446738,
+              141.0993736995724,
+              291.28731941446176
+            ],
+            "runtime_s": 21.894705701008206,
+            "nfev": 320,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 400.08905864033295,
+            "final_mass_kg": 599.910941359667,
+            "residual_rms": 0.006652680514003797,
+            "reprop_arrival_residual": 0.058798256526577934,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.005411763046475,
+              68.59383901679749,
+              139.7767549741832,
+              290.55463796396856
+            ],
+            "runtime_s": 39.77714736000053,
+            "nfev": 478,
+            "njev": 437,
+            "total_runtime_s": 61.67185306100873
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 923.1861477841079,
+            "final_mass_kg": 76.8138522158921,
+            "residual_rms": 0.039210608376325264,
+            "reprop_arrival_residual": 1.2677572816081475,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.76073998235313,
+              307.8506088085998
+            ],
+            "runtime_s": 11.349330051016295,
+            "nfev": 446,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 923.1861477841079,
+            "final_mass_kg": 76.8138522158921,
+            "residual_rms": 0.039210608376325264,
+            "reprop_arrival_residual": 1.2677572816081475,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.76073998235313,
+              307.8506088085998
+            ],
+            "runtime_s": 11.349330051016295,
+            "nfev": 446,
+            "njev": 215,
+            "total_runtime_s": 11.349330051016295
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 397.1906288413152,
+            "final_mass_kg": 602.8093711586848,
+            "residual_rms": 0.004502150587663752,
+            "reprop_arrival_residual": 0.012966635910612749,
+            "n_switches": 4,
+            "switch_times_days": [
+              49.00731817932575,
+              66.5448854224177,
+              141.09937363679694,
+              291.28731951110154
+            ],
+            "runtime_s": 23.84250520201749,
+            "nfev": 261,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 399.14698555730865,
+            "final_mass_kg": 600.8530144426913,
+            "residual_rms": 0.006645460511220046,
+            "reprop_arrival_residual": 0.081645264079933,
+            "n_switches": 4,
+            "switch_times_days": [
+              55.00538359469855,
+              69.24126189765754,
+              139.7767540916946,
+              290.5546379174447
+            ],
+            "runtime_s": 40.83476865600096,
+            "nfev": 419,
+            "njev": 413,
+            "total_runtime_s": 64.67727385801845
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 974.6044825378766,
+            "final_mass_kg": 25.39551746212343,
+            "residual_rms": 0.015596402933957523,
+            "reprop_arrival_residual": 0.4348854347300194,
+            "n_switches": 2,
+            "switch_times_days": [
+              305.1388735675052,
+              307.7091329711519
+            ],
+            "runtime_s": 19.853543684992474,
+            "nfev": 705,
+            "njev": 408
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 974.6044825378766,
+            "final_mass_kg": 25.39551746212343,
+            "residual_rms": 0.015596402933957523,
+            "reprop_arrival_residual": 0.4348854347300194,
+            "n_switches": 2,
+            "switch_times_days": [
+              305.1388735675052,
+              307.7091329711519
+            ],
+            "runtime_s": 19.853543684992474,
+            "nfev": 705,
+            "njev": 408,
+            "total_runtime_s": 19.853543684992474
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 0.08177494536375618,
+        "median_rms_all": 0.006678067389988125,
+        "median_total_runtime_s": 51.91658626749995
+      }
+    },
+    "tanh_spanning_w6.0_cgl_u05": {
+      "w": 6.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 949.4503493069174,
+            "final_mass_kg": 50.54965069308259,
+            "residual_rms": 0.03239936332608368,
+            "reprop_arrival_residual": 2.7111374442056686,
+            "n_switches": 2,
+            "switch_times_days": [
+              294.1824408671569,
+              299.78769683734987
+            ],
+            "runtime_s": 10.106628269975772,
+            "nfev": 362,
+            "njev": 235
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 949.4503493069174,
+            "final_mass_kg": 50.54965069308259,
+            "residual_rms": 0.03239936332608368,
+            "reprop_arrival_residual": 2.7111374442056686,
+            "n_switches": 2,
+            "switch_times_days": [
+              294.1824408671569,
+              299.78769683734987
+            ],
+            "runtime_s": 10.106628269975772,
+            "nfev": 362,
+            "njev": 235,
+            "total_runtime_s": 10.106628269975772
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 954.1819473498571,
+            "final_mass_kg": 45.81805265014294,
+            "residual_rms": 0.03726282348992023,
+            "reprop_arrival_residual": 2.628370840266752,
+            "n_switches": 2,
+            "switch_times_days": [
+              302.4965240285014,
+              305.69725105784016
+            ],
+            "runtime_s": 10.773923306987854,
+            "nfev": 422,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 954.1819473498571,
+            "final_mass_kg": 45.81805265014294,
+            "residual_rms": 0.03726282348992023,
+            "reprop_arrival_residual": 2.628370840266752,
+            "n_switches": 2,
+            "switch_times_days": [
+              302.4965240285014,
+              305.69725105784016
+            ],
+            "runtime_s": 10.773923306987854,
+            "nfev": 422,
+            "njev": 215,
+            "total_runtime_s": 10.773923306987854
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 945.3256404631028,
+            "final_mass_kg": 54.674359536897256,
+            "residual_rms": 0.03993661389329748,
+            "reprop_arrival_residual": 2.3690992378137588,
+            "n_switches": 2,
+            "switch_times_days": [
+              299.78771970696005,
+              304.74163007411113
+            ],
+            "runtime_s": 7.48273294599494,
+            "nfev": 326,
+            "njev": 127
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 945.3256404631028,
+            "final_mass_kg": 54.674359536897256,
+            "residual_rms": 0.03993661389329748,
+            "reprop_arrival_residual": 2.3690992378137588,
+            "n_switches": 2,
+            "switch_times_days": [
+              299.78771970696005,
+              304.74163007411113
+            ],
+            "runtime_s": 7.48273294599494,
+            "nfev": 326,
+            "njev": 127,
+            "total_runtime_s": 7.48273294599494
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 259.84742454042475,
+            "final_mass_kg": 740.1525754595752,
+            "residual_rms": 0.01587725468546163,
+            "reprop_arrival_residual": 2.4040827501478397,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13870747838384,
+              282.24980088805296
+            ],
+            "runtime_s": 11.470690329006175,
+            "nfev": 388,
+            "njev": 267
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 259.84742454042475,
+            "final_mass_kg": 740.1525754595752,
+            "residual_rms": 0.01587725468546163,
+            "reprop_arrival_residual": 2.4040827501478397,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13870747838384,
+              282.24980088805296
+            ],
+            "runtime_s": 11.470690329006175,
+            "nfev": 388,
+            "njev": 267,
+            "total_runtime_s": 11.470690329006175
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 413.7197685875833,
+            "final_mass_kg": 586.2802314124167,
+            "residual_rms": 0.007965841543683091,
+            "reprop_arrival_residual": 0.20180923228135958,
+            "n_switches": 4,
+            "switch_times_days": [
+              41.08354259429856,
+              66.54502863134864,
+              152.77434825781486,
+              291.2873138973635
+            ],
+            "runtime_s": 14.073839185992256,
+            "nfev": 264,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 393.69165361949854,
+            "final_mass_kg": 606.3083463805015,
+            "residual_rms": 0.007558527050801313,
+            "reprop_arrival_residual": 0.060864515021826784,
+            "n_switches": 4,
+            "switch_times_days": [
+              46.59250377458678,
+              70.53538651458496,
+              143.65947822459893,
+              290.5546376612251
+            ],
+            "runtime_s": 28.03834705799818,
+            "nfev": 394,
+            "njev": 389,
+            "total_runtime_s": 42.112186243990436
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 414.4014279839894,
+            "final_mass_kg": 585.5985720160106,
+            "residual_rms": 0.007919688421624825,
+            "reprop_arrival_residual": 0.20651563397909264,
+            "n_switches": 4,
+            "switch_times_days": [
+              41.08354474915091,
+              66.5450299715663,
+              152.7743483456861,
+              291.2873120761814
+            ],
+            "runtime_s": 12.063409099995624,
+            "nfev": 326,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": true,
+            "success_strict": false,
+            "fuel_kg": 396.4105579034367,
+            "final_mass_kg": 603.5894420965633,
+            "residual_rms": 0.00762343994311096,
+            "reprop_arrival_residual": 0.03740390407372285,
+            "n_switches": 4,
+            "switch_times_days": [
+              46.5925025395363,
+              70.53538243502895,
+              144.95372516113898,
+              290.55463734562954
+            ],
+            "runtime_s": 25.96638944998267,
+            "nfev": 456,
+            "njev": 389,
+            "total_runtime_s": 38.029798549978295
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 413.6698481710539,
+            "final_mass_kg": 586.3301518289461,
+            "residual_rms": 0.008160614593447135,
+            "reprop_arrival_residual": 0.20201478841409712,
+            "n_switches": 4,
+            "switch_times_days": [
+              41.083542823011555,
+              66.54502826843851,
+              152.77434821068613,
+              291.2873137939098
+            ],
+            "runtime_s": 14.197919747006381,
+            "nfev": 273,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 395.8729324158412,
+            "final_mass_kg": 604.1270675841588,
+            "residual_rms": 0.007616772731500019,
+            "reprop_arrival_residual": 0.05200773773949557,
+            "n_switches": 4,
+            "switch_times_days": [
+              47.23958276371063,
+              70.53537780227845,
+              144.3065757408467,
+              290.5546375141604
+            ],
+            "runtime_s": 28.152012831997126,
+            "nfev": 407,
+            "njev": 389,
+            "total_runtime_s": 42.34993257900351
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 935.9613239814521,
+            "final_mass_kg": 64.03867601854785,
+            "residual_rms": 0.04044879523440883,
+            "reprop_arrival_residual": 1.0812228931514667,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.7241890515388,
+              308.3125566831835
+            ],
+            "runtime_s": 11.186245516000781,
+            "nfev": 473,
+            "njev": 201
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 935.9613239814521,
+            "final_mass_kg": 64.03867601854785,
+            "residual_rms": 0.04044879523440883,
+            "reprop_arrival_residual": 1.0812228931514667,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.7241890515388,
+              308.3125566831835
+            ],
+            "runtime_s": 11.186245516000781,
+            "nfev": 473,
+            "njev": 201,
+            "total_runtime_s": 11.186245516000781
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 413.67225894464354,
+            "final_mass_kg": 586.3277410553565,
+            "residual_rms": 0.007751727392468396,
+            "reprop_arrival_residual": 0.2019458976075806,
+            "n_switches": 4,
+            "switch_times_days": [
+              41.083542845066646,
+              66.545028585222,
+              152.77434822241725,
+              291.28731389764266
+            ],
+            "runtime_s": 14.954602773999795,
+            "nfev": 260,
+            "njev": 259
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 395.8464353461295,
+            "final_mass_kg": 604.1535646538705,
+            "residual_rms": 0.007561364254381097,
+            "reprop_arrival_residual": 0.05233260121763841,
+            "n_switches": 4,
+            "switch_times_days": [
+              47.23958277982416,
+              70.53537748908171,
+              144.3065757104136,
+              290.55463753688434
+            ],
+            "runtime_s": 28.960895341995638,
+            "nfev": 395,
+            "njev": 389,
+            "total_runtime_s": 43.91549811599543
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 531.3810856492154,
+            "final_mass_kg": 468.6189143507846,
+            "residual_rms": 0.0373994509521394,
+            "reprop_arrival_residual": 3.2201473645211367,
+            "n_switches": 2,
+            "switch_times_days": [
+              272.71679705451845,
+              312.65616302651944
+            ],
+            "runtime_s": 14.661266261013225,
+            "nfev": 527,
+            "njev": 334
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 531.3810856492154,
+            "final_mass_kg": 468.6189143507846,
+            "residual_rms": 0.0373994509521394,
+            "reprop_arrival_residual": 3.2201473645211367,
+            "n_switches": 2,
+            "switch_times_days": [
+              272.71679705451845,
+              312.65616302651944
+            ],
+            "runtime_s": 14.661266261013225,
+            "nfev": 527,
+            "njev": 334,
+            "total_runtime_s": 14.661266261013225
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 1,
+        "rate_loose": 0.1,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": 396.4105579034367,
+        "median_reprop_loose": 0.03740390407372285,
+        "median_reprop_all": 1.7251610654826126,
+        "median_rms_all": 0.024138309005772657,
+        "median_total_runtime_s": 13.0659782950097
+      }
+    },
+    "tanh_spanning_w7.0_cgl_u05": {
+      "w": 7.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 977.5841601827243,
+            "final_mass_kg": 22.415839817275685,
+            "residual_rms": 0.021048897728885334,
+            "reprop_arrival_residual": 0.5217383919689168,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71174649716335,
+              312.65622350143195
+            ],
+            "runtime_s": 20.47263729100814,
+            "nfev": 724,
+            "njev": 409
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 977.5841601827243,
+            "final_mass_kg": 22.415839817275685,
+            "residual_rms": 0.021048897728885334,
+            "reprop_arrival_residual": 0.5217383919689168,
+            "n_switches": 2,
+            "switch_times_days": [
+              307.71174649716335,
+              312.65622350143195
+            ],
+            "runtime_s": 20.47263729100814,
+            "nfev": 724,
+            "njev": 409,
+            "total_runtime_s": 20.47263729100814
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.2418470984578,
+            "final_mass_kg": 566.7581529015422,
+            "residual_rms": 0.01616274329621332,
+            "reprop_arrival_residual": 0.7233124755953098,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.302364177639284,
+              51.77892521086961,
+              57.51078259586074,
+              58.783841233420176,
+              164.5534529516686,
+              167.2009098484522,
+              168.48363730780918,
+              207.7028316931039,
+              210.18964310381378,
+              294.18452696302467,
+              297.0165038193324,
+              299.78753270537453
+            ],
+            "runtime_s": 26.32795912201982,
+            "nfev": 925,
+            "njev": 521
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.2418470984578,
+            "final_mass_kg": 566.7581529015422,
+            "residual_rms": 0.01616274329621332,
+            "reprop_arrival_residual": 0.7233124755953098,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.302364177639284,
+              51.77892521086961,
+              57.51078259586074,
+              58.783841233420176,
+              164.5534529516686,
+              167.2009098484522,
+              168.48363730780918,
+              207.7028316931039,
+              210.18964310381378,
+              294.18452696302467,
+              297.0165038193324,
+              299.78753270537453
+            ],
+            "runtime_s": 26.32795912201982,
+            "nfev": 925,
+            "njev": 521,
+            "total_runtime_s": 26.32795912201982
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 7.130131417160182,
+            "reprop_arrival_residual": 2.26608299342261,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 9.725335447990801,
+            "nfev": 444,
+            "njev": 144
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 7.130131417160182,
+            "reprop_arrival_residual": 2.26608299342261,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 9.725335447990801,
+            "nfev": 444,
+            "njev": 144,
+            "total_runtime_s": 9.725335447990801
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 937.9775832729272,
+            "final_mass_kg": 62.02241672707287,
+            "residual_rms": 0.036708379124470544,
+            "reprop_arrival_residual": 1.5154014552054915,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.21989072165775,
+              312.6546407206102
+            ],
+            "runtime_s": 9.68691287600086,
+            "nfev": 369,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 937.9775832729272,
+            "final_mass_kg": 62.02241672707287,
+            "residual_rms": 0.036708379124470544,
+            "reprop_arrival_residual": 1.5154014552054915,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.21989072165775,
+              312.6546407206102
+            ],
+            "runtime_s": 9.68691287600086,
+            "nfev": 369,
+            "njev": 215,
+            "total_runtime_s": 9.68691287600086
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.755324597719,
+            "final_mass_kg": 566.244675402281,
+            "residual_rms": 0.016159424750358694,
+            "reprop_arrival_residual": 0.7259453508673152,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.30235127796884,
+              51.7789227600389,
+              57.51062420545529,
+              58.83859153348997,
+              164.55341618458255,
+              167.243179474755,
+              168.48357540421028,
+              207.6969166875439,
+              211.3068348656498,
+              294.1845266304224,
+              297.0165038332471,
+              299.7875332319875
+            ],
+            "runtime_s": 21.92117440601578,
+            "nfev": 800,
+            "njev": 452
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.755324597719,
+            "final_mass_kg": 566.244675402281,
+            "residual_rms": 0.016159424750358694,
+            "reprop_arrival_residual": 0.7259453508673152,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.30235127796884,
+              51.7789227600389,
+              57.51062420545529,
+              58.83859153348997,
+              164.55341618458255,
+              167.243179474755,
+              168.48357540421028,
+              207.6969166875439,
+              211.3068348656498,
+              294.1845266304224,
+              297.0165038332471,
+              299.7875332319875
+            ],
+            "runtime_s": 21.92117440601578,
+            "nfev": 800,
+            "njev": 452,
+            "total_runtime_s": 21.92117440601578
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 302.963392507662,
+            "final_mass_kg": 697.036607492338,
+            "residual_rms": 0.01888882666740588,
+            "reprop_arrival_residual": 2.824367626012996,
+            "n_switches": 2,
+            "switch_times_days": [
+              66.54519422155255,
+              291.2873449926771
+            ],
+            "runtime_s": 21.867065001977608,
+            "nfev": 796,
+            "njev": 450
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 302.963392507662,
+            "final_mass_kg": 697.036607492338,
+            "residual_rms": 0.01888882666740588,
+            "reprop_arrival_residual": 2.824367626012996,
+            "n_switches": 2,
+            "switch_times_days": [
+              66.54519422155255,
+              291.2873449926771
+            ],
+            "runtime_s": 21.867065001977608,
+            "nfev": 796,
+            "njev": 450,
+            "total_runtime_s": 21.867065001977608
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.8999849042366,
+            "final_mass_kg": 566.1000150957634,
+            "residual_rms": 0.01613009876867175,
+            "reprop_arrival_residual": 0.7187452831539273,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.30234910520486,
+              51.77892254300859,
+              57.51058490208265,
+              58.851632883552384,
+              164.55338629679477,
+              167.26978445282296,
+              168.48353844806553,
+              207.6990458702522,
+              209.84557656208037,
+              294.1845249504533,
+              297.0165034675309,
+              299.7875345856178
+            ],
+            "runtime_s": 23.13908378899214,
+            "nfev": 805,
+            "njev": 454
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 433.8999849042366,
+            "final_mass_kg": 566.1000150957634,
+            "residual_rms": 0.01613009876867175,
+            "reprop_arrival_residual": 0.7187452831539273,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.30234910520486,
+              51.77892254300859,
+              57.51058490208265,
+              58.851632883552384,
+              164.55338629679477,
+              167.26978445282296,
+              168.48353844806553,
+              207.6990458702522,
+              209.84557656208037,
+              294.1845249504533,
+              297.0165034675309,
+              299.7875345856178
+            ],
+            "runtime_s": 23.13908378899214,
+            "nfev": 805,
+            "njev": 454,
+            "total_runtime_s": 23.13908378899214
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 942.3633806684518,
+            "final_mass_kg": 57.636619331548175,
+            "residual_rms": 0.039895659088581094,
+            "reprop_arrival_residual": 1.6319131208183764,
+            "n_switches": 2,
+            "switch_times_days": [
+              314.03138163310257,
+              315.0166266305681
+            ],
+            "runtime_s": 11.320582496002316,
+            "nfev": 448,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 942.3633806684518,
+            "final_mass_kg": 57.636619331548175,
+            "residual_rms": 0.039895659088581094,
+            "reprop_arrival_residual": 1.6319131208183764,
+            "n_switches": 2,
+            "switch_times_days": [
+              314.03138163310257,
+              315.0166266305681
+            ],
+            "runtime_s": 11.320582496002316,
+            "nfev": 448,
+            "njev": 215,
+            "total_runtime_s": 11.320582496002316
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 434.48332966943326,
+            "final_mass_kg": 565.5166703305667,
+            "residual_rms": 0.01610747186295134,
+            "reprop_arrival_residual": 0.7199444689597717,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.302353337980726,
+              51.77893110900173,
+              57.51136442454051,
+              58.62115808974734,
+              164.55344580025394,
+              167.21233439806878,
+              168.483623047263,
+              207.75633499329106,
+              208.94509551624463,
+              294.1845240747411,
+              297.0164998450623,
+              299.78753387309365
+            ],
+            "runtime_s": 24.641010855004424,
+            "nfev": 902,
+            "njev": 508
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 434.48332966943326,
+            "final_mass_kg": 565.5166703305667,
+            "residual_rms": 0.01610747186295134,
+            "reprop_arrival_residual": 0.7199444689597717,
+            "n_switches": 12,
+            "switch_times_days": [
+              46.302353337980726,
+              51.77893110900173,
+              57.51136442454051,
+              58.62115808974734,
+              164.55344580025394,
+              167.21233439806878,
+              168.483623047263,
+              207.75633499329106,
+              208.94509551624463,
+              294.1845240747411,
+              297.0164998450623,
+              299.78753387309365
+            ],
+            "runtime_s": 24.641010855004424,
+            "nfev": 902,
+            "njev": 508,
+            "total_runtime_s": 24.641010855004424
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 522.9914591887876,
+            "final_mass_kg": 477.00854081121236,
+            "residual_rms": 0.036659641608353194,
+            "reprop_arrival_residual": 3.11556022168842,
+            "n_switches": 2,
+            "switch_times_days": [
+              252.34067787395338,
+              307.71167056019533
+            ],
+            "runtime_s": 15.689088433980942,
+            "nfev": 571,
+            "njev": 338
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 522.9914591887876,
+            "final_mass_kg": 477.00854081121236,
+            "residual_rms": 0.036659641608353194,
+            "reprop_arrival_residual": 3.11556022168842,
+            "n_switches": 2,
+            "switch_times_days": [
+              252.34067787395338,
+              307.71167056019533
+            ],
+            "runtime_s": 15.689088433980942,
+            "nfev": 571,
+            "njev": 338,
+            "total_runtime_s": 15.689088433980942
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 1.1206734030364034,
+        "median_rms_all": 0.019968862198145608,
+        "median_total_runtime_s": 21.169851146492874
+      }
+    },
+    "tanh_spanning_w8.0_cgl_u05": {
+      "w": 8.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 978.9585439381098,
+            "final_mass_kg": 21.04145606189023,
+            "residual_rms": 0.023896589855915022,
+            "reprop_arrival_residual": 0.4635821529006668,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.321454455647,
+              319.5379241649025
+            ],
+            "runtime_s": 23.9896359090053,
+            "nfev": 923,
+            "njev": 455
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 978.9585439381098,
+            "final_mass_kg": 21.04145606189023,
+            "residual_rms": 0.023896589855915022,
+            "reprop_arrival_residual": 0.4635821529006668,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.321454455647,
+              319.5379241649025
+            ],
+            "runtime_s": 23.9896359090053,
+            "nfev": 923,
+            "njev": 455,
+            "total_runtime_s": 23.9896359090053
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 968.0027064341631,
+            "final_mass_kg": 31.997293565836916,
+            "residual_rms": 0.03703686803566562,
+            "reprop_arrival_residual": 2.617035631990272,
+            "n_switches": 2,
+            "switch_times_days": [
+              311.4164164098591,
+              312.6515622505281
+            ],
+            "runtime_s": 11.107827558007557,
+            "nfev": 459,
+            "njev": 199
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 968.0027064341631,
+            "final_mass_kg": 31.997293565836916,
+            "residual_rms": 0.03703686803566562,
+            "reprop_arrival_residual": 2.617035631990272,
+            "n_switches": 2,
+            "switch_times_days": [
+              311.4164164098591,
+              312.6515622505281
+            ],
+            "runtime_s": 11.107827558007557,
+            "nfev": 459,
+            "njev": 199,
+            "total_runtime_s": 11.107827558007557
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 971.8440353813234,
+            "final_mass_kg": 28.15596461867664,
+            "residual_rms": 0.03956124946375579,
+            "reprop_arrival_residual": 2.6345031433665334,
+            "n_switches": 2,
+            "switch_times_days": [
+              313.681041376109,
+              315.01798660649695
+            ],
+            "runtime_s": 6.628353277017595,
+            "nfev": 280,
+            "njev": 108
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 971.8440353813234,
+            "final_mass_kg": 28.15596461867664,
+            "residual_rms": 0.03956124946375579,
+            "reprop_arrival_residual": 2.6345031433665334,
+            "n_switches": 2,
+            "switch_times_days": [
+              313.681041376109,
+              315.01798660649695
+            ],
+            "runtime_s": 6.628353277017595,
+            "nfev": 280,
+            "njev": 108,
+            "total_runtime_s": 6.628353277017595
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 941.9328039263072,
+            "final_mass_kg": 58.06719607369282,
+            "residual_rms": 0.03601380632729314,
+            "reprop_arrival_residual": 1.3544146769171188,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.13703319609436,
+              312.64424583648344
+            ],
+            "runtime_s": 9.977589897986036,
+            "nfev": 374,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 941.9328039263072,
+            "final_mass_kg": 58.06719607369282,
+            "residual_rms": 0.03601380632729314,
+            "reprop_arrival_residual": 1.3544146769171188,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.13703319609436,
+              312.64424583648344
+            ],
+            "runtime_s": 9.977589897986036,
+            "nfev": 374,
+            "njev": 215,
+            "total_runtime_s": 9.977589897986036
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 249.97531998674822,
+            "final_mass_kg": 750.0246800132518,
+            "residual_rms": 0.015951317321280287,
+            "reprop_arrival_residual": 2.4004183862130404,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869156764169,
+              282.24979910636654
+            ],
+            "runtime_s": 7.608186949015362,
+            "nfev": 228,
+            "njev": 198
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 249.97531998674822,
+            "final_mass_kg": 750.0246800132518,
+            "residual_rms": 0.015951317321280287,
+            "reprop_arrival_residual": 2.4004183862130404,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869156764169,
+              282.24979910636654
+            ],
+            "runtime_s": 7.608186949015362,
+            "nfev": 228,
+            "njev": 198,
+            "total_runtime_s": 7.608186949015362
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.01776842314246,
+            "final_mass_kg": 590.9822315768575,
+            "residual_rms": 0.01678241334620439,
+            "reprop_arrival_residual": 0.39933493942965254,
+            "n_switches": 4,
+            "switch_times_days": [
+              25.03390427653969,
+              92.94851385406075,
+              199.92619688213907,
+              294.18241940772907
+            ],
+            "runtime_s": 17.237013959995238,
+            "nfev": 593,
+            "njev": 369
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 409.01776842314246,
+            "final_mass_kg": 590.9822315768575,
+            "residual_rms": 0.01678241334620439,
+            "reprop_arrival_residual": 0.39933493942965254,
+            "n_switches": 4,
+            "switch_times_days": [
+              25.03390427653969,
+              92.94851385406075,
+              199.92619688213907,
+              294.18241940772907
+            ],
+            "runtime_s": 17.237013959995238,
+            "nfev": 593,
+            "njev": 369,
+            "total_runtime_s": 17.237013959995238
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 249.9753300938612,
+            "final_mass_kg": 750.0246699061388,
+            "residual_rms": 0.015951318680845882,
+            "reprop_arrival_residual": 2.4004183865751716,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869156800737,
+              282.24979910769406
+            ],
+            "runtime_s": 7.4865690000006,
+            "nfev": 229,
+            "njev": 197
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 249.9753300938612,
+            "final_mass_kg": 750.0246699061388,
+            "residual_rms": 0.015951318680845882,
+            "reprop_arrival_residual": 2.4004183865751716,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869156800737,
+              282.24979910769406
+            ],
+            "runtime_s": 7.4865690000006,
+            "nfev": 229,
+            "njev": 197,
+            "total_runtime_s": 7.4865690000006
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 971.5303799490197,
+            "final_mass_kg": 28.469620050980303,
+            "residual_rms": 0.03727878805367596,
+            "reprop_arrival_residual": 2.598038323917393,
+            "n_switches": 2,
+            "switch_times_days": [
+              313.28085816072183,
+              315.019129534683
+            ],
+            "runtime_s": 11.929992568009766,
+            "nfev": 460,
+            "njev": 203
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 971.5303799490197,
+            "final_mass_kg": 28.469620050980303,
+            "residual_rms": 0.03727878805367596,
+            "reprop_arrival_residual": 2.598038323917393,
+            "n_switches": 2,
+            "switch_times_days": [
+              313.28085816072183,
+              315.019129534683
+            ],
+            "runtime_s": 11.929992568009766,
+            "nfev": 460,
+            "njev": 203,
+            "total_runtime_s": 11.929992568009766
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 912.2899458202102,
+            "final_mass_kg": 87.71005417978984,
+            "residual_rms": 0.04640691858223821,
+            "reprop_arrival_residual": 1.407011184147102,
+            "n_switches": 2,
+            "switch_times_days": [
+              315.032983964379,
+              315.72888349916707
+            ],
+            "runtime_s": 23.60582911298843,
+            "nfev": 858,
+            "njev": 455
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 912.2899458202102,
+            "final_mass_kg": 87.71005417978984,
+            "residual_rms": 0.04640691858223821,
+            "reprop_arrival_residual": 1.407011184147102,
+            "n_switches": 2,
+            "switch_times_days": [
+              315.032983964379,
+              315.72888349916707
+            ],
+            "runtime_s": 23.60582911298843,
+            "nfev": 858,
+            "njev": 455,
+            "total_runtime_s": 23.60582911298843
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 555.0759617818971,
+            "final_mass_kg": 444.9240382181029,
+            "residual_rms": 0.042899189291137466,
+            "reprop_arrival_residual": 3.412419262602776,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.22127970644215,
+              312.65394656604457
+            ],
+            "runtime_s": 21.82208981597796,
+            "nfev": 807,
+            "njev": 406
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 555.0759617818971,
+            "final_mass_kg": 444.9240382181029,
+            "residual_rms": 0.042899189291137466,
+            "reprop_arrival_residual": 3.412419262602776,
+            "n_switches": 2,
+            "switch_times_days": [
+              310.22127970644215,
+              312.65394656604457
+            ],
+            "runtime_s": 21.82208981597796,
+            "nfev": 807,
+            "njev": 406,
+            "total_runtime_s": 21.82208981597796
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 2.400418386394106,
+        "median_rms_all": 0.03652533718147938,
+        "median_total_runtime_s": 11.518910063008661
+      }
+    },
+    "tanh_spanning_w9.0_cgl_u05": {
+      "w": 9.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 352.8066484500698,
+            "final_mass_kg": 647.1933515499302,
+            "residual_rms": 0.015453714469472699,
+            "reprop_arrival_residual": 0.9933955767457944,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106594136038563,
+              122.00751237838259,
+              196.02065874756653,
+              291.28727213597523
+            ],
+            "runtime_s": 26.897016424976755,
+            "nfev": 614,
+            "njev": 395
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 352.8066484500698,
+            "final_mass_kg": 647.1933515499302,
+            "residual_rms": 0.015453714469472699,
+            "reprop_arrival_residual": 0.9933955767457944,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106594136038563,
+              122.00751237838259,
+              196.02065874756653,
+              291.28727213597523
+            ],
+            "runtime_s": 26.897016424976755,
+            "nfev": 614,
+            "njev": 395,
+            "total_runtime_s": 26.897016424976755
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 939.3744860375067,
+            "final_mass_kg": 60.62551396249327,
+            "residual_rms": 0.033879826607390306,
+            "reprop_arrival_residual": 1.5937452744285825,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.6563355585851,
+              317.31811405836135
+            ],
+            "runtime_s": 10.428567452996504,
+            "nfev": 360,
+            "njev": 235
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 939.3744860375067,
+            "final_mass_kg": 60.62551396249327,
+            "residual_rms": 0.033879826607390306,
+            "reprop_arrival_residual": 1.5937452744285825,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.6563355585851,
+              317.31811405836135
+            ],
+            "runtime_s": 10.428567452996504,
+            "nfev": 360,
+            "njev": 235,
+            "total_runtime_s": 10.428567452996504
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 943.7630135227218,
+            "final_mass_kg": 56.23698647727815,
+            "residual_rms": 0.03406845114834667,
+            "reprop_arrival_residual": 1.6881831320883303,
+            "n_switches": 2,
+            "switch_times_days": [
+              315.02325006932745,
+              319.5402733727088
+            ],
+            "runtime_s": 9.23022870402201,
+            "nfev": 318,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 943.7630135227218,
+            "final_mass_kg": 56.23698647727815,
+            "residual_rms": 0.03406845114834667,
+            "reprop_arrival_residual": 1.6881831320883303,
+            "n_switches": 2,
+            "switch_times_days": [
+              315.02325006932745,
+              319.5402733727088
+            ],
+            "runtime_s": 9.23022870402201,
+            "nfev": 318,
+            "njev": 215,
+            "total_runtime_s": 9.23022870402201
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 940.5578257345182,
+            "final_mass_kg": 59.442174265481704,
+            "residual_rms": 0.032492709470514886,
+            "reprop_arrival_residual": 2.688149015505413,
+            "n_switches": 2,
+            "switch_times_days": [
+              285.3194959210086,
+              299.7876979968952
+            ],
+            "runtime_s": 5.994984442018904,
+            "nfev": 210,
+            "njev": 142
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 940.5578257345182,
+            "final_mass_kg": 59.442174265481704,
+            "residual_rms": 0.032492709470514886,
+            "reprop_arrival_residual": 2.688149015505413,
+            "n_switches": 2,
+            "switch_times_days": [
+              285.3194959210086,
+              299.7876979968952
+            ],
+            "runtime_s": 5.994984442018904,
+            "nfev": 210,
+            "njev": 142,
+            "total_runtime_s": 5.994984442018904
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.49156769578724,
+            "final_mass_kg": 747.5084323042128,
+            "residual_rms": 0.015790569431735485,
+            "reprop_arrival_residual": 2.3952773801419682,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.138694676924665,
+              282.24979671612203
+            ],
+            "runtime_s": 7.591424925019965,
+            "nfev": 232,
+            "njev": 205
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.49156769578724,
+            "final_mass_kg": 747.5084323042128,
+            "residual_rms": 0.015790569431735485,
+            "reprop_arrival_residual": 2.3952773801419682,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.138694676924665,
+              282.24979671612203
+            ],
+            "runtime_s": 7.591424925019965,
+            "nfev": 232,
+            "njev": 205,
+            "total_runtime_s": 7.591424925019965
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 4.508308630392518,
+            "reprop_arrival_residual": 1.4360895992007925,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 13.133174717018846,
+            "nfev": 527,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 4.508308630392518,
+            "reprop_arrival_residual": 1.4360895992007925,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 13.133174717018846,
+            "nfev": 527,
+            "njev": 215,
+            "total_runtime_s": 13.133174717018846
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.49156726941635,
+            "final_mass_kg": 747.5084327305836,
+            "residual_rms": 0.015790603001276632,
+            "reprop_arrival_residual": 2.395277378742283,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869467726736,
+              282.24979671597185
+            ],
+            "runtime_s": 7.643189455004176,
+            "nfev": 228,
+            "njev": 203
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.49156726941635,
+            "final_mass_kg": 747.5084327305836,
+            "residual_rms": 0.015790603001276632,
+            "reprop_arrival_residual": 2.395277378742283,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.13869467726736,
+              282.24979671597185
+            ],
+            "runtime_s": 7.643189455004176,
+            "nfev": 228,
+            "njev": 203,
+            "total_runtime_s": 7.643189455004176
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 953.2896548852361,
+            "final_mass_kg": 46.71034511476391,
+            "residual_rms": 0.039081734320634706,
+            "reprop_arrival_residual": 1.7239643591624325,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.3327097053417,
+              317.8088689766034
+            ],
+            "runtime_s": 11.667235590022756,
+            "nfev": 452,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 953.2896548852361,
+            "final_mass_kg": 46.71034511476391,
+            "residual_rms": 0.039081734320634706,
+            "reprop_arrival_residual": 1.7239643591624325,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.3327097053417,
+              317.8088689766034
+            ],
+            "runtime_s": 11.667235590022756,
+            "nfev": 452,
+            "njev": 215,
+            "total_runtime_s": 11.667235590022756
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.4915677382919,
+            "final_mass_kg": 747.5084322617081,
+            "residual_rms": 0.015790668997925826,
+            "reprop_arrival_residual": 2.3952773771860207,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.1386946769365,
+              282.24979671564034
+            ],
+            "runtime_s": 13.445039999001892,
+            "nfev": 325,
+            "njev": 283
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 252.4915677382919,
+            "final_mass_kg": 747.5084322617081,
+            "residual_rms": 0.015790668997925826,
+            "reprop_arrival_residual": 2.3952773771860207,
+            "n_switches": 2,
+            "switch_times_days": [
+              36.1386946769365,
+              282.24979671564034
+            ],
+            "runtime_s": 13.445039999001892,
+            "nfev": 325,
+            "njev": 283,
+            "total_runtime_s": 13.445039999001892
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 939.9604590435302,
+            "final_mass_kg": 60.03954095646979,
+            "residual_rms": 0.03383656603818365,
+            "reprop_arrival_residual": 1.604327501619233,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.65633716635824,
+              317.31810892484503
+            ],
+            "runtime_s": 10.719453314988641,
+            "nfev": 366,
+            "njev": 235
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 939.9604590435302,
+            "final_mass_kg": 60.03954095646979,
+            "residual_rms": 0.03383656603818365,
+            "reprop_arrival_residual": 1.604327501619233,
+            "n_switches": 2,
+            "switch_times_days": [
+              312.65633716635824,
+              317.31810892484503
+            ],
+            "runtime_s": 10.719453314988641,
+            "nfev": 366,
+            "njev": 235,
+            "total_runtime_s": 10.719453314988641
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 1.7060737456253814,
+        "median_rms_all": 0.03316463775434927,
+        "median_total_runtime_s": 10.574010383992572
+      }
+    },
+    "tanh_spanning_w10.0_cgl_u05": {
+      "w": 10.0,
+      "grid_type": "cgl",
+      "init_mode": "u_neg05_pos05",
+      "seeds": {
+        "1000": {
+          "coarse": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065554615578,
+            "final_mass_kg": 620.4934445384422,
+            "residual_rms": 0.015114838442051932,
+            "reprop_arrival_residual": 0.7467931154029585,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.10660856644556,
+              110.85778313257106,
+              196.02065800638078,
+              291.2872902409059
+            ],
+            "runtime_s": 21.147482843021862,
+            "nfev": 570,
+            "njev": 401
+          },
+          "refined": {
+            "seed": 1000,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065554615578,
+            "final_mass_kg": 620.4934445384422,
+            "residual_rms": 0.015114838442051932,
+            "reprop_arrival_residual": 0.7467931154029585,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.10660856644556,
+              110.85778313257106,
+              196.02065800638078,
+              291.2872902409059
+            ],
+            "runtime_s": 21.147482843021862,
+            "nfev": 570,
+            "njev": 401,
+            "total_runtime_s": 21.147482843021862
+          }
+        },
+        "1001": {
+          "coarse": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 953.9963574093081,
+            "final_mass_kg": 46.003642590691896,
+            "residual_rms": 0.03922167138481154,
+            "reprop_arrival_residual": 1.836924967555195,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.32590009603217,
+              318.2352954534318
+            ],
+            "runtime_s": 11.520015810005134,
+            "nfev": 443,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1001,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 953.9963574093081,
+            "final_mass_kg": 46.003642590691896,
+            "residual_rms": 0.03922167138481154,
+            "reprop_arrival_residual": 1.836924967555195,
+            "n_switches": 2,
+            "switch_times_days": [
+              317.32590009603217,
+              318.2352954534318
+            ],
+            "runtime_s": 11.520015810005134,
+            "nfev": 443,
+            "njev": 215,
+            "total_runtime_s": 11.520015810005134
+          }
+        },
+        "1002": {
+          "coarse": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 7.578554114908365,
+            "reprop_arrival_residual": 2.202426348791211,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 13.499483013001736,
+            "nfev": 543,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1002,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 0.0,
+            "final_mass_kg": 1000.0,
+            "residual_rms": 7.578554114908365,
+            "reprop_arrival_residual": 2.202426348791211,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 13.499483013001736,
+            "nfev": 543,
+            "njev": 215,
+            "total_runtime_s": 13.499483013001736
+          }
+        },
+        "1003": {
+          "coarse": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 959.2558751337812,
+            "final_mass_kg": 40.74412486621881,
+            "residual_rms": 0.032733852362627845,
+            "reprop_arrival_residual": 2.70134902959141,
+            "n_switches": 2,
+            "switch_times_days": [
+              299.7876976634474,
+              305.136669534241
+            ],
+            "runtime_s": 7.649497013015207,
+            "nfev": 294,
+            "njev": 143
+          },
+          "refined": {
+            "seed": 1003,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 959.2558751337812,
+            "final_mass_kg": 40.74412486621881,
+            "residual_rms": 0.032733852362627845,
+            "reprop_arrival_residual": 2.70134902959141,
+            "n_switches": 2,
+            "switch_times_days": [
+              299.7876976634474,
+              305.136669534241
+            ],
+            "runtime_s": 7.649497013015207,
+            "nfev": 294,
+            "njev": 143,
+            "total_runtime_s": 7.649497013015207
+          }
+        },
+        "1004": {
+          "coarse": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065455600435,
+            "final_mass_kg": 620.4934544399565,
+            "residual_rms": 0.015114838492602957,
+            "reprop_arrival_residual": 0.746793117709414,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106608566462185,
+              110.85778313274888,
+              196.02065800577654,
+              291.28729024068923
+            ],
+            "runtime_s": 13.858169573999476,
+            "nfev": 437,
+            "njev": 328
+          },
+          "refined": {
+            "seed": 1004,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065455600435,
+            "final_mass_kg": 620.4934544399565,
+            "residual_rms": 0.015114838492602957,
+            "reprop_arrival_residual": 0.746793117709414,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106608566462185,
+              110.85778313274888,
+              196.02065800577654,
+              291.28729024068923
+            ],
+            "runtime_s": 13.858169573999476,
+            "nfev": 437,
+            "njev": 328,
+            "total_runtime_s": 13.858169573999476
+          }
+        },
+        "1005": {
+          "coarse": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 442.67793341031677,
+            "final_mass_kg": 557.3220665896832,
+            "residual_rms": 0.016401270979538148,
+            "reprop_arrival_residual": 0.5616111974176945,
+            "n_switches": 4,
+            "switch_times_days": [
+              29.25462174611842,
+              76.07832756559357,
+              211.55593603846125,
+              305.1366941638063
+            ],
+            "runtime_s": 17.967340173985576,
+            "nfev": 632,
+            "njev": 381
+          },
+          "refined": {
+            "seed": 1005,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 442.67793341031677,
+            "final_mass_kg": 557.3220665896832,
+            "residual_rms": 0.016401270979538148,
+            "reprop_arrival_residual": 0.5616111974176945,
+            "n_switches": 4,
+            "switch_times_days": [
+              29.25462174611842,
+              76.07832756559357,
+              211.55593603846125,
+              305.1366941638063
+            ],
+            "runtime_s": 17.967340173985576,
+            "nfev": 632,
+            "njev": 381,
+            "total_runtime_s": 17.967340173985576
+          }
+        },
+        "1006": {
+          "coarse": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065557594884,
+            "final_mass_kg": 620.4934442405116,
+            "residual_rms": 0.015114838422281798,
+            "reprop_arrival_residual": 0.7467931315061103,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.10660856623621,
+              110.85778313272726,
+              196.02065800643425,
+              291.2872902408152
+            ],
+            "runtime_s": 17.245786196988774,
+            "nfev": 546,
+            "njev": 425
+          },
+          "refined": {
+            "seed": 1006,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.5065557594884,
+            "final_mass_kg": 620.4934442405116,
+            "residual_rms": 0.015114838422281798,
+            "reprop_arrival_residual": 0.7467931315061103,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.10660856623621,
+              110.85778313272726,
+              196.02065800643425,
+              291.2872902408152
+            ],
+            "runtime_s": 17.245786196988774,
+            "nfev": 546,
+            "njev": 425,
+            "total_runtime_s": 17.245786196988774
+          }
+        },
+        "1007": {
+          "coarse": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 955.1432701231165,
+            "final_mass_kg": 44.85672987688349,
+            "residual_rms": 0.03923190399281728,
+            "reprop_arrival_residual": 1.9396638686226508,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 12.563165001978632,
+            "nfev": 435,
+            "njev": 215
+          },
+          "refined": {
+            "seed": 1007,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 955.1432701231165,
+            "final_mass_kg": 44.85672987688349,
+            "residual_rms": 0.03923190399281728,
+            "reprop_arrival_residual": 1.9396638686226508,
+            "n_switches": 0,
+            "switch_times_days": [],
+            "runtime_s": 12.563165001978632,
+            "nfev": 435,
+            "njev": 215,
+            "total_runtime_s": 12.563165001978632
+          }
+        },
+        "1008": {
+          "coarse": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.50654905868214,
+            "final_mass_kg": 620.4934509413179,
+            "residual_rms": 0.015114838499929395,
+            "reprop_arrival_residual": 0.7467931255172717,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106608566539673,
+              110.8577831328071,
+              196.02065800625883,
+              291.28729024055576
+            ],
+            "runtime_s": 16.93036784499418,
+            "nfev": 546,
+            "njev": 394
+          },
+          "refined": {
+            "seed": 1008,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 379.50654905868214,
+            "final_mass_kg": 620.4934509413179,
+            "residual_rms": 0.015114838499929395,
+            "reprop_arrival_residual": 0.7467931255172717,
+            "n_switches": 4,
+            "switch_times_days": [
+              27.106608566539673,
+              110.8577831328071,
+              196.02065800625883,
+              291.28729024055576
+            ],
+            "runtime_s": 16.93036784499418,
+            "nfev": 546,
+            "njev": 394,
+            "total_runtime_s": 16.93036784499418
+          }
+        },
+        "1009": {
+          "coarse": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 262.94646420568097,
+            "final_mass_kg": 737.053535794319,
+            "residual_rms": 0.016753509703307853,
+            "reprop_arrival_residual": 2.4915772136080885,
+            "n_switches": 2,
+            "switch_times_days": [
+              41.0831908596471,
+              288.33250691237174
+            ],
+            "runtime_s": 13.702817653975217,
+            "nfev": 479,
+            "njev": 292
+          },
+          "refined": {
+            "seed": 1009,
+            "success_loose": false,
+            "success_strict": false,
+            "fuel_kg": 262.94646420568097,
+            "final_mass_kg": 737.053535794319,
+            "residual_rms": 0.016753509703307853,
+            "reprop_arrival_residual": 2.4915772136080885,
+            "n_switches": 2,
+            "switch_times_days": [
+              41.0831908596471,
+              288.33250691237174
+            ],
+            "runtime_s": 13.702817653975217,
+            "nfev": 479,
+            "njev": 292,
+            "total_runtime_s": 13.702817653975217
+          }
+        }
+      },
+      "summary": {
+        "n_seeds": 10,
+        "n_loose": 0,
+        "rate_loose": 0.0,
+        "n_strict": 0,
+        "rate_strict": 0.0,
+        "median_fuel_loose_kg": null,
+        "median_reprop_loose": null,
+        "median_reprop_all": 1.2918590495306526,
+        "median_rms_all": 0.016577390341423,
+        "median_total_runtime_s": 13.780493613987346
+      }
+    }
+  }
+}

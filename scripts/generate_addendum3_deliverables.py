@@ -299,6 +299,24 @@ def write_claims_md(t1: dict | None, t2: dict | None, holm: dict) -> None:
         ("C11", "Fair equal-smoothing open-loop accuracy comparison", "`results/addendum3_task2_accuracy_9100_9199.json` / `tab11_addendum3_accuracy.tex`", "100 fresh seeds `9100..9199`, exact event-aware arc integration", t2_claim),
         ("C12", "Independent DOP853 re-propagation & Scenario B 247.9 d scope", "`DEVIATIONS.md`, `REPORT.md` §7", "DOP853 `rtol=1e-11, atol=1e-13`; global min-time scan", "Independent DOP853 re-propagation is not reported in the original paper; on Scenario B (1218 kg, 0.5 N), no feasible solution was found at 247.9 d (numerical t_min = 260.833 d)."),
     ]
+    t5_path = RESULTS / "task5_tanh_spanning_ablation.json"
+    if t5_path.exists():
+        t5_data = json.loads(t5_path.read_text(encoding="utf-8"))
+        a4_data = json.loads((RESULTS / "scenario_a_phase_a4.json").read_text(encoding="utf-8"))
+        cheb_v = [v["refined"] for v in a4_data["ablation_b_basis"]["chebyshev_shifted_cgl"].values()]
+        rand_v = [v["refined"] for v in a4_data["ablation_b_basis"]["tanh_elm_cgl"].values()]
+        cheb_ok = sum(1 for v in cheb_v if v.get("success"))
+        rand_ok = sum(1 for v in rand_v if v.get("success"))
+        cheb_rt = float(np.median([v["runtime_s"] for v in cheb_v]))
+        s_uni52 = t5_data["configs"]["tanh_spanning_w5.2_uni_u05"]["summary"]
+        s_cgl60 = t5_data["configs"]["tanh_spanning_w6.0_cgl_u05"]["summary"]
+        rows.append((
+            "C13",
+            "Fair deterministic spanning tanh-ELM vs random-draw tanh & Chebyshev",
+            "`results/task5_tanh_spanning_ablation.json` / `tab12_task5_tanh_spanning.tex`",
+            "Same 10 A4(b) seeds `1000..1009`, $w=5.2$ + $w \\in \\{1..10\\}$ sweep",
+            f"We measured random-draw tanh features at {rand_ok}/10 loose, whereas deterministic spanning tanh recovers the 4-switch branch in the w in [5.2, 6.0] sweet spot (w=5.2 uniform: {s_uni52['n_loose']}/{s_uni52['n_seeds']} loose, med {s_uni52['median_reprop_loose']:.2e}; w=6.0 CGL: {s_cgl60['n_loose']}/{s_cgl60['n_seeds']} loose, {s_cgl60['median_fuel_loose_kg']:.2f} kg, {s_cgl60['median_reprop_loose']:.2e}); shifted Chebyshev remains higher-rate ({cheb_ok}/10) and faster ({cheb_rt:.2f} s vs {s_uni52['median_total_runtime_s']:.2f} s).",
+        ))
 
     lines = [
         "# Paper Claims & Evidence Traceability Table (`CLAIMS.md`)",
@@ -390,6 +408,72 @@ def update_report_and_readme(t1: dict | None, t2: dict | None, holm: dict) -> No
             "",
         ]
 
+    t5_path = RESULTS / "task5_tanh_spanning_ablation.json"
+    if t5_path.exists():
+        t5 = json.loads(t5_path.read_text(encoding="utf-8"))
+        a4 = json.loads((RESULTS / "scenario_a_phase_a4.json").read_text(encoding="utf-8"))
+        cheb_vals = [v["refined"] for v in a4["ablation_b_basis"]["chebyshev_shifted_cgl"].values()]
+        cheb_ok = sum(1 for v in cheb_vals if v.get("success"))
+        cheb_rp = float(np.median([v["reprop_arrival_residual"] for v in cheb_vals]))
+        cheb_rt = float(np.median([v["runtime_s"] for v in cheb_vals]))
+        cheb_fuel = float(np.median([v["fuel_kg"] for v in cheb_vals if v.get("success")]))
+        rand_vals = [v["refined"] for v in a4["ablation_b_basis"]["tanh_elm_cgl"].values()]
+        rand_ok = sum(1 for v in rand_vals if v.get("success"))
+        rand_rp = float(np.median([v["reprop_arrival_residual"] for v in rand_vals]))
+        rand_rt = float(np.median([v["runtime_s"] for v in rand_vals]))
+
+        lines += [
+            "### 14.3 Task 5: Fair Deterministic Spanning `tanh`-ELM Ablation (A4(b) Seeds `1000..1009`)",
+            "",
+            "Deterministic spanning weights $w_q = w$, $b_q = w(-1 + 2(q-1)/(L-1))$ ($q = 1 \\dots L$), output weights $\\beta \\sim U(-0.5, 0.5)$ (plus `scaled_u01` check at $w=5.2$) evaluated on the identical 10 seeds (`1000..1009`) as Phase A4(b):",
+            "",
+            "| Basis / Config (10 seeds `1000..1009`) | Loose (`<5e-2`) | Strict (`<1e-2`) | Med. $e_{\\text{reprop}}$ (all) | Med. $e_{\\text{reprop}}$ (loose) | Med. Fuel (loose, kg) | Med. Time (s) |",
+            "|:---|:---:|:---:|---:|---:|---:|---:|",
+            f"| Chebyshev Shifted (CGL, A4(b) ref.) | {cheb_ok}/10 | 0/10 | {cheb_rp:.2e} | {cheb_rp:.2e} | {cheb_fuel:.2f} | {cheb_rt:.2f} |",
+            f"| Random-Draw `tanh` ELM (CGL, A4(b) ref.) | {rand_ok}/10 | 0/10 | {rand_rp:.2e} | — | — | {rand_rt:.2f} |",
+        ]
+        tex_lines = [
+            r"\begin{table*}[t]",
+            r"\centering",
+            r"\caption{Task~5 fair deterministic spanning $\tanh$-ELM ablation on Scenario~A (A4(b) seeds 1000--1009, $N=10$, $L=70 \to 80$, $n=140 \to 540$) with $w_q=w$, $b_q=w(-1+2(q-1)/(L-1))$, $\beta \sim U(-0.5,0.5)$, compared against shifted Chebyshev and random-draw $\tanh$ ELM.}",
+            r"\label{tab:task5_tanh_spanning}",
+            r"\begin{tabular}{lcccccc}",
+            r"\toprule",
+            r"Basis / Config & Loose ($<5\times 10^{-2}$) & Strict ($<10^{-2}$) & Med.\ $e_{\mathrm{reprop}}$ (all) & Med.\ $e_{\mathrm{reprop}}$ (loose) & Med.\ Fuel (loose, kg) & Med.\ Time (s) \\",
+            r"\midrule",
+            f"Chebyshev Shifted (CGL, A4(b) ref.) & {cheb_ok}/10 & 0/10 & {cheb_rp:.2e} & {cheb_rp:.2e} & {cheb_fuel:.2f} & {cheb_rt:.2f} \\\\",
+            f"Random-Draw $\\tanh$ ELM (CGL, A4(b) ref.) & {rand_ok}/10 & 0/10 & {rand_rp:.2e} & --- & --- & {rand_rt:.2f} \\\\",
+            r"\midrule",
+        ]
+        for lbl, cfg in t5["configs"].items():
+            s = cfg["summary"]
+            if s.get("n_seeds", 0) == 0:
+                continue
+            rpa = f"{s['median_reprop_all']:.2e}" if s.get("median_reprop_all") is not None else "—"
+            rpl = f"{s['median_reprop_loose']:.2e}" if s.get("median_reprop_loose") is not None else "—"
+            fl = f"{s['median_fuel_loose_kg']:.2f}" if s.get("median_fuel_loose_kg") is not None else "—"
+            rt_s = f"{s['median_total_runtime_s']:.2f}" if s.get("median_total_runtime_s") is not None else "—"
+            lines.append(
+                f"| `{lbl}` | {s['n_loose']}/{s['n_seeds']} | {s['n_strict']}/{s['n_seeds']} | {rpa} | {rpl} | {fl} | {rt_s} |"
+            )
+            tex_lines.append(
+                f"\\texttt{{{lbl.replace('_', r'\_')}}} & {s['n_loose']}/{s['n_seeds']} & {s['n_strict']}/{s['n_seeds']} & "
+                f"{rpa.replace('—', '---')} & {rpl.replace('—', '---')} & {fl.replace('—', '---')} & {rt_s.replace('—', '---')} \\\\"
+            )
+        tex_lines += [r"\bottomrule", r"\end{tabular}", r"\end{table*}", ""]
+        (TABLES / "tab12_task5_tanh_spanning.tex").write_text("\n".join(tex_lines), encoding="utf-8")
+        s_uni52 = t5["configs"]["tanh_spanning_w5.2_uni_u05"]["summary"]
+        s_cgl60 = t5["configs"]["tanh_spanning_w6.0_cgl_u05"]["summary"]
+        uni52_min_rp = min(
+            r["refined"]["reprop_arrival_residual"]
+            for r in t5["configs"]["tanh_spanning_w5.2_uni_u05"]["seeds"].values()
+        )
+        lines += [
+            "",
+            f"- **Finding:** Unlike random-draw `tanh` features (`{rand_ok}/10` loose), deterministic spanning `tanh` recovers the 4-switch physical branch in the $w \\in [5.2, 6.0]$ sweet spot (`tanh_spanning_w5.2_uni_u05`: `{s_uni52['n_loose']}/{s_uni52['n_seeds']}` loose, `reprop` down to `{uni52_min_rp:.2e}`, med `{s_uni52['median_reprop_loose']:.2e}`; `tanh_spanning_w6.0_cgl_u05`: `{s_cgl60['n_loose']}/{s_cgl60['n_seeds']}` loose at `{s_cgl60['median_fuel_loose_kg']:.2f} kg`, `reprop = {s_cgl60['median_reprop_loose']:.2e}`), before degrading for $w \\ge 7$. Shifted Chebyshev remains more reliable (`{cheb_ok}/10` loose) and faster (`{cheb_rt:.2f} s` vs. `{s_uni52['median_total_runtime_s']:.2f} s` at $w=5.2$ uniform). LaTeX table: `results/tables/tab12_task5_tanh_spanning.tex`.",
+            "",
+        ]
+
     report_path.write_text(txt.rstrip() + "\n" + "\n".join(lines), encoding="utf-8")
 
     # Update README.md Addendum 3 summary
@@ -402,7 +486,7 @@ def update_report_and_readme(t1: dict | None, t2: dict | None, holm: dict) -> No
 
 - **Preregistration:** [PREREG_ADDENDUM_3.md](PREREG_ADDENDUM_3.md) (commit `792b304`, feature freeze).
 - **Claims traceability:** [CLAIMS.md](CLAIMS.md) (every manuscript claim mapped to stored JSON evidence, computation method, and exact wording).
-- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [REPORT.md](REPORT.md) Section 14.
+- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/tables/tab12_task5_tanh_spanning.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [REPORT.md](REPORT.md) Section 14.
 """
     readme_path.write_text(rtxt.rstrip() + "\n" + rblock, encoding="utf-8")
 
@@ -421,7 +505,7 @@ def main() -> None:
     plot_fig_addendum3(t1, t2)
     write_claims_md(t1, t2, holm)
     update_report_and_readme(t1, t2, holm)
-    print(f"[Addendum 3 Deliverables] Generated tab10, tab11, fig_addendum3, CLAIMS.md, updated REPORT.md §14 & README.md (M={holm['m_tests']} Holm tests).", flush=True)
+    print(f"[Addendum 3 Deliverables] Generated tab10, tab11, tab12, fig_addendum3, CLAIMS.md, updated REPORT.md §14 & README.md (M={holm['m_tests']} Holm tests).", flush=True)
 
 
 if __name__ == "__main__":

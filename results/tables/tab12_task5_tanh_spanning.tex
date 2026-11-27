@@ -1,0 +1,27 @@
+\begin{table*}[t]
+\centering
+\caption{Task~5 fair deterministic spanning $\tanh$-ELM ablation on Scenario~A (A4(b) seeds 1000--1009, $N=10$, $L=70 \to 80$, $n=140 \to 540$) with $w_q=w$, $b_q=w(-1+2(q-1)/(L-1))$, $\beta \sim U(-0.5,0.5)$, compared against shifted Chebyshev and random-draw $\tanh$ ELM.}
+\label{tab:task5_tanh_spanning}
+\begin{tabular}{lcccccc}
+\toprule
+Basis / Config & Loose ($<5\times 10^{-2}$) & Strict ($<10^{-2}$) & Med.\ $e_{\mathrm{reprop}}$ (all) & Med.\ $e_{\mathrm{reprop}}$ (loose) & Med.\ Fuel (loose, kg) & Med.\ Time (s) \\
+\midrule
+Chebyshev Shifted (CGL, A4(b) ref.) & 10/10 & 0/10 & 3.63e-02 & 3.63e-02 & 396.52 & 12.24 \\
+Random-Draw $\tanh$ ELM (CGL, A4(b) ref.) & 0/10 & 0/10 & 1.03e-01 & --- & --- & 41.11 \\
+\midrule
+\texttt{tanh\_spanning\_w5.2\_cgl\_u05} & 0/10 & 0/10 & 6.13e-01 & --- & --- & 38.62 \\
+\texttt{tanh\_spanning\_w5.2\_uni\_u05} & 4/10 & 0/10 & 5.03e-02 & 4.39e-02 & 401.49 & 45.68 \\
+\texttt{tanh\_spanning\_w5.2\_cgl\_scaled} & 0/10 & 0/10 & 1.17e+00 & --- & --- & 20.72 \\
+\texttt{tanh\_spanning\_w1.0\_cgl\_u05} & 0/10 & 0/10 & 1.41e-01 & --- & --- & 73.84 \\
+\texttt{tanh\_spanning\_w2.0\_cgl\_u05} & 0/10 & 0/10 & 1.18e-01 & --- & --- & 80.71 \\
+\texttt{tanh\_spanning\_w3.0\_cgl\_u05} & 0/10 & 0/10 & 5.91e-01 & --- & --- & 71.67 \\
+\texttt{tanh\_spanning\_w4.0\_cgl\_u05} & 0/10 & 0/10 & 1.37e-01 & --- & --- & 57.06 \\
+\texttt{tanh\_spanning\_w5.0\_cgl\_u05} & 0/10 & 0/10 & 8.18e-02 & --- & --- & 51.92 \\
+\texttt{tanh\_spanning\_w6.0\_cgl\_u05} & 1/10 & 0/10 & 1.73e+00 & 3.74e-02 & 396.41 & 13.07 \\
+\texttt{tanh\_spanning\_w7.0\_cgl\_u05} & 0/10 & 0/10 & 1.12e+00 & --- & --- & 21.17 \\
+\texttt{tanh\_spanning\_w8.0\_cgl\_u05} & 0/10 & 0/10 & 2.40e+00 & --- & --- & 11.52 \\
+\texttt{tanh\_spanning\_w9.0\_cgl\_u05} & 0/10 & 0/10 & 1.71e+00 & --- & --- & 10.57 \\
+\texttt{tanh\_spanning\_w10.0\_cgl\_u05} & 0/10 & 0/10 & 1.29e+00 & --- & --- & 13.78 \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -97,7 +97,7 @@ Key numerical findings from single-seed verification:
 ![Phase A4 Ablations](results/figures/scenario_a_phase_a4_ablations.png)
 
 1. **8-residual CE vs. 14-residual unreduced (`A4(a)`):** Eliminating $\mathbf{v} = \dot{\mathbf{r}}$ via Table A6 Hermite CEs and $\boldsymbol{\lambda}_r = -\dot{\boldsymbol{\lambda}}_v$ increases convergence from `1/10 (10%)` to `10/10 (100%)` and cuts runtime by more than $2\times$.
-2. **Chebyshev NN vs. random-weight $\tanh$ ELM (`A4(b)`):** Deterministic orthogonal Chebyshev polynomials (`chebyshev_shifted`: `10/10`, `396.52 kg`; `chebyshev_literal`: `9/10`, `399.45 kg`) decisively outperform random-weight $\tanh$ ELM features (`0/10` on both CGL and uniform grids, stalling at `425–451 kg`, `reprop ~ 0.10`, 6 switches).
+2. **Chebyshev NN vs. random-draw $\tanh$ ELM (`A4(b)`):** Deterministic orthogonal Chebyshev polynomials (`chebyshev_shifted`: `10/10`, `396.52 kg`; `chebyshev_literal`: `9/10`, `399.45 kg`) decisively outperform **random-draw $\tanh$ features** (`0/10` on both CGL and uniform grids, stalling at `425–451 kg`, `reprop ~ 0.10`, 6 switches). As tested in the fair spanning-$\tanh$ ablation (Section 14.3, Task 5), replacing random draws with deterministic spanning weights ($w_q = w, b_q = w(-1 + 2(q-1)/(L-1))$, $\beta \sim U(-0.5, 0.5)$) *does* recover the 4-switch `~396–401 kg` branch at $w \in [5.2, 6.0]$ (up to `4/10` loose convergence, `reprop = 3.74e-2 – 4.92e-2`), though with a narrower basin and ~3–5× higher runtime than shifted Chebyshev.
 3. **Continuation $\rho$ schedule (`A4(c)`):** Too few steps (`5` steps) jump to a 2-switch suboptimal branch (`524.79 kg`, `reprop = 0.636`); `10` steps undershoot (`392.65 kg`, `reprop = 0.080`). The paper's 20-step log-spaced schedule from $1$ to $10^{-10}$ achieves the best balance (`5/5`, `396.52 kg`, `reprop = 3.63e-2`).
 4. **Grid & optimizer (`A4(d)`):** `lm_svd` (Cholesky with QR+SVD fallback), SciPy MINPACK `'lm'`, and SciPy `'trf'` all converge to the identical coarse solution (`400.70 kg`, `rms = 2.06e-3`, `reprop = 8.64e-2`) on CGL-140, with `lm_svd` running ~7–10x faster (~3 s vs 20–30 s). Uniform-540 directly from random init converges `4/5 (80%)` to `396.52 kg`, confirming that uniform-grid failure at $n=140$ (`NaN` fuel due to divergence) is purely a Runge oversampling effect.
 
@@ -345,3 +345,27 @@ and provided as the initial guess to indirect shooting, continuing the exact sam
 
 - **Equal-smoothing accuracy verdict (`A3`):** `split_domain` vs. `shoot_hard_polish` median exact-arc error diff = `+3.39e-06`, $p_{\text{Holm}} = 7.65e-10$ → **`CONTRADICTED`** (at equal exact hard-switch smoothing, event-polished indirect shooting is orders of magnitude more accurate than split-domain PoNN).
 - **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [`CLAIMS.md`](CLAIMS.md).
+
+### 14.3 Task 5: Fair Deterministic Spanning `tanh`-ELM Ablation (A4(b) Seeds `1000..1009`)
+
+Deterministic spanning weights $w_q = w$, $b_q = w(-1 + 2(q-1)/(L-1))$ ($q = 1 \dots L$), output weights $\beta \sim U(-0.5, 0.5)$ (plus `scaled_u01` check at $w=5.2$) evaluated on the identical 10 seeds (`1000..1009`) as Phase A4(b):
+
+| Basis / Config (10 seeds `1000..1009`) | Loose (`<5e-2`) | Strict (`<1e-2`) | Med. $e_{\text{reprop}}$ (all) | Med. $e_{\text{reprop}}$ (loose) | Med. Fuel (loose, kg) | Med. Time (s) |
+|:---|:---:|:---:|---:|---:|---:|---:|
+| Chebyshev Shifted (CGL, A4(b) ref.) | 10/10 | 0/10 | 3.63e-02 | 3.63e-02 | 396.52 | 12.24 |
+| Random-Draw `tanh` ELM (CGL, A4(b) ref.) | 0/10 | 0/10 | 1.03e-01 | — | — | 41.11 |
+| `tanh_spanning_w5.2_cgl_u05` | 0/10 | 0/10 | 6.13e-01 | — | — | 38.62 |
+| `tanh_spanning_w5.2_uni_u05` | 4/10 | 0/10 | 5.03e-02 | 4.39e-02 | 401.49 | 45.68 |
+| `tanh_spanning_w5.2_cgl_scaled` | 0/10 | 0/10 | 1.17e+00 | — | — | 20.72 |
+| `tanh_spanning_w1.0_cgl_u05` | 0/10 | 0/10 | 1.41e-01 | — | — | 73.84 |
+| `tanh_spanning_w2.0_cgl_u05` | 0/10 | 0/10 | 1.18e-01 | — | — | 80.71 |
+| `tanh_spanning_w3.0_cgl_u05` | 0/10 | 0/10 | 5.91e-01 | — | — | 71.67 |
+| `tanh_spanning_w4.0_cgl_u05` | 0/10 | 0/10 | 1.37e-01 | — | — | 57.06 |
+| `tanh_spanning_w5.0_cgl_u05` | 0/10 | 0/10 | 8.18e-02 | — | — | 51.92 |
+| `tanh_spanning_w6.0_cgl_u05` | 1/10 | 0/10 | 1.73e+00 | 3.74e-02 | 396.41 | 13.07 |
+| `tanh_spanning_w7.0_cgl_u05` | 0/10 | 0/10 | 1.12e+00 | — | — | 21.17 |
+| `tanh_spanning_w8.0_cgl_u05` | 0/10 | 0/10 | 2.40e+00 | — | — | 11.52 |
+| `tanh_spanning_w9.0_cgl_u05` | 0/10 | 0/10 | 1.71e+00 | — | — | 10.57 |
+| `tanh_spanning_w10.0_cgl_u05` | 0/10 | 0/10 | 1.29e+00 | — | — | 13.78 |
+
+- **Finding:** Unlike random-draw `tanh` features (`0/10` loose), deterministic spanning `tanh` recovers the 4-switch physical branch in the $w \in [5.2, 6.0]$ sweet spot (`tanh_spanning_w5.2_uni_u05`: `4/10` loose, `reprop` down to `3.95e-02`, med `4.39e-02`; `tanh_spanning_w6.0_cgl_u05`: `1/10` loose at `396.41 kg`, `reprop = 3.74e-02`), before degrading for $w \ge 7$. Shifted Chebyshev remains more reliable (`10/10` loose) and faster (`12.24 s` vs. `45.68 s` at $w=5.2$ uniform). LaTeX table: `results/tables/tab12_task5_tanh_spanning.tex`.

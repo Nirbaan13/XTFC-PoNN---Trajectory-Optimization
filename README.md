@@ -132,4 +132,4 @@ python3 run_all.py --from-stored
 
 - **Preregistration:** [PREREG_ADDENDUM_3.md](PREREG_ADDENDUM_3.md) (commit `792b304`, feature freeze).
 - **Claims traceability:** [CLAIMS.md](CLAIMS.md) (every manuscript claim mapped to stored JSON evidence, computation method, and exact wording).
-- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [REPORT.md](REPORT.md) Section 14.
+- **Deliverables:** `results/tables/tab10_addendum3_cross_case.tex`, `results/tables/tab11_addendum3_accuracy.tex`, `results/tables/tab12_task5_tanh_spanning.tex`, `results/figures/fig_addendum3_cross_case_and_accuracy.pdf`, and [REPORT.md](REPORT.md) Section 14.

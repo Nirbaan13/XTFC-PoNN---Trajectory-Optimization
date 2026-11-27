@@ -205,14 +205,16 @@ class PaperPoNNModel:
         self,
         prob: ScenarioAProblem,
         n_neurons: int = 70,
-        basis_type: str = "chebyshev",     # "chebyshev" | "chebyshev_shifted" | "tanh_elm"
+        basis_type: str = "chebyshev",     # "chebyshev" | "chebyshev_shifted" | "tanh_elm" | "tanh_spanning"
         elm_seed: int = 1000,
         elm_w_range: tuple[float, float] = (-1.0, 1.0),
         elm_b_range: tuple[float, float] = (-1.0, 1.0),
+        spanning_w: float = 5.2,
     ):
         self.prob = prob
         self.L = int(n_neurons)
         self.basis_type = basis_type
+        self.spanning_w = float(spanning_w)
         self.z0 = -1.0
         self.zf = 1.0
         self.b2 = (self.zf - self.z0) / prob.tf
@@ -222,6 +224,9 @@ class PaperPoNNModel:
             rng = np.random.default_rng(elm_seed)
             self.W = rng.uniform(elm_w_range[0], elm_w_range[1], self.L)
             self.b = rng.uniform(elm_b_range[0], elm_b_range[1], self.L)
+        elif basis_type == "tanh_spanning":
+            self.W = np.full(self.L, self.spanning_w, dtype=float)
+            self.b = self.spanning_w * np.linspace(-1.0, 1.0, self.L)
         else:
             self.W = np.ones(self.L, dtype=float)
             self.b = np.zeros(self.L, dtype=float)
@@ -232,7 +237,7 @@ class PaperPoNNModel:
             return chebyshev_basis(z, L_req)
         if self.basis_type == "chebyshev_shifted":
             return chebyshev_basis(z, L_req + 4)
-        if self.basis_type == "tanh_elm":
+        if self.basis_type in ("tanh_elm", "tanh_spanning"):
             return tanh_elm_basis(z, self.W, self.b)
         raise ValueError(f"Unknown basis_type: {self.basis_type}")
 
@@ -400,6 +405,9 @@ class PaperPoNNModel:
         elif init_mode == "scaled_u01":
             beta[0:3] = 1e-3 * rng.uniform(0.0, 1.0, (3, self.L))
             beta[4:7] = 1e-2 * rng.uniform(0.0, 1.0, (3, self.L))
+        elif init_mode == "u_neg05_pos05":
+            beta[0:3] = rng.uniform(-0.5, 0.5, (3, self.L))
+            beta[4:7] = rng.uniform(-0.5, 0.5, (3, self.L))
         else:
             raise ValueError(f"Unknown init_mode: {init_mode}")
         beta[3] = np.linalg.lstsq(ops["Phi_m"], np.zeros(len(ops["z"])), rcond=1e-12)[0]
@@ -604,6 +612,7 @@ class PaperPoNNSolver:
         max_iter_cont: int = 25,
         conv_rms_tol: float = 1.5e-2,
         reprop_conv_tol: float = 5e-2,
+        spanning_w: float = 5.2,
     ):
         self.L = int(n_neurons)
         self.n = int(n_points)
@@ -619,6 +628,7 @@ class PaperPoNNSolver:
         self.max_iter_cont = int(max_iter_cont)
         self.conv_rms_tol = conv_rms_tol
         self.reprop_conv_tol = reprop_conv_tol
+        self.spanning_w = float(spanning_w)
 
     def _run_continuation(
         self,
@@ -831,7 +841,9 @@ class PaperPoNNSolver:
         """
         t0 = time.perf_counter()
         z_coarse = make_collocation_grid(self.n, self.grid_type)
-        model_c = PaperPoNNModel(prob, n_neurons=self.L, basis_type=self.basis_type, elm_seed=seed)
+        model_c = PaperPoNNModel(
+            prob, n_neurons=self.L, basis_type=self.basis_type, elm_seed=seed, spanning_w=self.spanning_w
+        )
         ops_c = model_c.operators(z_coarse)
         xi0 = (
             model_c.initial_guess_paper(ops_c, seed=seed, init_mode=self.init_mode)
@@ -863,7 +875,9 @@ class PaperPoNNSolver:
             z_coarse, ev_c["S"], points_per_switch=points_per_switch, refine_grid_mode=refine_grid_mode
         )
         t1 = time.perf_counter()
-        model_r = PaperPoNNModel(prob, n_neurons=refine_neurons, basis_type=self.basis_type, elm_seed=seed)
+        model_r = PaperPoNNModel(
+            prob, n_neurons=refine_neurons, basis_type=self.basis_type, elm_seed=seed, spanning_w=self.spanning_w
+        )
         ops_r = model_r.operators(z_ref)
 
         # Select coarse snapshot for warm-starting refinement
@@ -873,7 +887,7 @@ class PaperPoNNSolver:
                 smooth_idx = idx
         xi_src = snaps_c.get(smooth_idx, xi_c) if refine_init_mode == "pad_from_smooth" else xi_c
 
-        if refine_init_mode in ("pad_from_smooth", "pad_final_rho") and self.basis_type != "tanh_elm":
+        if refine_init_mode in ("pad_from_smooth", "pad_final_rho") and self.basis_type not in ("tanh_elm", "tanh_spanning"):
             beta_c = xi_src.reshape(8, self.L)
             beta_r0 = np.zeros((8, refine_neurons), dtype=float)
             m_copy = min(self.L, refine_neurons)
