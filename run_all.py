@@ -87,6 +87,8 @@ def main():
             or Path("results/addendum3_task2_accuracy_9100_9199.json").exists()
         ):
             subprocess.run([sys.executable, "scripts/generate_addendum3_deliverables.py"], check=True, env=env)
+        if Path("scripts/generate_trajectory_and_pipeline_figures.py").exists() and Path("results/scenario_a_phase_a3.json").exists():
+            subprocess.run([sys.executable, "scripts/generate_trajectory_and_pipeline_figures.py"], check=True, env=env)
         print("ALL STORED DELIVERABLES REPRODUCED SUCCESSFULLY.", flush=True)
         return
 
